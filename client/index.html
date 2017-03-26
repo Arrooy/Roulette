@@ -1,3 +1,25 @@
+<style id="generalStyle"type="text/css">
+body {
+    overflow:hidden;
+}
+	::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+    border-radius: 10px;
+	border-radius: 100px;
+
+}
+ 
+::-webkit-scrollbar-thumb {
+      border-radius: 100px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.7); 
+}
+
+</style>
+
 <div id="signDiv">
 	Username: <input id="signDiv-username" type="text"></input><br>
 	Password: <input id="signDiv-password" type="password"></input>
@@ -6,21 +28,37 @@
 </div>
 
 <div id="gameDiv" style="display:none;">
-	<canvas id="ctx" width="500" height="500" style="border:1px solid #000000;"></canvas>
-
-	<div id="chat-text" style="width:500px;height:100px;overflow-y:scroll">
-		<div>Hello!</div>
+	
+	<canvas id="ctx" width="500" height="500" style="position:absolute;top:1;left:1;"></canvas>
+	<canvas id="ctx-ui" width="500" height="500" style="position:absolute;top:1;left:1;"></canvas>
+	
+	<!--<div id="ui" style="position:absolute;">
+		
+	</div>-->
+	
+	
+	<div style="position:absolute;bottom:0;right:0;">
+		
+		<div style='overflow:hidden;background: rgba(0,0,0,0.2);'>
+			<div id="chat-text" style="width:500px; max-height: 125px;overflow-y:scroll">
+			</div>
+		</div>
+		<div id="inventory"></div>
+		<form id="chat-form"style="margin-bottom:0px" autocomplete="off">
+			<input id="chat-input" type="text" style="width:500px"placeholder="This is a chat!"></input>
+		</form>	 
+	
 	</div>
+	
 
-	<form id="chat-form">
-		<input id="chat-input" type="text" style="width:500px"></input>
-	</form>
 </div>
 
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="/client/Inventory.js"></script>
 <script>
-	var WIDTH = 500;
-	var HEIGHT = 500;
+	
+	var WIDTH = document.body.clientWidth;
+	var HEIGHT = document.body.clientHeight;
 	var socket = io();
 	
 	//sign
@@ -29,9 +67,14 @@
 	var signDivSignIn = document.getElementById('signDiv-signIn');
 	var signDivSignUp = document.getElementById('signDiv-signUp');
 	var signDivPassword = document.getElementById('signDiv-password');
+	var ctx = document.getElementById("ctx").getContext("2d");
+	var ctxUi = document.getElementById("ctx-ui").getContext("2d");
+	//var Ui = document.getElementById("ui")
+	
+	var adminColor = false;
 	
 	signDivSignIn.onclick = function(){
-		socket.emit('signIn',{username:signDivUsername.value,password:signDivPassword.value});
+		socket.emit('signIn',{username:signDivUsername.value,password:signDivPassword.value,width:WIDTH,height:HEIGHT});
 	}
 	signDivSignUp.onclick = function(){
 		socket.emit('signUp',{username:signDivUsername.value,password:signDivPassword.value});
@@ -40,6 +83,16 @@
 		if(data.success){
 			signDiv.style.display = 'none';
 			gameDiv.style.display = 'inline-block';
+			gameDiv.style.width = document.body.clientWidth;
+			gameDiv.style.height = document.body.clientHeight;
+			ctx.canvas.width = WIDTH;
+			ctx.canvas.height = HEIGHT;
+			ctxUi.canvas.width = WIDTH;
+			ctxUi.canvas.height = HEIGHT;
+			//Ui.style.width = WIDTH;
+			//Ui.style.height = HEIGHT;
+			
+			socket.emit('HelloHeight',{width:WIDTH,height:HEIGHT});
 		} else
 			alert("Sign in unsuccessul.");
 	});
@@ -56,7 +109,19 @@
 	var chatForm = document.getElementById('chat-form');
 	
 	socket.on('addToChat',function(data){
-		chatText.innerHTML += '<div>' + data + '</div>';
+		if(data.admin === true){
+			chatText.innerHTML += '<div id="admin" style ="color:'+data.color+'">' + data.message + '</div>';	
+			adminColor = true;
+		}else{
+			var divisios = [];
+			var numberN = 0;
+			for(var i = data.message.length/40;i>=0;i--){
+				chatText.innerHTML += '<div style ="color:'+data.color+'">'+data.message.slice(numberN,numberN+40) + '</div>';	
+				numberN +=40;
+			}		
+		}
+		
+		chatText.scrollTop = chatText.scrollHeight;
 	});
 	socket.on('evalAnswer',function(data){
 		console.log(data);
@@ -65,24 +130,77 @@
 	
 	chatForm.onsubmit = function(e){
 		e.preventDefault();
-		if(chatInput.value[0] === '/')
+		if(chatInput.value[0] === '/'){
 			socket.emit('evalServer',chatInput.value.slice(1));
-		else
-			socket.emit('sendMsgToServer',chatInput.value);
-		chatInput.value = '';		
+		}else if(chatInput.value[0] === '@'){
+			
+			if(chatInput.value.indexOf(",") !== -1){
+				if(chatInput.value.slice(1,chatInput.value.indexOf(',')) !== Player.list[selfId].name){
+				   
+					socket.emit('sendPmToServer',{
+						username:chatInput.value.slice(1,chatInput.value.indexOf(',')),
+						message:chatInput.value.slice(chatInput.value.indexOf(',') + 1),
+					});	
+				
+				}else{
+					chatText.innerHTML += '<div style ="color:#000000">Que solo estas...</div>';	
+				}
+			
+				}else{
+				chatText.innerHTML += '<div style ="color:#000000">Error, La sintaxis requiere @USERNAME,MESSAGE</div>';	
+			}
+	
+		}else{
+			socket.emit('sendMsgToServer',chatInput.value);	
+		}
+		chatInput.value = '';	
 	}
 	
+	//UI
+	
+	
+	
+	var inventory = new Inventory(socket,false);
+	
+	socket.on('updateInventory',function(items){
+		inventory.items = items;
+		inventory.refreshRender();
+	});
+	
+	
+	
+	
+	//transform: rotateX(45deg)
 	//game
 	var Img = {};
-	Img.player = new Image();
-	Img.player.src = '/client/img/player.png';
-	Img.bullet = new Image();
-	Img.bullet.src = '/client/img/bullet.png';
-	Img.map = new Image();
-	Img.map.src = '/client/img/map.png';
 	
-	var ctx = document.getElementById("ctx").getContext("2d");
+	Img.hgun1 = new Image();
+	Img.hgun1.src = '/client/img/hgun1.png';
+	Img.hgun2 = new Image();
+	Img.hgun2.src = '/client/img/hgun2.png';
+	Img.hgun3 = new Image();
+	Img.hgun3.src = '/client/img/hgun3.png';
+	Img.hNogun = new Image();
+	Img.hNogun.src = '/client/img/hNogun.png';
+	
+	
+	Img.bulletBlau = new Image();
+	Img.bulletBlau.src = '/client/img/bulletBlau.png';
+	Img.bulletLilaa = new Image();
+	Img.bulletLilaa.src = '/client/img/bulletLilaa.png';
+	Img.bulletOr = new Image();
+	Img.bulletOr.src = '/client/img/bulletOr.png';
+	Img.bulletVerd = new Image();
+	Img.bulletVerd.src = '/client/img/bulletVerd.png';
+	Img.bulletVermell = new Image();
+	Img.bulletVermell.src = '/client/img/bulletVermell.png';
+		
+	Img.Zhold = new Image();
+	Img.Zhold.src = '/client/img/Zhold.png';
+	
 	ctx.font = '30px Arial';
+	ctxUi.font = '30px Arial';
+	
 	
 	var Player = function(initPack){
 		var self = {};
@@ -93,24 +211,27 @@
 		self.hp = initPack.hp;
 		self.hpMax = initPack.hpMax;
 		self.score = initPack.score;
+		self.name = initPack.name;
+		self.maplvl = initPack.maplvl;
 		
 		self.draw = function(){	
+			
+			if(Player.list[selfId].maplvl !== self.maplvl)
+				return;
+			
 			var x = self.x - Player.list[selfId].x + WIDTH/2;
 			var y = self.y - Player.list[selfId].y + HEIGHT/2;
-			
-			var hpWidth = 30 * self.hp / self.hpMax;
+					
 			ctx.fillStyle = 'red';
-			ctx.fillRect(x - hpWidth/2,y - 40,hpWidth,4);
+			ctx.fillRect(x - 2.5*self.hpMax,y - 40,5*self.hpMax,5);
+			ctx.fillStyle = 'green';
+			ctx.fillRect(x - 2.5*self.hpMax,y - 40,5*self.hp,5);
+		
+			ctx.fillStyle = 'white';
+			ctx.fillText(self.name,x - 2.5*self.hpMax,y-50,100);
 			
-			var width = Img.player.width*2;
-			var height = Img.player.height*2;
+			ctx.drawImage(Img.hgun1,0,0,Img.hgun1.width,Img.hgun1.height,x-Img.hgun1.width/2,y-Img.hgun1.height/2,Img.hgun1.width,Img.hgun1.height);
 			
-			
-			ctx.drawImage(Img.player,
-				0,0,Img.player.width,Img.player.height,
-				x-width/2,y-height/2,width,height);
-			
-			//ctx.fillText(self.score,self.x,self.y-60);
 		}
 		
 		Player.list[self.id] = self;
@@ -126,17 +247,17 @@
 		self.id = initPack.id;
 		self.x = initPack.x;
 		self.y = initPack.y;
+		self.maplvl = initPack.maplvl;
 		
-		self.draw = function(){			
-			var width = Img.bullet.width/2;
-			var height = Img.bullet.height/2;
+		self.draw = function(){	
+			if(Player.list[selfId].maplvl !== self.maplvl)
+				return;
+			
 			
 			var x = self.x - Player.list[selfId].x + WIDTH/2;
 			var y = self.y - Player.list[selfId].y + HEIGHT/2;
-			
-			ctx.drawImage(Img.bullet,
-				0,0,Img.bullet.width,Img.bullet.height,
-				x-width/2,y-height/2,width,height);
+					
+			ctx.drawImage(Img.bulletBlau,0,0,Img.bulletBlau.width,Img.bulletBlau.height,x-Img.bulletBlau.width/2,y-Img.bulletBlau.height/2,Img.bulletBlau.width,Img.bulletBlau.height);
 		}
 		
 		Bullet.list[self.id] = self;		
@@ -172,6 +293,8 @@
 					p.hp = pack.hp;
 				if(pack.score !== undefined)
 					p.score = pack.score;
+				if(pack.maplvl !== undefined)
+					p.maplvl = pack.maplvl;
 			}
 		}
 		for(var i = 0 ; i < data.bullet.length; i++){
@@ -197,9 +320,15 @@
 	});
 	
 	setInterval(function(){
+		if(adminColor === true){
+			var a  = document.getElementById('admin');
+			a.style.color = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);			
+		}
+		
 		if(!selfId)
 			return;
-		ctx.clearRect(0,0,500,500);
+		
+		ctx.clearRect(0,0,WIDTH,HEIGHT);
 		drawMap();
 		drawScore();
 		for(var i in Player.list)
@@ -211,34 +340,51 @@
 	var drawMap = function(){
 		var x = WIDTH/2 - Player.list[selfId].x;
 		var y = HEIGHT/2 - Player.list[selfId].y;
-		ctx.drawImage(Img.map,x,y);
+		//Map lvl conditions here
+		ctx.fillStyle="#FF0000";
+		ctx.fillRect(x - 800,y - 800,1600,1600);
 	}
 	
 	var drawScore = function(){
-		ctx.fillStyle = 'white';
-		ctx.fillText(Player.list[selfId].score,0,30);
+		if(lastScore === Player.list[selfId].score)
+			return;
+		lastScore = Player.list[selfId].score;
+		ctxUi.clearRect(0,0,WIDTH,HEIGHT);
+		ctxUi.fillStyle = 'black';
+		ctxUi.fillText(Player.list[selfId].score,0,30);
+		
+		
 	}
 	
+	var lastScore = null;
+	
 	document.onkeydown = function(event){
-		if(event.keyCode === 68)	//d
-			socket.emit('keyPress',{inputId:'right',state:true});
-		else if(event.keyCode === 83)	//s
-			socket.emit('keyPress',{inputId:'down',state:true});
-		else if(event.keyCode === 65) //a
-			socket.emit('keyPress',{inputId:'left',state:true});
-		else if(event.keyCode === 87) // w
-			socket.emit('keyPress',{inputId:'up',state:true});
-			
+		if(document.activeElement.id !== "chat-input"){
+			if(event.keyCode === 68)	//d
+				socket.emit('keyPress',{inputId:'right',state:true});
+			else if(event.keyCode === 83)	//s
+				socket.emit('keyPress',{inputId:'down',state:true});
+			else if(event.keyCode === 65) //a
+				socket.emit('keyPress',{inputId:'left',state:true});
+			else if(event.keyCode === 87) // w
+				socket.emit('keyPress',{inputId:'up',state:true});
+			else if(event.keyCode === 32) // space
+				socket.emit('keyPress',{inputId:'attack',state:true});
+		}
 	}
 	document.onkeyup = function(event){
-		if(event.keyCode === 68)	//d
-			socket.emit('keyPress',{inputId:'right',state:false});
-		else if(event.keyCode === 83)	//s
-			socket.emit('keyPress',{inputId:'down',state:false});
-		else if(event.keyCode === 65) //a
-			socket.emit('keyPress',{inputId:'left',state:false});
-		else if(event.keyCode === 87) // w
-			socket.emit('keyPress',{inputId:'up',state:false});
+		if(document.activeElement.id !== "chat-input"){
+			if(event.keyCode === 68)	//d
+				socket.emit('keyPress',{inputId:'right',state:false});
+			else if(event.keyCode === 83)	//s
+				socket.emit('keyPress',{inputId:'down',state:false});
+			else if(event.keyCode === 65) //a
+				socket.emit('keyPress',{inputId:'left',state:false});
+			else if(event.keyCode === 87) // w
+				socket.emit('keyPress',{inputId:'up',state:false});
+			else if(event.keyCode === 32) // w
+				socket.emit('keyPress',{inputId:'attack',state:false});
+		}
 	}
 	
 	document.onmousedown = function(event){
@@ -248,10 +394,14 @@
 		socket.emit('keyPress',{inputId:'attack',state:false});
 	}
 	document.onmousemove = function(event){
-		var x = -250 + event.clientX - 8;
-		var y = -250 + event.clientY - 8;
+		var x = -WIDTH/2 + event.clientX - 8;
+		var y = -HEIGHT/2 + event.clientY - 8;
 		var angle = Math.atan2(y,x) / Math.PI * 180;
 		socket.emit('keyPress',{inputId:'mouseAngle',state:angle});
+	}
+	
+	document.oncontextmenu = function(event){
+		event.preventDefault();
 	}
 	
 	
