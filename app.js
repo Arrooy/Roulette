@@ -22,7 +22,7 @@ SOCKET_LIST = {};
 var HEIGHT;
 var WIDTH;
 
-var DEBUG = true;
+
 
 var isValidPassword = function(data,cb){
 	return cb(true);

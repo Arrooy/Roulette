@@ -1,0 +1,7 @@
+down:x:15 Size43x49px
+	Y: 44
+left x:5  size:49x43px
+	y:12
+right:x:47,y:31 size 49x43
+
+up:x:30,y:4 size 43x49
