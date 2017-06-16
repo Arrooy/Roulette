@@ -2,7 +2,7 @@
 //var db = null;//mongojs('localhost:27017/myGame', ['account','progress']);
 
 
-var mongoClient = require("mongodb").MongoClient;
+var mongoClient = require("mongojs").MongoClient;
 var url = "mongodb://roulette:hn85YJZ9pNpaTbxiTGtMKodxJroA8JvyKlwzs8K764TdFRSUx7bMv0xupDCFMQ8wdSmAJy9WtNtSipiqoA2E1A==@roulette.documents.azure.com:10255/?ssl=true";
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
