@@ -8,9 +8,13 @@
 	var signDivPassword = document.getElementById('signDiv-password');
 	var ctx = document.getElementById("ctx").getContext("2d");
 	var ctxUi = document.getElementById("ctx-ui").getContext("2d");
-	var ErrorType ;
 
+
+
+	var ErrorType ;
+	var ChatOpened;
 	var adminColor = false;
+
 
 	signDivSignIn.onclick = function(){
 		socket.emit('signIn',{username:signDivUsername.value,password:signDivPassword.value});
@@ -66,15 +70,30 @@
 	var chatInput = document.getElementById('chat-input');
 	var chatForm = document.getElementById('chat-form');
 
+
+
+	$("#chat-input").focus(function() {
+		if(EverChatSow == 1){
+			chatText.style.display = "inline-block";
+		}
+
+
+
+	}).blur(function() {
+		chatText.style.display = "none";
+	});
+
+
 	socket.on('addToChat',function(data){
+
 		if(data.admin === true){
-			chatText.innerHTML += '<div name="admin" style ="color:'+data.color+'">' + data.message + '</div>';
+			chatText.innerHTML += '<div id = "Comment" name="admin" style ="color:'+data.color+'">' + data.message + '</div>';
 			adminColor = true;
 		}else{
 			var divisios = [];
 			var numberN = 0;
 			for(var i = data.message.length/40;i>=0;i--){
-				chatText.innerHTML += '<div style ="color:'+data.color+'">'+data.message.slice(numberN,numberN+40) + '</div>';
+				chatText.innerHTML += '<div id = "Comment" style ="color:'+data.color+'">'+data.message.slice(numberN,numberN+40) + '</div>';
 				numberN +=40;
 			}
 		}
@@ -83,6 +102,7 @@
 	});
 
 	chatForm.onsubmit = function(e){
+		EverChatSow = 1;
 		e.preventDefault();
 		if(chatInput.value[0] === '@'){
 
@@ -134,10 +154,10 @@
 			if(selfId != self.id)
 				return;
 			var xp = self.xp;
-			ctx.fillStyle = 'black';
+			/*ctx.fillStyle = 'black';
 			ctx.fillRect(0,HEIGHT - 15,WIDTH - 505,12);
 			ctx.fillStyle = 'green';
-			ctx.fillRect(0,HEIGHT - 15,(WIDTH - 505)*(self.xp/(10*self.lvl)),12);
+			ctx.fillRect(0,HEIGHT - 15,(WIDTH - 505)*(self.xp/(10*self.lvl)),12);*/
 		}
 
 		Player.list[self.id] = self;
