@@ -51,6 +51,7 @@ Player = function(param){
 	self.color = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
 	self.team = param.team;
 	self.press = false;
+	self.cur = "cursorBasic";
 
 	self.update = function(){
 
@@ -69,7 +70,9 @@ Player = function(param){
 			name:self.name,
 			lvl:self.lvl,
 			team:self.team,
-
+			cur:self.cur,
+			x:self.x,
+			y:self.y
 		};
 	}
 	self.getUpdatePack = function(){
@@ -80,6 +83,9 @@ Player = function(param){
 			xp:self.xp,
 			lvl:self.lvl,
 			team:self.team,
+			cur:self.cur,
+			x:self.x,
+			y:self.y
 		}
 	}
 
@@ -92,10 +98,10 @@ Player = function(param){
 Player.list = {};
 
 Player.onConnect = function(socket,data){
-	var lvl = 0;
+
 	var player = Player({
 		id:socket.id,
-		lvl:lvl,
+		lvl:0,
 		name:data.username,
 		socket:socket,
 		team:data.team,
@@ -105,6 +111,9 @@ Player.onConnect = function(socket,data){
 		if(data.inputId === 'press'){
 			player.press = data.state;
 
+			player.x = data.x;
+			player.y = data.y;
+		}else if(data.inputId === 'mouseMoved'){
 			player.x = data.x;
 			player.y = data.y;
 		}

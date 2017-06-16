@@ -26,6 +26,10 @@
 		if(data.success){
 			signDiv.style.display = 'none';
 			gameDiv.style.display = 'inline-block';
+			ctx.canvas.width = window.innerWidth;
+			ctx.canvas.height = window.innerHeight;
+			ctxUi.canvas.width = "0px";
+			ctxUi.canvas.height ="0px";
 
 		} else{
 			ErrorType = 2;
@@ -69,7 +73,7 @@
 	var chatText = document.getElementById('chat-text');
 	var chatInput = document.getElementById('chat-input');
 	var chatForm = document.getElementById('chat-form');
-
+ 	var EverChatSow;
 
 
 	$("#chat-input").focus(function() {
@@ -129,11 +133,11 @@
 	}
 
 
-	/*var Img = {};
+	var Img = {};
 
-	Img.hgun1r = new Image();
-	Img.hgun1r.src = '/client/img/6right.png';
-  */
+	Img.cursor = new Image();
+
+
 
 	var Player = function(initPack){
 		var self = {};
@@ -144,20 +148,24 @@
 		self.name = initPack.name;
 		self.lvl = initPack.lvl;
 		self.team = initPack.team;
+		self.cur = initPack.cur;
+		self.x = initPack.x;
+		self.y = initPack.y;
+		Img.cursor.src = '/client/img/'+self.cur+'.png';
 
 		self.draw = function(){
+		if(self.cur != undefined){
+				ctx.drawImage(Img.cursor,0,0,Img.cursor.width,Img.cursor.height,self.x-Img.cursor.width/2,self.y-Img.cursor.height/2,Img.cursor.width,Img.cursor.height);
+		}
 
-
-			ctx.fillStyle = 'black';
-			ctx.fillText(self.name + " ( "+self.team + " "+self.lvl+" )",x - 2.5*self.hpMax,y-50,100);
 
 			if(selfId != self.id)
 				return;
 			var xp = self.xp;
-			/*ctx.fillStyle = 'black';
-			ctx.fillRect(0,HEIGHT - 15,WIDTH - 505,12);
+			ctx.fillStyle = 'black';
+			ctx.fillRect(0,window.innerHeight - 15,window.innerWidth - 505,12);
 			ctx.fillStyle = 'green';
-			ctx.fillRect(0,HEIGHT - 15,(WIDTH - 505)*(self.xp/(10*self.lvl)),12);*/
+			ctx.fillRect(0,window.innerHeight - 15,(window.innerWidth - 505)*(self.xp/(10*self.lvl)),12);
 		}
 
 		Player.list[self.id] = self;
@@ -193,7 +201,12 @@
 					p.hpMax = pack.hpMax;
 				if(pack.team !== undefined)
 					p.team = pack.team;
-
+				if(pack.cur !== undefined)
+					p.cur = pack.cur;
+					if(pack.x !== undefined)
+						p.x = pack.x;
+					if(pack.y !== undefined)
+						p.y = pack.y;
 			}
 		}
 	});
@@ -216,7 +229,7 @@
 		if(!selfId)
 			return;
 
-		ctx.clearRect(0,0,WIDTH,HEIGHT);
+		ctx.clearRect(0,0,document.getElementById('ctx').width,document.getElementById('ctx').height);
 
 		for(var i in Player.list)
 			Player.list[i].draw();
@@ -228,6 +241,9 @@
 	}
 	document.onmouseup = function(event){
 		socket.emit('keyPress',{inputId:'press',x:event.clientX,y:event.clientY,state:false});
+	}
+	document.onmousemove = function(event){
+		socket.emit('keyPress',{inputId:'mouseMoved',x:event.clientX,y:event.clientY});
 	}
 
 	document.oncontextmenu = function(event){
