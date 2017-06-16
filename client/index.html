@@ -24,8 +24,7 @@
 				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
 					<label style="color:#2F1B41"for="signDiv-username">Email address</label>
 						<input type="email" class="form-control" id="signDiv-username" placeholder="Email or Username">
-						<!-- <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> -->
-						<!-- Warning succes info danger-->
+
 				</div>
 				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
 					<label style="color:#2F1B41"for="signDiv-password">Password</label>
@@ -40,6 +39,58 @@
 
 					</div>
 
+
+			</div>
+		</div>
+
+		<div class="container-fluid "style="display:none;" id="CrearCuenta1">
+			<h1 class="text-center LogInTitle">Roulette</h1>
+			<div class="row LogIn">
+				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+					<label   id = "CEmailLabel" style="color:#2F1B41"for="CEmail">Email address</label>
+						<input  type="email" class="form-control" id="CEmail" placeholder="Email">
+				</div>
+				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+					<label id = "CUsernameLabel" style="color:#2F1B41"for="CUsername">Username</label>
+						<input type="text" class="form-control" id="CUsername" placeholder="Username">
+				</div>
+				<div id = "CAgediv"class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+					<label id = "LabelCAge"style="color:#2F1B41"for="CAge">Date of your birth</label>
+						<input type="date" class="form-control" max="1999-12-31"id="CAge">
+				</div>
+
+				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+					<button type="button" id="Step1"class="btn btn-warning">Next step</button>
+				</div>
+
+				</div>
+		</div>
+
+		<div class="container-fluid" style ="display:none;" id="CrearCuenta2">
+			<h1 class="text-center LogInTitle">Roulette</h1>
+			<div class="row LogIn">
+				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+					<label style="color:#2F1B41"for="CColor">Favourite color</label>
+						<input type="color" class="form-control" id="CColor">
+				</div>
+				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+					<label id ="Pass1" style="color:#2F1B41"for="CPassword1">New password</label>
+					<input type="password" class="form-control" id="CPassword1" placeholder="Password">
+				</div>
+				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+					<label id ="Pass2"style="color:#2F1B41"for="CPassword2">Password confirmation</label>
+					<input type="password" class="form-control" id="CPassword2" placeholder="Same Password again">
+				</div>
+
+
+				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+					<button type="button" id="Step0"class="btn btn-warning">Previous step</button>
+					<button type="button" id="CA"class="btn btn-warning">Create Account</button>
+				</div>
+
+				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+					<label style="color:#2F1B41">By pressing <i>Create account</i> I accept:<br /> <a style="font-weight:normal;color:#2F1B41">The terms and conditions of the site</a><br /><a style="font-weight:normal;color:#2F1B41">The rules of the game</a></label>
+				</div>
 
 			</div>
 		</div>
