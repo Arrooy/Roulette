@@ -23,7 +23,6 @@
 			signDiv.style.display = 'none';
 			gameDiv.style.display = 'inline-block';
 
-
 		} else{
 			ErrorType = 2;
 			$('#alerta').modal('toggle')
@@ -33,9 +32,9 @@
 	});
 
 	socket.on('signUpResponse',function(data){
-		if(data.success)
+		if(data.success){
 
-		else{
+		}else{
 			ErrorType = 1;
 			$('#alerta').modal('toggle')
 		}
