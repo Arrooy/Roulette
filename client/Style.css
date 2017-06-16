@@ -1,0 +1,30 @@
+/*Pallette de colores*/
+/*
+#2F1B41
+#872341
+#BE3144
+#F05941
+*/
+body{
+  background: linear-gradient(to left, #F05941, rgba(190, 49, 68, 0.9), #BE3144,#872341);
+}
+.LogIn{
+  position: relative;
+  top: calc(100vh/7);
+}
+.ModalTitle{
+  font-size: 200%;
+  padding-top: 10px;
+  color:#F05941;
+  font-family: BlackDiamonds;
+}
+
+.LogInTitle{
+  position: relative;
+  top: calc(100vh/8);
+  font-size: 900%;
+  color:#2F1B41;
+  font-family: BlackDiamonds;
+}
+
+@font-face { font-family: BlackDiamonds;src: url('BlackDiamonds.ttf'); }

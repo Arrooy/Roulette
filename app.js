@@ -2,7 +2,7 @@
 var db = null;//mongojs('localhost:27017/myGame', ['account','progress']);
 
 require('./Entity');
-require('./client/Inventory');
+
 
 var express = require('express');
 var app = express();
@@ -17,11 +17,6 @@ serv.listen(process.env.PORT || 2000);
 console.log("Server started.");
 
 SOCKET_LIST = {};
-
-
-var HEIGHT;
-var WIDTH;
-
 
 
 var isValidPassword = function(data,cb){
@@ -54,64 +49,47 @@ var io = require('socket.io')(serv,{});
 io.sockets.on('connection', function(socket){
 	socket.id = Math.random();
 	SOCKET_LIST[socket.id] = socket;
-	
+
 	socket.on('signIn',function(data){
-		
+
 		isValidPassword(data,function(res){
 			if(res){
 				Player.onConnect(socket,data);
-				
+
 				socket.emit('signInResponse',{success:true});
 			} else {
-				socket.emit('signInResponse',{success:false});			
+				socket.emit('signInResponse',{success:false});
 			}
 		});
 	});
 	socket.on('signUp',function(data){
 		isUsernameTaken(data,function(res){
 			if(res){
-				socket.emit('signUpResponse',{success:false});		
+				socket.emit('signUpResponse',{success:false});
 			} else {
 				addUser(data,function(){
-					socket.emit('signUpResponse',{success:true});					
+					socket.emit('signUpResponse',{success:true});
 				});
 			}
-		});		
+		});
 	});
-	
-	
+
+
 	socket.on('disconnect',function(){
 		delete SOCKET_LIST[socket.id];
 		Player.onDisconnect(socket);
 	});
-	
-	
-	socket.on('HelloHeight',function(data){
-		WIDTH = data.width;
-		HEIGHT = data.height;
-	});
-	
 });
 
 
 
 setInterval(function(){
 	var packs = Entity.getFrameUpdateDate();
-		
+
 	for(var i in SOCKET_LIST){
 		var socket = SOCKET_LIST[i];
 		socket.emit('init',packs.initPack);
 		socket.emit('update',packs.updatePack);
 		socket.emit('remove',packs.removePack);
-	}	
+	}
 },1000/25);
-
-
-
-
-
-
-
-
-
-
