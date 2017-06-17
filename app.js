@@ -2,16 +2,9 @@
 //var db = null;//mongojs('localhost:27017/myGame', ['account','progress']);
 
 
-var mongoClient = require("mongojs").MongoClient;
+var mongoClient = require("mongojs");
 var url = "mongodb://roulette:hn85YJZ9pNpaTbxiTGtMKodxJroA8JvyKlwzs8K764TdFRSUx7bMv0xupDCFMQ8wdSmAJy9WtNtSipiqoA2E1A==@roulette.documents.azure.com:10255/?ssl=true";
-MongoClient.connect(url, function(err, db) {
-  if (err) throw err;
-  db.createCollection("Accounts", function(err, res) {
-    if (err) throw err;
-    console.log("Table created!");
-    db.close();
-  });
-});
+var db = mongoClient(url,['account']);
 
 require('./Entity');
 
@@ -30,31 +23,38 @@ console.log("Server started.");
 
 SOCKET_LIST = {};
 
+db.on('error', function() {
+  console.log('we had an error.');
+});
+
 
 var isValidPassword = function(data,cb){
-	return cb(true);
-	/*db.account.find({username:data.username,password:data.password},function(err,res){
+var flag = -1;
+	db.account.find({username:data.username,password:data.password},function(err,res){
 		if(res.length > 0)
-			cb(true);
+			 return cb(true);
+	});
+	db.account.find({email:data.username,password:data.password},function(err,res){
+		if(res.length > 0)
+			return cb(true);
 		else
-			cb(false);
-	});*/
+			return cb(false);
+	});
 }
+
 var isUsernameTaken = function(data,cb){
-	return cb(false);
-	/*db.account.find({username:data.username},function(err,res){
+	db.account.find({username:data.username},function(err,res){
 		if(res.length > 0)
 			cb(true);
 		else
 			cb(false);
-	});*/
+	});
 }
 
 var addUser = function(data,cb){
-	return cb();
-	/*db.account.insert({username:data.username,password:data.password},function(err){
-		cb();
-	});*/
+	db.account.insert({_id:data.email,email:data.email,username:data.username,password:data.password,color:data.color,age:data.age},function(err,doc){
+		return cb();
+	});
 }
 
 var io = require('socket.io')(serv,{});
