@@ -125,6 +125,7 @@
 
 	}
 	socket.on('signInResponse',function(data){
+		console.log("Data succes = " + data.success);
 		if(data.success){
 			signDiv.style.display = 'none';
 			gameDiv.style.display = 'inline-block';
@@ -264,8 +265,6 @@
 	var Player = function(initPack){
 		var self = {};
 		self.id = initPack.id;
-		self.hp = initPack.hp;
-		self.hpMax = initPack.hpMax;
 		self.xp = initPack.xp;
 		self.name = initPack.name;
 		self.lvl = initPack.lvl;
@@ -311,14 +310,12 @@
 			var pack = data.player[i];
 			var p = Player.list[pack.id];
 			if(p){
-				if(pack.hp !== undefined)
-					p.hp = pack.hp;
+
 				if(pack.xp !== undefined)
 					p.xp = pack.xp;
 				if(pack.lvl !== undefined)
 					p.lvl = pack.lvl;
-				if(pack.hpMax !== undefined)
-					p.hpMax = pack.hpMax;
+
 				if(pack.team !== undefined)
 					p.team = pack.team;
 				if(pack.cur !== undefined)
@@ -355,6 +352,22 @@
 			Player.list[i].draw();
 
 	},40);
+
+		document.onkeypress = function(event){
+			var letra = event.keyCode;
+			console.log("Letter in");
+			console.log(letra);
+			//socket.emit('keyPress',{inputId:'key',key: letra,state:true});
+			if(letra === 13){
+				console.log("JuasJuas");
+			}
+		}
+
+		document.onkeyup = function(event){
+			var letra = event.keyCode;
+			console.log("Letter out");
+			//socket.emit('keyPress',{inputId:'key',key: letra,state:false});
+		}
 
 	document.onmousedown = function(event){
 		socket.emit('keyPress',{inputId:'press',x:event.clientX,y:event.clientY,state:true});

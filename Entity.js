@@ -9,7 +9,6 @@ Entity = function(param){
 		x:0,
 		y:0,
 		id:"",
-		lvl:0,
 	}
 	if(param){
 		if(param.x)
@@ -45,32 +44,25 @@ Player = function(param){
 	var self = Entity(param);
 
 	self.name = param.name;
-	self.hp = 10;
-	self.hpMax = 10;
 	self.xp = 1;
 	self.color = param.color;
 	self.team = param.team;
 	self.press = false;
-	self.cur = "cursorBasic";
+	self.cur = ["cursorBasic"];
+	self.actualCur = 0;
 
 	self.update = function(){
 
-		if(self.xp >= 10*self.lvl){
-			self.lvl++;
-			self.xp = 0;
-		}
 	}
 
 	self.getInitPack = function(){
 		return {
 			id:self.id,
-			hp:self.hp,
-			hpMax:self.hpMax,
 			xp:self.xp,
 			name:self.name,
 			lvl:self.lvl,
 			team:self.team,
-			cur:self.cur,
+			cur:self.cur[0],
 			x:self.x,
 			y:self.y
 		};
@@ -78,12 +70,10 @@ Player = function(param){
 	self.getUpdatePack = function(){
 		return {
 			id:self.id,
-			hp:self.hp,
-			hpMax:self.hpMax,
 			xp:self.xp,
 			lvl:self.lvl,
 			team:self.team,
-			cur:self.cur,
+			cur:self.cur[self.actualCur],
 			x:self.x,
 			y:self.y
 		}
@@ -101,21 +91,25 @@ Player.onConnect = function(socket,data){
 
 	var player = Player({
 		id:socket.id,
-		lvl:0,
-		name:data.username,
+		lvl:data[0].lvl,
+		name:data[0].username,
 		socket:socket,
-		team:data.team,
+		color:data[0].color,
+		cur:data[0].cur[0],
+		xp:data[0].xp,
+		team:data[0].team,
 	});
 
 	socket.on('keyPress',function(data){
 		if(data.inputId === 'press'){
 			player.press = data.state;
-
 			player.x = data.x;
 			player.y = data.y;
 		}else if(data.inputId === 'mouseMoved'){
 			player.x = data.x;
 			player.y = data.y;
+		}else if(data.inputId === 'key'){
+
 		}
 	});
 

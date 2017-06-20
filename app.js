@@ -29,17 +29,18 @@ db.on('error', function() {
 
 
 var isValidPassword = function(data,cb){
-var flag = -1;
+
+
 	db.account.find({username:data.username,password:data.password},function(err,res){
-		if(res.length > 0)
+		if(res.length > 0){
+
 			 return cb(true);
+		}else{
+			 return cb(false);
+		}
+
 	});
-	db.account.find({email:data.username,password:data.password},function(err,res){
-		if(res.length > 0)
-			return cb(true);
-		else
-			return cb(false);
-	});
+
 }
 
 var isUsernameTaken = function(data,cb){
@@ -52,10 +53,17 @@ var isUsernameTaken = function(data,cb){
 }
 
 var addUser = function(data,cb){
-	db.account.insert({_id:data.email,email:data.email,username:data.username,password:data.password,color:data.color,age:data.age},function(err,doc){
+	db.account.insert({_id:data.email,email:data.email,username:data.username,password:data.password,color:data.color,age:data.age,xp:0,team:"none",cur:["cursorBasic"]},function(err,doc){
 		return cb();
 	});
 }
+var consultaInfo = function(socket,data){
+	db.account.find({username:data.username,password:data.password},function(err,res){
+		Player.onConnect(socket,res);
+		socket.emit('signInResponse',{success:true});
+	});
+}
+
 
 var io = require('socket.io')(serv,{});
 io.sockets.on('connection', function(socket){
@@ -66,13 +74,20 @@ io.sockets.on('connection', function(socket){
 
 		isValidPassword(data,function(res){
 			if(res){
-				Player.onConnect(socket,data);
-
-				socket.emit('signInResponse',{success:true});
+				consultaInfo(socket,data);
 			} else {
-				socket.emit('signInResponse',{success:false});
+				db.account.find({email:data.username,password:data.password},function(err,res){
+					if(res.length > 0){
+						consultaInfo(socket,data);
+					}else{
+						socket.emit('signInResponse',{success:false});
+					}
+				});
+
 			}
+
 		});
+
 	});
 	socket.on('signUp',function(data){
 		isUsernameTaken(data,function(res){
@@ -88,6 +103,7 @@ io.sockets.on('connection', function(socket){
 
 
 	socket.on('disconnect',function(){
+
 		delete SOCKET_LIST[socket.id];
 		Player.onDisconnect(socket);
 	});
