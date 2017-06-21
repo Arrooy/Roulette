@@ -1,5 +1,7 @@
 	var socket = io();
 
+	var ErrorAnimation = "shake"
+
 	//sign
 	var signDiv = document.getElementById('signDiv');
 	var signDivUsername = document.getElementById('signDiv-username');
@@ -17,7 +19,12 @@
 
 			var ReHOme = document.getElementById('Step0');
 
-	var ErrorType ;
+	var ErrorType = 0;
+	var tryedandFailedEmail = 0;
+	var tryedandFailedAge = 0;
+	var tryedandFailedPass1 = 0;
+	var tryedandFailedPass2 = 0;
+	var tryedandFailedPass3 = 0;
 	var ChatOpened;
 	var adminColor = false;
 
@@ -50,6 +57,11 @@
 	}
 
 	NextStep1.onclick =function(){
+		tryedandFailedEmail = 0;
+		tryedandFailedAge = 0;
+		tryedandFailedPass1 = 0;
+		tryedandFailedPass2 = 0;
+		tryedandFailedPass3 = 0;
 		var NoError = 1;
 		var data = CAge.value.split('-');
 		var UserAge = new Date();
@@ -61,7 +73,10 @@
 			NoError = 0;
 			ErrorType = 3;
 			$("#CEmailLabel").css('color','#F05941');
-			$('#alerta').modal('toggle')
+			$('#alerta').modal('toggle');
+			tryedandFailedEmail = 1;
+			$("#ContainerMail").addClass('animated infinite ' + ErrorAnimation);
+
 		}else{
 			$("#CEmailLabel").css('color','#2F1B41');
 		}
@@ -69,7 +84,9 @@
 			if (data[0] == "" || data[1] == undefined || data[2] == undefined){
 				NoError = 0;
 				countError = 1;
+				tryedandFailedAge = 1;
 				$("#LabelCAge").css('color','#F05941');
+				$("#CAgediv").addClass('animated infinite  ' + ErrorAnimation);
 			}else{
 				$("#LabelCAge").css('color','#2F1B41');
 			}
@@ -80,6 +97,8 @@
 				ErrorType = 4;
 				$("#LabelCAge").css('color','#F05941');
 				$('#alerta').modal('toggle')
+				tryedandFailedAge =	1;
+				$("#CAgediv").addClass('animated infinite  ' + ErrorAnimation);
 			}else{
 				$("#LabelCAge").css('color','#2F1B41');
 			}
@@ -93,26 +112,39 @@
 
 	}
 	CreateAccount.onclick = function(){
+		tryedandFailedEmail = 0;
+		tryedandFailedAge = 0;
+		tryedandFailedPass1 = 0;
+		tryedandFailedPass2 = 0;
+		tryedandFailedPass3 = 0;
 		var error = 0;
 		if(CPassword1.value == ""){
 			$("#Pass1").css('color','#F05941');
+			$('#divPass1').addClass('animated infinite  ' + ErrorAnimation);
 			error = 1;
+			tryedandFailedPass1 = 1;
 		}else{
 			$("#Pass1").css('color','#2F1B41');
 		}
 
 		if(CPassword2.value == ""){
 			$("#Pass2").css('color','#F05941');
+			$('#divPass2').addClass('animated infinite  ' + ErrorAnimation);
 			error = 1;
+			tryedandFailedPass2 = 1;
 		}else{
 			$("#Pass2").css('color','#2F1B41');
 		}
 		if(CPassword1.value != CPassword2.value){
 			error = 1;
 			ErrorType = 5;
+			tryedandFailedPass3 = 1;
 			$('#alerta').modal('toggle')
+			$('#divPass1').addClass('animated  infinite  ' + ErrorAnimation);
+			$('#divPass2').addClass('animated  infinite  ' + ErrorAnimation);
 		}
 		if(error == 0){
+			flag = -1;
 			socket.emit('signUp',{
 				email:CEmail.value,
 				username:CUsername.value,
@@ -133,6 +165,30 @@
 		signDiv.style.display = 'none';
 
 	}
+
+	$("#CEmail").hover(function() {
+		if(tryedandFailedEmail === 1){
+			$("#ContainerMail").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
+		}
+	});
+
+	$("#CAge").hover(function() {
+		if(tryedandFailedAge === 1)  {
+			$("#CAgediv").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
+		}
+	});
+	$("#CPassword1").hover(function() {
+
+
+	});
+	$("#CPassword2").hover(function() {
+		if(tryedandFailedPass1 === 1 || tryedandFailedPass3 === 1)  {
+			$("#divPass1").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
+			$("#divPass2").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
+		}
+	});
+
+
 	socket.on('signInResponse',function(data){
 		console.log("Data succes = " + data.success);
 		if(data.success){
@@ -218,6 +274,9 @@
 	}).blur(function() {
 		chatText.style.display = "none";
 	});
+
+
+
 
 
 	socket.on('addToChat',function(data){
