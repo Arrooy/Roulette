@@ -34,6 +34,13 @@
 
 	var CPassword2 = document.getElementById('CPassword2');
 
+
+
+
+
+
+
+
 	ReHOme.onclick = function(){
 		Fase1.style.display = '';
 		Fase2.style.display = 'none';
@@ -355,17 +362,20 @@
 
 		document.onkeypress = function(event){
 			var letra = event.keyCode;
-			console.log("Letter in");
-			console.log(letra);
 			//socket.emit('keyPress',{inputId:'key',key: letra,state:true});
-			if(letra === 13){
-				console.log("JuasJuas");
+			if($('#signDiv').css('display') == 'block'){
+				if(letra === 13){
+					$('#signDiv-signIn').trigger('click');
+				}
+			}else{
+				//Inside game
 			}
+
 		}
 
 		document.onkeyup = function(event){
 			var letra = event.keyCode;
-			console.log("Letter out");
+
 			//socket.emit('keyPress',{inputId:'key',key: letra,state:false});
 		}
 
