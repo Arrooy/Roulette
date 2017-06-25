@@ -53,7 +53,7 @@ var isUsernameTaken = function(data,cb){
 }
 
 var addUser = function(data,cb){
-	db.account.insert({_id:data.email,email:data.email,username:data.username,password:data.password,color:data.color,age:data.age,xp:0,team:"none",cur:["cursorBasic"]},function(err,doc){
+	db.account.insert({_id:data.email,email:data.email,username:data.username,password:data.password,color:data.color,age:data.age,xp:0,team:"none",cur:["cursorBasic"],lvl:0},function(err,doc){
 		return cb();
 	});
 }

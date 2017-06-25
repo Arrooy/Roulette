@@ -1,5 +1,9 @@
 	var socket = io();
 
+
+
+
+
 	var ErrorAnimation = "shake"
 
 	//sign
@@ -25,6 +29,7 @@
 	var tryedandFailedPass1 = 0;
 	var tryedandFailedPass2 = 0;
 	var tryedandFailedPass3 = 0;
+	var tryedandFailedUsername = 0;
 	var ChatOpened;
 	var adminColor = false;
 
@@ -54,14 +59,21 @@
 		Fase1.style.display = '';
 		Fase2.style.display = 'none';
 		signDiv.style.display = 'none';
+		$("#ContainerMail").removeClass('animated infinite  ' + ErrorAnimation);
+		$("#CAgediv").removeClass('animated infinite  ' + ErrorAnimation);
+
 	}
 
 	NextStep1.onclick =function(){
+		$("#divPass1").removeClass('animated infinite  ' + ErrorAnimation);
+		$("#divPass2").removeClass('animated infinite  ' + ErrorAnimation);
+
 		tryedandFailedEmail = 0;
 		tryedandFailedAge = 0;
 		tryedandFailedPass1 = 0;
 		tryedandFailedPass2 = 0;
 		tryedandFailedPass3 = 0;
+		tryedandFailedUsername = 0;
 		var NoError = 1;
 		var data = CAge.value.split('-');
 		var UserAge = new Date();
@@ -71,10 +83,12 @@
 		var countError = 0;
 		if(CEmail.value.indexOf('@') == -1){
 			NoError = 0;
-			ErrorType = 3;
-			$("#CEmailLabel").css('color','#F05941');
-			$('#alerta').modal('toggle');
+
+			//ErrorType = 3;
+			//$('#alerta').modal('toggle');
+
 			tryedandFailedEmail = 1;
+			$("#CEmailLabel").css('color','#F05941');
 			$("#ContainerMail").addClass('animated infinite ' + ErrorAnimation);
 
 		}else{
@@ -94,10 +108,11 @@
 		if(NoError == 1){
 			if(UserAge > LimitedAge){
 				NoError = 0;
-				ErrorType = 4;
-				$("#LabelCAge").css('color','#F05941');
-				$('#alerta').modal('toggle')
+				//ErrorType = 4;
+				//$('#alerta').modal('toggle')
+
 				tryedandFailedAge =	1;
+				$("#LabelCAge").css('color','#F05941');
 				$("#CAgediv").addClass('animated infinite  ' + ErrorAnimation);
 			}else{
 				$("#LabelCAge").css('color','#2F1B41');
@@ -117,6 +132,7 @@
 		tryedandFailedPass1 = 0;
 		tryedandFailedPass2 = 0;
 		tryedandFailedPass3 = 0;
+		tryedandFailedUsername = 0;
 		var error = 0;
 		if(CPassword1.value == ""){
 			$("#Pass1").css('color','#F05941');
@@ -137,9 +153,13 @@
 		}
 		if(CPassword1.value != CPassword2.value){
 			error = 1;
-			ErrorType = 5;
+			$("#Pass1").css('color','#F05941');
+			$("#Pass2").css('color','#F05941');
+
+			/*ErrorType = 5;
+			$('#alerta').modal('toggle')*/
+
 			tryedandFailedPass3 = 1;
-			$('#alerta').modal('toggle')
 			$('#divPass1').addClass('animated  infinite  ' + ErrorAnimation);
 			$('#divPass2').addClass('animated  infinite  ' + ErrorAnimation);
 		}
@@ -178,8 +198,10 @@
 		}
 	});
 	$("#CPassword1").hover(function() {
-
-
+		if(tryedandFailedPass1 === 1 || tryedandFailedPass3 === 1)  {
+			$("#divPass1").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
+			$("#divPass2").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
+		}
 	});
 	$("#CPassword2").hover(function() {
 		if(tryedandFailedPass1 === 1 || tryedandFailedPass3 === 1)  {
@@ -187,8 +209,11 @@
 			$("#divPass2").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
 		}
 	});
-
-
+	$("#CUsername").hover(function() {
+		if(tryedandFailedUsername === 1)  {
+			$("#ContainerUsername").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
+		}
+	});
 	socket.on('signInResponse',function(data){
 		console.log("Data succes = " + data.success);
 		if(data.success){
@@ -217,7 +242,10 @@
 		}else{
 			ErrorType = 1;
 			$("#CUsernameLabel").css('color','#F05941');
-			$('#alerta').modal('toggle')
+			$('#alerta').modal('toggle');
+			tryedandFailedUsername = 1;
+			$("#ContainerUsername").removeClass('animated infinite  ' + ErrorAnimation);
+
 		}
 	});
 
@@ -226,29 +254,29 @@
 
 	switch (ErrorType) {
 		case 1://Error signUp
-		modal.find('#tituloModal').text('This is weird...')
-		modal.find('#textoModal').text('Your account Username is taken! try again')
+		modal.find('#tituloModal').text('This is weird...');
+		modal.find('#textoModal').text('Your account Username is taken! Try with another one please');
 		Fase1.style.display = '';
 		Fase2.style.display = 'none';
 		signDiv.style.display = 'none';
 			break;
 
 			case 2://Error signUp
-			modal.find('#tituloModal').text('Well...')
-			modal.find('#textoModal').text('Combination wrong. Feel free to try again!')
+			modal.find('#tituloModal').text('Well...');
+			modal.find('#textoModal').text('Combination wrong. Feel free to try again!');
 				break;
-				case 3://Error signUp
+				/*case 3://Error signUp
 				modal.find('#tituloModal').text('Email error!')
 				modal.find('#textoModal').text('What about using a correct E-MAIL')
-					break;
-					case 4://Error signUp
+					break;*/
+					/*case 4://Error signUp
 					modal.find('#tituloModal').text('Too little: ')
 					modal.find('#textoModal').text('This game ROULES doesnt let you come in. You must be 18 to play.')
-						break;
-						case 5://Error signUp
+						break;*/
+						/*case 5://Error signUp
 						modal.find('#tituloModal').text('Passwords arent the same')
 						modal.find('#textoModal').text('Try to insert the SAME password in both fields.')
-							break;
+							break;*/
 		default:
 		modal.find('#tituloModal').text('OH')
 		modal.find('#textoModal').text('Our tech group failed, report us')
