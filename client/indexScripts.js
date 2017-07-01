@@ -18,6 +18,7 @@
 	var CreateAccount = document.getElementById('CA');
 
 	var ReHOme = document.getElementById('Step0');
+	var GoInicio = document.getElementById('GoInicio');
 
 	var ErrorType = 0;
 	var tryedandFailedEmail = 0;
@@ -44,12 +45,21 @@
 
 
 
+	var Input = new input();
+
 	$(function() {
 	  $('[data-toggle="tooltip"]').tooltip()
 	})
 
 
 
+	 GoInicio.onclick = function() {
+		Fase1.style.display = 'none';
+ 	  Fase2.style.display = 'none';
+ 	  signDiv.style.display = '';
+		$("#ContainerMail").removeClass('animated infinite  ' + ErrorAnimation);
+	  $("#CAgediv").removeClass('animated infinite  ' + ErrorAnimation);
+	 }
 
 	ReHOme.onclick = function() {
 	  Fase1.style.display = '';
@@ -57,7 +67,6 @@
 	  signDiv.style.display = 'none';
 	  $("#ContainerMail").removeClass('animated infinite  ' + ErrorAnimation);
 	  $("#CAgediv").removeClass('animated infinite  ' + ErrorAnimation);
-
 	}
 
 	NextStep1.onclick = function() {
@@ -182,7 +191,6 @@
 	  Fase1.style.display = '';
 	  Fase2.style.display = 'none';
 	  signDiv.style.display = 'none';
-
 	}
 
 	$("#CEmail").hover(function() {
@@ -190,7 +198,6 @@
 	    $("#ContainerMail").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
 	  }
 	});
-
 	$("#CAge").hover(function() {
 	  if (tryedandFailedAge === 1) {
 	    $("#CAgediv").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
@@ -213,6 +220,7 @@
 	    $("#ContainerUsername").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
 	  }
 	});
+
 	socket.on('signInResponse', function(data) {
 	  console.log("Data succes = " + data.success);
 	  if (data.success) {
@@ -303,9 +311,6 @@
 	});
 
 
-
-
-
 	socket.on('addToChat', function(data) {
 
 	  if (data.admin === true) {
@@ -351,6 +356,7 @@
 	}
 
 
+
 	var Img = {};
 
 	Img.cursor = new Image();
@@ -370,7 +376,6 @@
 	  Img.cursor.src = '/client/img/' + self.cur + '.png';
 
 	  self.draw = function() {
-
 
 
 	    if (selfId != self.id) {
@@ -460,17 +465,6 @@
 	  }
 
 	}
-
-	/*document.onkeyup = function(event){
-		var letra = event.keyCode;
-
-		//socket.emit('keyPress',{inputId:'key',key: letra,state:false});
-	}
-	document.onkeydown = function(event){
-		var letra = event.keyCode;
-		input.ProcessaKeyEvent(letra,true);
-		//socket.emit('keyPress',{inputId:'key',key: letra,state:false});
-	}*/
 
 	document.onmousedown = function(event) {
 	  socket.emit('keyPress', {
