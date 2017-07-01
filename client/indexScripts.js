@@ -1,9 +1,5 @@
 	var socket = io();
 
-
-
-
-
 	var ErrorAnimation = "shake"
 
 	//sign
@@ -19,9 +15,9 @@
 	var Fase2 = document.getElementById('CrearCuenta2');
 	var NextStep1 = document.getElementById('Step1');
 
-		var CreateAccount = document.getElementById('CA');
+	var CreateAccount = document.getElementById('CA');
 
-			var ReHOme = document.getElementById('Step0');
+	var ReHOme = document.getElementById('Step0');
 
 	var ErrorType = 0;
 	var tryedandFailedEmail = 0;
@@ -48,307 +44,310 @@
 
 
 
-	$(function () {
+	$(function() {
 	  $('[data-toggle="tooltip"]').tooltip()
 	})
 
 
 
 
-	ReHOme.onclick = function(){
-		Fase1.style.display = '';
-		Fase2.style.display = 'none';
-		signDiv.style.display = 'none';
-		$("#ContainerMail").removeClass('animated infinite  ' + ErrorAnimation);
-		$("#CAgediv").removeClass('animated infinite  ' + ErrorAnimation);
+	ReHOme.onclick = function() {
+	  Fase1.style.display = '';
+	  Fase2.style.display = 'none';
+	  signDiv.style.display = 'none';
+	  $("#ContainerMail").removeClass('animated infinite  ' + ErrorAnimation);
+	  $("#CAgediv").removeClass('animated infinite  ' + ErrorAnimation);
 
 	}
 
-	NextStep1.onclick =function(){
-		$("#divPass1").removeClass('animated infinite  ' + ErrorAnimation);
-		$("#divPass2").removeClass('animated infinite  ' + ErrorAnimation);
+	NextStep1.onclick = function() {
+	  $("#divPass1").removeClass('animated infinite  ' + ErrorAnimation);
+	  $("#divPass2").removeClass('animated infinite  ' + ErrorAnimation);
 
-		tryedandFailedEmail = 0;
-		tryedandFailedAge = 0;
-		tryedandFailedPass1 = 0;
-		tryedandFailedPass2 = 0;
-		tryedandFailedPass3 = 0;
-		tryedandFailedUsername = 0;
-		var NoError = 1;
-		var data = CAge.value.split('-');
-		var UserAge = new Date();
-		UserAge.setFullYear(data[0],data[1]-1,data[2]);
-		var LimitedAge = new Date();
-		LimitedAge.setFullYear(1999,11,31);
-		var countError = 0;
-		if(CEmail.value.indexOf('@') == -1){
-			NoError = 0;
+	  tryedandFailedEmail = 0;
+	  tryedandFailedAge = 0;
+	  tryedandFailedPass1 = 0;
+	  tryedandFailedPass2 = 0;
+	  tryedandFailedPass3 = 0;
+	  tryedandFailedUsername = 0;
+	  var NoError = 1;
+	  var data = CAge.value.split('-');
+	  var UserAge = new Date();
+	  UserAge.setFullYear(data[0], data[1] - 1, data[2]);
+	  var LimitedAge = new Date();
+	  LimitedAge.setFullYear(1999, 11, 31);
+	  var countError = 0;
+	  if (CEmail.value.indexOf('@') == -1) {
+	    NoError = 0;
 
-			//ErrorType = 3;
-			//$('#alerta').modal('toggle');
+	    //ErrorType = 3;
+	    //$('#alerta').modal('toggle');
 
-			tryedandFailedEmail = 1;
-			$("#CEmailLabel").css('color','#F05941');
-			$("#ContainerMail").addClass('animated infinite ' + ErrorAnimation);
+	    tryedandFailedEmail = 1;
+	    $("#CEmailLabel").css('color', '#F05941');
+	    $("#ContainerMail").addClass('animated infinite ' + ErrorAnimation);
 
-		}else{
-			$("#CEmailLabel").css('color','#2F1B41');
-		}
-		if(NoError == 1){
-			if (data[0] == "" || data[1] == undefined || data[2] == undefined){
-				NoError = 0;
-				countError = 1;
-				tryedandFailedAge = 1;
-				$("#LabelCAge").css('color','#F05941');
-				$("#CAgediv").addClass('animated infinite  ' + ErrorAnimation);
-			}else{
-				$("#LabelCAge").css('color','#2F1B41');
-			}
-		}
-		if(NoError == 1){
-			if(UserAge > LimitedAge){
-				NoError = 0;
-				//ErrorType = 4;
-				//$('#alerta').modal('toggle')
+	  } else {
+	    $("#CEmailLabel").css('color', '#2F1B41');
+	  }
+	  if (NoError == 1) {
+	    if (data[0] == "" || data[1] == undefined || data[2] == undefined) {
+	      NoError = 0;
+	      countError = 1;
+	      tryedandFailedAge = 1;
+	      $("#LabelCAge").css('color', '#F05941');
+	      $("#CAgediv").addClass('animated infinite  ' + ErrorAnimation);
+	    } else {
+	      $("#LabelCAge").css('color', '#2F1B41');
+	    }
+	  }
+	  if (NoError == 1) {
+	    if (UserAge > LimitedAge) {
+	      NoError = 0;
+	      //ErrorType = 4;
+	      //$('#alerta').modal('toggle')
 
-				tryedandFailedAge =	1;
-				$("#LabelCAge").css('color','#F05941');
-				$("#CAgediv").addClass('animated infinite  ' + ErrorAnimation);
-			}else{
-				$("#LabelCAge").css('color','#2F1B41');
-			}
-		}
-		if(NoError === 1){
+	      tryedandFailedAge = 1;
+	      $("#LabelCAge").css('color', '#F05941');
+	      $("#CAgediv").addClass('animated infinite  ' + ErrorAnimation);
+	    } else {
+	      $("#LabelCAge").css('color', '#2F1B41');
+	    }
+	  }
+	  if (NoError === 1) {
 
-			Fase1.style.display = 'none';
-			Fase2.style.display = '';
-			signDiv.style.display = 'none';
-		}
-
-	}
-	CreateAccount.onclick = function(){
-		tryedandFailedEmail = 0;
-		tryedandFailedAge = 0;
-		tryedandFailedPass1 = 0;
-		tryedandFailedPass2 = 0;
-		tryedandFailedPass3 = 0;
-		tryedandFailedUsername = 0;
-		var error = 0;
-		if(CPassword1.value == ""){
-			$("#Pass1").css('color','#F05941');
-			$('#divPass1').addClass('animated infinite  ' + ErrorAnimation);
-			error = 1;
-			tryedandFailedPass1 = 1;
-		}else{
-			$("#Pass1").css('color','#2F1B41');
-		}
-
-		if(CPassword2.value == ""){
-			$("#Pass2").css('color','#F05941');
-			$('#divPass2').addClass('animated infinite  ' + ErrorAnimation);
-			error = 1;
-			tryedandFailedPass2 = 1;
-		}else{
-			$("#Pass2").css('color','#2F1B41');
-		}
-		if(CPassword1.value != CPassword2.value){
-			error = 1;
-			$("#Pass1").css('color','#F05941');
-			$("#Pass2").css('color','#F05941');
-
-			/*ErrorType = 5;
-			$('#alerta').modal('toggle')*/
-
-			tryedandFailedPass3 = 1;
-			$('#divPass1').addClass('animated  infinite  ' + ErrorAnimation);
-			$('#divPass2').addClass('animated  infinite  ' + ErrorAnimation);
-		}
-		if(error == 0){
-			flag = -1;
-			socket.emit('signUp',{
-				email:CEmail.value,
-				username:CUsername.value,
-				age:CAge.value,
-				color:CColor.value,
-				password:CPassword1.value
-			});
-		}
-
+	    Fase1.style.display = 'none';
+	    Fase2.style.display = '';
+	    signDiv.style.display = 'none';
+	  }
 
 	}
-	signDivSignIn.onclick = function(){
-		socket.emit('signIn',{username:signDivUsername.value,password:signDivPassword.value});
+	CreateAccount.onclick = function() {
+	  tryedandFailedEmail = 0;
+	  tryedandFailedAge = 0;
+	  tryedandFailedPass1 = 0;
+	  tryedandFailedPass2 = 0;
+	  tryedandFailedPass3 = 0;
+	  tryedandFailedUsername = 0;
+	  var error = 0;
+	  if (CPassword1.value == "") {
+	    $("#Pass1").css('color', '#F05941');
+	    $('#divPass1').addClass('animated infinite  ' + ErrorAnimation);
+	    error = 1;
+	    tryedandFailedPass1 = 1;
+	  } else {
+	    $("#Pass1").css('color', '#2F1B41');
+	  }
+
+	  if (CPassword2.value == "") {
+	    $("#Pass2").css('color', '#F05941');
+	    $('#divPass2').addClass('animated infinite  ' + ErrorAnimation);
+	    error = 1;
+	    tryedandFailedPass2 = 1;
+	  } else {
+	    $("#Pass2").css('color', '#2F1B41');
+	  }
+	  if (CPassword1.value != CPassword2.value) {
+	    error = 1;
+	    $("#Pass1").css('color', '#F05941');
+	    $("#Pass2").css('color', '#F05941');
+
+	    /*ErrorType = 5;
+	    $('#alerta').modal('toggle')*/
+
+	    tryedandFailedPass3 = 1;
+	    $('#divPass1').addClass('animated  infinite  ' + ErrorAnimation);
+	    $('#divPass2').addClass('animated  infinite  ' + ErrorAnimation);
+	  }
+	  if (error == 0) {
+	    flag = -1;
+	    socket.emit('signUp', {
+	      email: CEmail.value,
+	      username: CUsername.value,
+	      age: CAge.value,
+	      color: CColor.value,
+	      password: CPassword1.value
+	    });
+	  }
+
+
 	}
-	signDivSignUp.onclick = function(){
-		Fase1.style.display = '';
-		Fase2.style.display = 'none';
-		signDiv.style.display = 'none';
+	signDivSignIn.onclick = function() {
+	  socket.emit('signIn', {
+	    username: signDivUsername.value,
+	    password: signDivPassword.value
+	  });
+	}
+	signDivSignUp.onclick = function() {
+	  Fase1.style.display = '';
+	  Fase2.style.display = 'none';
+	  signDiv.style.display = 'none';
 
 	}
 
 	$("#CEmail").hover(function() {
-		if(tryedandFailedEmail === 1){
-			$("#ContainerMail").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
-		}
+	  if (tryedandFailedEmail === 1) {
+	    $("#ContainerMail").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
+	  }
 	});
 
 	$("#CAge").hover(function() {
-		if(tryedandFailedAge === 1)  {
-			$("#CAgediv").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
-		}
+	  if (tryedandFailedAge === 1) {
+	    $("#CAgediv").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
+	  }
 	});
 	$("#CPassword1").hover(function() {
-		if(tryedandFailedPass1 === 1 || tryedandFailedPass3 === 1)  {
-			$("#divPass1").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
-			$("#divPass2").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
-		}
+	  if (tryedandFailedPass1 === 1 || tryedandFailedPass3 === 1) {
+	    $("#divPass1").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
+	    $("#divPass2").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
+	  }
 	});
 	$("#CPassword2").hover(function() {
-		if(tryedandFailedPass1 === 1 || tryedandFailedPass3 === 1)  {
-			$("#divPass1").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
-			$("#divPass2").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
-		}
+	  if (tryedandFailedPass1 === 1 || tryedandFailedPass3 === 1) {
+	    $("#divPass1").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
+	    $("#divPass2").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
+	  }
 	});
 	$("#CUsername").hover(function() {
-		if(tryedandFailedUsername === 1)  {
-			$("#ContainerUsername").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
-		}
+	  if (tryedandFailedUsername === 1) {
+	    $("#ContainerUsername").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
+	  }
 	});
-	socket.on('signInResponse',function(data){
-		console.log("Data succes = " + data.success);
-		if(data.success){
-			signDiv.style.display = 'none';
-			gameDiv.style.display = 'inline-block';
-			ctx.canvas.width = window.innerWidth;
-			ctx.canvas.height = window.innerHeight;
-			ctxUi.canvas.width = "0px";
-			ctxUi.canvas.height ="0px";
+	socket.on('signInResponse', function(data) {
+	  console.log("Data succes = " + data.success);
+	  if (data.success) {
+	    signDiv.style.display = 'none';
+	    gameDiv.style.display = 'inline-block';
+	    ctx.canvas.width = window.innerWidth;
+	    ctx.canvas.height = window.innerHeight;
+	    ctxUi.canvas.width = "0px";
+	    ctxUi.canvas.height = "0px";
 
-		} else{
-			ErrorType = 2;
-			$('#alerta').modal('toggle')
-		}
+	  } else {
+	    ErrorType = 2;
+	    $('#alerta').modal('toggle')
+	  }
 
-//
-	});
-
-	socket.on('signUpResponse',function(data){
-		if(data.success){
-
-			Fase1.style.display = 'none';
-			Fase2.style.display = 'none';
-			signDiv.style.display = '';
-			$("#CUsernameLabel").css('color','#2F1B41');
-		}else{
-			ErrorType = 1;
-			$("#CUsernameLabel").css('color','#F05941');
-			$('#alerta').modal('toggle');
-			tryedandFailedUsername = 1;
-			$("#ContainerUsername").removeClass('animated infinite  ' + ErrorAnimation);
-
-		}
+	  //
 	});
 
-	$('#alerta').on('show.bs.modal', function (event) {
-  var modal = $(this)
+	socket.on('signUpResponse', function(data) {
+	  if (data.success) {
 
-	switch (ErrorType) {
-		case 1://Error signUp
-		modal.find('#tituloModal').text('This is weird...');
-		modal.find('#textoModal').text('Your account Username is taken! Try with another one please');
-		Fase1.style.display = '';
-		Fase2.style.display = 'none';
-		signDiv.style.display = 'none';
-			break;
+	    Fase1.style.display = 'none';
+	    Fase2.style.display = 'none';
+	    signDiv.style.display = '';
+	    $("#CUsernameLabel").css('color', '#2F1B41');
+	  } else {
+	    ErrorType = 1;
+	    $("#CUsernameLabel").css('color', '#F05941');
+	    $('#alerta').modal('toggle');
+	    tryedandFailedUsername = 1;
+	    $("#ContainerUsername").removeClass('animated infinite  ' + ErrorAnimation);
 
-			case 2://Error signUp
-			modal.find('#tituloModal').text('Well...');
-			modal.find('#textoModal').text('Combination wrong. Feel free to try again!');
-				break;
-				/*case 3://Error signUp
-				modal.find('#tituloModal').text('Email error!')
-				modal.find('#textoModal').text('What about using a correct E-MAIL')
-					break;*/
-					/*case 4://Error signUp
-					modal.find('#tituloModal').text('Too little: ')
-					modal.find('#textoModal').text('This game ROULES doesnt let you come in. You must be 18 to play.')
-						break;*/
-						/*case 5://Error signUp
-						modal.find('#tituloModal').text('Passwords arent the same')
-						modal.find('#textoModal').text('Try to insert the SAME password in both fields.')
-							break;*/
-		default:
-		modal.find('#tituloModal').text('OH')
-		modal.find('#textoModal').text('Our tech group failed, report us')
+	  }
+	});
 
-	}
+	$('#alerta').on('show.bs.modal', function(event) {
+	  var modal = $(this)
 
-})
+	  switch (ErrorType) {
+	    case 1: //Error signUp
+	      modal.find('#tituloModal').text('This is weird...');
+	      modal.find('#textoModal').text('Your account Username is taken! Try with another one please');
+	      Fase1.style.display = '';
+	      Fase2.style.display = 'none';
+	      signDiv.style.display = 'none';
+	      break;
+
+	    case 2: //Error signUp
+	      modal.find('#tituloModal').text('Well...');
+	      modal.find('#textoModal').text('Combination wrong. Feel free to try again!');
+	      break;
+	      /*case 3://Error signUp
+	      modal.find('#tituloModal').text('Email error!')
+	      modal.find('#textoModal').text('What about using a correct E-MAIL')
+	      	break;*/
+	      /*case 4://Error signUp
+	      modal.find('#tituloModal').text('Too little: ')
+	      modal.find('#textoModal').text('This game ROULES doesnt let you come in. You must be 18 to play.')
+	      	break;*/
+	      /*case 5://Error signUp
+	      modal.find('#tituloModal').text('Passwords arent the same')
+	      modal.find('#textoModal').text('Try to insert the SAME password in both fields.')
+	      	break;*/
+	    default:
+	      modal.find('#tituloModal').text('OH')
+	      modal.find('#textoModal').text('Our tech group failed, report us')
+
+	  }
+
+	})
 
 	//chat
 	var chatText = document.getElementById('chat-text');
 	var chatInput = document.getElementById('chat-input');
 	var chatForm = document.getElementById('chat-form');
- 	var EverChatSow;
+	var EverChatSow;
 
 
 	$("#chat-input").focus(function() {
-		if(EverChatSow == 1){
-			chatText.style.display = "inline-block";
-		}
+	  if (EverChatSow == 1) {
+	    chatText.style.display = "inline-block";
+	  }
 
 
 
 	}).blur(function() {
-		chatText.style.display = "none";
+	  chatText.style.display = "none";
 	});
 
 
 
 
 
-	socket.on('addToChat',function(data){
+	socket.on('addToChat', function(data) {
 
-		if(data.admin === true){
-			chatText.innerHTML += '<div id = "Comment" name="admin" style ="color:'+data.color+'">' + data.message + '</div>';
-			adminColor = true;
-		}else{
-			var divisios = [];
-			var numberN = 0;
-			for(var i = data.message.length/40;i>=0;i--){
-				chatText.innerHTML += '<div id = "Comment" style ="color:'+data.color+'">'+data.message.slice(numberN,numberN+40) + '</div>';
-				numberN +=40;
-			}
-		}
+	  if (data.admin === true) {
+	    chatText.innerHTML += '<div id = "Comment" name="admin" style ="color:' + data.color + '">' + data.message + '</div>';
+	    adminColor = true;
+	  } else {
+	    var divisios = [];
+	    var numberN = 0;
+	    for (var i = data.message.length / 40; i >= 0; i--) {
+	      chatText.innerHTML += '<div id = "Comment" style ="color:' + data.color + '">' + data.message.slice(numberN, numberN + 40) + '</div>';
+	      numberN += 40;
+	    }
+	  }
 
-		chatText.scrollTop = chatText.scrollHeight;
+	  chatText.scrollTop = chatText.scrollHeight;
 	});
 
-	chatForm.onsubmit = function(e){
-		EverChatSow = 1;
-		e.preventDefault();
-		if(chatInput.value[0] === '@'){
+	chatForm.onsubmit = function(e) {
+	  EverChatSow = 1;
+	  e.preventDefault();
+	  if (chatInput.value[0] === '@') {
 
-			if(chatInput.value.indexOf(",") !== -1){
-				if(chatInput.value.slice(1,chatInput.value.indexOf(',')) !== Player.list[selfId].name){
+	    if (chatInput.value.indexOf(",") !== -1) {
+	      if (chatInput.value.slice(1, chatInput.value.indexOf(',')) !== Player.list[selfId].name) {
 
-					socket.emit('sendPmToServer',{
-						username:chatInput.value.slice(1,chatInput.value.indexOf(',')),
-						message:chatInput.value.slice(chatInput.value.indexOf(',') + 1),
-					});
+	        socket.emit('sendPmToServer', {
+	          username: chatInput.value.slice(1, chatInput.value.indexOf(',')),
+	          message: chatInput.value.slice(chatInput.value.indexOf(',') + 1),
+	        });
 
-				}else{
-					chatText.innerHTML += '<div style ="color:#000000">Que solo estas...</div>';
-				}
+	      } else {
+	        chatText.innerHTML += '<div style ="color:#000000">Que solo estas...</div>';
+	      }
 
-				}else{
-				chatText.innerHTML += '<div style ="color:#000000">Error, La sintaxis requiere @USERNAME,MESSAGE</div>';
-			}
+	    } else {
+	      chatText.innerHTML += '<div style ="color:#000000">Error, La sintaxis requiere @USERNAME,MESSAGE</div>';
+	    }
 
-		}else{
-			socket.emit('sendMsgToServer',chatInput.value);
-		}
-		chatInput.value = '';
+	  } else {
+	    socket.emit('sendMsgToServer', chatInput.value);
+	  }
+	  chatInput.value = '';
 	}
 
 
@@ -358,131 +357,145 @@
 
 
 
-	var Player = function(initPack){
-		var self = {};
-		self.id = initPack.id;
-		self.xp = initPack.xp;
-		self.name = initPack.name;
-		self.lvl = initPack.lvl;
-		self.team = initPack.team;
-		self.cur = initPack.cur;
-		self.x = initPack.x;
-		self.y = initPack.y;
-		Img.cursor.src = '/client/img/'+self.cur+'.png';
+	var Player = function(initPack) {
+	  var self = {};
+	  self.id = initPack.id;
+	  self.xp = initPack.xp;
+	  self.name = initPack.name;
+	  self.lvl = initPack.lvl;
+	  self.team = initPack.team;
+	  self.cur = initPack.cur;
+	  self.x = initPack.x;
+	  self.y = initPack.y;
+	  Img.cursor.src = '/client/img/' + self.cur + '.png';
 
-		self.draw = function(){
+	  self.draw = function() {
 
 
 
-			if(selfId != self.id){
-				if(self.cur != undefined){
-						ctx.drawImage(Img.cursor,0,0,Img.cursor.width,Img.cursor.height,self.x-Img.cursor.width/2,self.y-Img.cursor.height/2,Img.cursor.width,Img.cursor.height);
-				}
-				return;
-			}
+	    if (selfId != self.id) {
+	      if (self.cur != undefined) {
+	        ctx.drawImage(Img.cursor, 0, 0, Img.cursor.width, Img.cursor.height, self.x - Img.cursor.width / 2, self.y - Img.cursor.height / 2, Img.cursor.width, Img.cursor.height);
+	      }
+	      return;
+	    }
 
-		}
+	  }
 
-		Player.list[self.id] = self;
+	  Player.list[self.id] = self;
 
-		return self;
+	  return self;
 	}
-  Player.list = {};
+	Player.list = {};
 
 	var selfId = null;
 
-	socket.on('init',function(data){
-		if(data.selfId)
-			selfId = data.selfId;
+	socket.on('init', function(data) {
+	  if (data.selfId)
+	    selfId = data.selfId;
 
-		for(var i = 0 ; i < data.player.length; i++){
-			new Player(data.player[i]);
-		}
+	  for (var i = 0; i < data.player.length; i++) {
+	    new Player(data.player[i]);
+	  }
 	});
 
-	socket.on('update',function(data){
+	socket.on('update', function(data) {
 
-		for(var i = 0 ; i < data.player.length; i++){
-			var pack = data.player[i];
-			var p = Player.list[pack.id];
-			if(p){
+	  for (var i = 0; i < data.player.length; i++) {
+	    var pack = data.player[i];
+	    var p = Player.list[pack.id];
+	    if (p) {
 
-				if(pack.xp !== undefined)
-					p.xp = pack.xp;
-				if(pack.lvl !== undefined)
-					p.lvl = pack.lvl;
+	      if (pack.xp !== undefined)
+	        p.xp = pack.xp;
+	      if (pack.lvl !== undefined)
+	        p.lvl = pack.lvl;
 
-				if(pack.team !== undefined)
-					p.team = pack.team;
-				if(pack.cur !== undefined)
-					p.cur = pack.cur;
-					if(pack.x !== undefined)
-						p.x = pack.x;
-					if(pack.y !== undefined)
-						p.y = pack.y;
-			}
-		}
+	      if (pack.team !== undefined)
+	        p.team = pack.team;
+	      if (pack.cur !== undefined)
+	        p.cur = pack.cur;
+	      if (pack.x !== undefined)
+	        p.x = pack.x;
+	      if (pack.y !== undefined)
+	        p.y = pack.y;
+	    }
+	  }
 	});
 
-	socket.on('remove',function(data){
-		for(var i = 0 ; i < data.player.length; i++){
-			delete Player.list[data.player[i]];
-		}
+	socket.on('remove', function(data) {
+	  for (var i = 0; i < data.player.length; i++) {
+	    delete Player.list[data.player[i]];
+	  }
 	});
 
-	setInterval(function(){
-		if(adminColor === true){
-      var a  = document.getElementsByName('admin');
-      var i = 0;
-      for(i = 0;i<a.length;i++){
-        a[i].style.color = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
-      }
-		}
+	setInterval(function() {
+	  if (adminColor === true) {
+	    var a = document.getElementsByName('admin');
+	    var i = 0;
+	    for (i = 0; i < a.length; i++) {
+	      a[i].style.color = '#' + (0x1000000 + (Math.random()) * 0xffffff).toString(16).substr(1, 6);
+	    }
+	  }
 
-		if(!selfId)
-			return;
+	  if (!selfId)
+	    return;
 
-		ctx.clearRect(0,0,document.getElementById('ctx').width,document.getElementById('ctx').height);
+	  ctx.clearRect(0, 0, document.getElementById('ctx').width, document.getElementById('ctx').height);
 
-		for(var i in Player.list)
-			Player.list[i].draw();
+	  for (var i in Player.list)
+	    Player.list[i].draw();
 
-	},40);
+	}, 40);
 
-		document.onkeypress = function(event){
-			var letra = event.keyCode;
-			//socket.emit('keyPress',{inputId:'key',key: letra,state:true});
-			if($('#signDiv').css('display') == 'block'){
-				if(letra === 13){
-					$('#signDiv-signIn').trigger('click');
-				}
-			}else{
-				//Inside game
-			}
+	document.onkeypress = function(event) {
+	  var letra = event.keyCode;
+	  //socket.emit('keyPress',{inputId:'key',key: letra,state:true});
+	  if ($('#signDiv').css('display') == 'block') {
+	    if (letra === 13) {
+	      $('#signDiv-signIn').trigger('click');
+	    }
+	  } else {
+	    //Inside game
+	  }
 
-		}
-
-		/*document.onkeyup = function(event){
-			var letra = event.keyCode;
-
-			//socket.emit('keyPress',{inputId:'key',key: letra,state:false});
-		}
-		document.onkeydown = function(event){
-			var letra = event.keyCode;
-			input.ProcessaKeyEvent(letra,true);
-			//socket.emit('keyPress',{inputId:'key',key: letra,state:false});
-		}*/
-
-	document.onmousedown = function(event){
-		socket.emit('keyPress',{inputId:'press',x:event.clientX,y:event.clientY,state:true});
-	}
-	document.onmouseup = function(event){
-		socket.emit('keyPress',{inputId:'press',x:event.clientX,y:event.clientY,state:false});
-	}
-	document.onmousemove = function(event){
-		socket.emit('keyPress',{inputId:'mouseMoved',x:event.clientX,y:event.clientY});
 	}
 
-	document.oncontextmenu = function(event){
-		event.preventDefault();
+	/*document.onkeyup = function(event){
+		var letra = event.keyCode;
+
+		//socket.emit('keyPress',{inputId:'key',key: letra,state:false});
+	}
+	document.onkeydown = function(event){
+		var letra = event.keyCode;
+		input.ProcessaKeyEvent(letra,true);
+		//socket.emit('keyPress',{inputId:'key',key: letra,state:false});
+	}*/
+
+	document.onmousedown = function(event) {
+	  socket.emit('keyPress', {
+	    inputId: 'press',
+	    x: event.clientX,
+	    y: event.clientY,
+	    state: true
+	  });
+	}
+	document.onmouseup = function(event) {
+	  socket.emit('keyPress', {
+	    inputId: 'press',
+	    x: event.clientX,
+	    y: event.clientY,
+	    state: false
+	  });
+	}
+	document.onmousemove = function(event) {
+	  socket.emit('keyPress', {
+	    inputId: 'mouseMoved',
+	    x: event.clientX,
+	    y: event.clientY
+	  });
+	}
+
+	document.oncontextmenu = function(event) {
+	  event.preventDefault();
 	}

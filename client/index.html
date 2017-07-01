@@ -1,151 +1,153 @@
 <!DOCTYPE HTML>
 <html>
-	<head>
-		<meta charset="utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link rel="stylesheet" href="./client/bootstrap/css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="./client/Style.css">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous" ></script>
-		<script src="./client/bootstrap/js/bootstrap.js"></script>
-		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
- 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
-		<!--<link rel="stylesheet" href="./client/animate.css/animate.min.css">-->
+	<link rel="stylesheet" href="./client/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="./client/Style.css">
+
+	<script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+	<script src="./client/bootstrap/js/bootstrap.js"></script>
+	<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+	<!--<link rel="stylesheet" href="./client/animate.css/animate.min.css">-->
 
 
 
-		<title>Title</title>
+	<title>Title</title>
 
-	</head>
+</head>
 
-	<body>
+<body>
 
-		<div class="container-fluid animated bounceInUp"id="signDiv">
-			<h1 class="text-center LogInTitle">Roulette</h1>
-			<div class="row LogIn">
-				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
-					<label style="color:#2F1B41"for="signDiv-username">Email address</label>
-						<input type="email" class="form-control" id="signDiv-username" placeholder="Email or Username">
+	<div class="container-fluid animated bounceInUp" id="signDiv">
+		<h1 class="text-center LogInTitle">Roulette</h1>
+		<div class="row LogIn">
+			<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+				<label style="color:#2F1B41" for="signDiv-username">Email address</label>
+				<input type="email" class="form-control" id="signDiv-username" placeholder="Email or Username">
 
+			</div>
+			<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+				<label style="color:#2F1B41" for="signDiv-password">Password</label>
+				<input type="password" class="form-control" id="signDiv-password" placeholder="Password">
+			</div>
+			<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+				<a style="color:#2F1B41" href="https://www.google.es/search?q=brain+not+found&newwindow=1&source=lnms&sa=X&ved=0ahUKEwiStMTDor7UAhVSI1AKHdZiCnoQ_AUIBSgA&biw=1242&bih=589&dpr=1.1">Forgot your username or password?</a>
+			</div>
+			<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+				<button type="button" id="signDiv-signIn" class="btn btn-warning">Log in</button>
+				<button type="button" style="position:relative; left:25px;" id="signDiv-signUp" class="btn btn-info">Sign up</button>
+
+			</div>
+
+
+		</div>
+	</div>
+
+	<div class="container-fluid animated bounceInUp " style="display:none;" id="CrearCuenta1">
+		<h1 class="text-center LogInTitle">Roulette</h1>
+
+		<div class="row LogIn">
+			<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4" id="ContainerMail">
+				<label id="CEmailLabel" style="color:#2F1B41" for="CEmail">Email address</label>
+				<input type="email" class="form-control" id="CEmail" placeholder="Email" data-toggle="tooltip" data-placement="top" title="To verificate the account">
+			</div>
+			<div id="ContainerUsername" class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+				<label id="CUsernameLabel" style="color:#2F1B41" for="CUsername">Username</label>
+				<input type="text" class="form-control" id="CUsername" placeholder="Username" data-toggle="tooltip" data-placement="top" title="Your nickname in the game">
+			</div>
+			<div id="CAgediv" class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+				<label id="LabelCAge" style="color:#2F1B41" for="CAge">Date of your birth</label>
+				<input type="date" class="form-control" max="1999-12-31" id="CAge" data-toggle="tooltip" data-placement="top" title="You must be +18 to play!">
+			</div>
+
+			<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+				<button type="button" id="Step1" class="btn btn-warning">Next step</button>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="container-fluid animated bounceInUp" style="display:none;" id="CrearCuenta2">
+		<h1 class="text-center LogInTitle">Roulette</h1>
+		<div class="row LogIn">
+			<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+				<label style="color:#2F1B41" for="CColor">Favourite color</label>
+				<input type="color" class="form-control" id="CColor" data-toggle="tooltip" data-placement="top" title="Almost everything will be this color to identificate yourself">
+			</div>
+			<div id="divPass1" class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+				<label id="Pass1" style="color:#2F1B41" for="CPassword1">New password</label>
+				<input type="password" class="form-control" id="CPassword1" placeholder="Password" data-toggle="tooltip" data-placement="top" title="We suggest usign: Letters & Numbers & symbols to guarantee a secure account ">
+			</div>
+			<div id="divPass2" class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+				<label id="Pass2" style="color:#2F1B41" for="CPassword2">Password confirmation</label>
+				<input type="password" class="form-control" id="CPassword2" placeholder="Same Password again" data-toggle="tooltip" data-placement="top" title="Just repeat the password to verificate you didnt mistyped something">
+			</div>
+
+
+			<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+				<button type="button" id="Step0" class="btn btn-warning">Previous step</button>
+				<button type="button" id="CA" class="btn btn-warning">Create Account</button>
+			</div>
+
+			<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
+				<label style="color:#2F1B41">By pressing <i>Create account</i> I accept:<br /> <a style="font-weight:normal;color:#2F1B41">The terms and conditions of the site</a><br /><a style="font-weight:normal;color:#2F1B41">The rules of the game</a></label>
+			</div>
+
+		</div>
+	</div>
+
+
+
+	<div class="modal fade bs-example-modal-sm" id="alerta" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+
+				<div class="text-center">
+					<label id="tituloModal" class="ModalTitle">Esto es incomodo...</label>
+					<label id="textoModal" class="">Parece que no se pueden crear accounts</label>
 				</div>
-				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
-					<label style="color:#2F1B41"for="signDiv-password">Password</label>
-					<input type="password" class="form-control" id="signDiv-password" placeholder="Password">
-				</div>
-				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
-					<a style="color:#2F1B41"href="https://www.google.es/search?q=brain+not+found&newwindow=1&source=lnms&sa=X&ved=0ahUKEwiStMTDor7UAhVSI1AKHdZiCnoQ_AUIBSgA&biw=1242&bih=589&dpr=1.1">Forgot your username or password?</a>
-				</div>
-				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
-					<button type="button" id="signDiv-signIn"class="btn btn-warning">Log in</button>
-						<button type="button" style = "position:relative; left:25px;" id="signDiv-signUp"class="btn btn-info">Sign up</button>
-
-					</div>
-
 
 			</div>
 		</div>
+	</div>
 
-		<div class="container-fluid animated bounceInUp "style="display:none;" id="CrearCuenta1">
-			<h1 class="text-center LogInTitle">Roulette</h1>
+	<div id="gameDiv" style="display:none;">
 
-			<div class="row LogIn">
-				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4" id="ContainerMail">
-					<label   id = "CEmailLabel" style="color:#2F1B41"for="CEmail">Email address</label>
-						<input  type="email" class="form-control" id="CEmail" placeholder="Email"data-toggle="tooltip"data-placement="top" title="To verificate the account" >
-				</div>
-				<div id = "ContainerUsername"class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
-					<label id = "CUsernameLabel" style="color:#2F1B41"for="CUsername">Username</label>
-						<input type="text" class="form-control" id="CUsername" placeholder="Username"data-toggle="tooltip"data-placement="top" title="Your nickname in the game" >
-				</div>
-				<div id = "CAgediv"class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
-					<label id = "LabelCAge"style="color:#2F1B41"for="CAge">Date of your birth</label>
-						<input type="date" class="form-control" max="1999-12-31"id="CAge"data-toggle="tooltip"data-placement="top" title="You must be +18 to play!" >
-				</div>
+		<canvas id="ThreeCanvas" style="position:absolute;top:0px;left:0px;"></canvas>
 
-				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
-					<button type="button" id="Step1"class="btn btn-warning">Next step</button>
-				</div>
+		<canvas id="ctx" style="position:absolute;top:0px;left:0px;"></canvas>
 
-				</div>
-		</div>
-
-		<div class="container-fluid animated bounceInUp" style ="display:none;" id="CrearCuenta2">
-			<h1 class="text-center LogInTitle">Roulette</h1>
-			<div class="row LogIn">
-				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
-					<label style="color:#2F1B41"for="CColor" >Favourite color</label>
-						<input type="color" class="form-control" id="CColor" data-toggle="tooltip"data-placement="top" title="Almost everything will be this color to identificate yourself">
-				</div>
-				<div  id = "divPass1"class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
-					<label id ="Pass1" style="color:#2F1B41"for="CPassword1">New password</label>
-					<input type="password" class="form-control" id="CPassword1" placeholder="Password" data-toggle="tooltip"data-placement="top" title="We suggest usign: Letters & Numbers & symbols to guarantee a secure account ">
-				</div>
-				<div id = "divPass2" class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
-					<label id ="Pass2"style="color:#2F1B41"for="CPassword2">Password confirmation</label>
-					<input type="password" class="form-control" id="CPassword2" placeholder="Same Password again"data-toggle="tooltip"data-placement="top" title="Just repeat the password to verificate you didnt mistyped something">
-				</div>
+		<canvas id="ctx-ui" width="500" height="500" style="position:absolute;top:1px;left:1px;"></canvas>
 
 
-				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
-					<button type="button" id="Step0"class="btn btn-warning">Previous step</button>
-					<button type="button" id="CA"class="btn btn-warning">Create Account</button>
-				</div>
 
-				<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
-					<label style="color:#2F1B41">By pressing <i>Create account</i> I accept:<br /> <a style="font-weight:normal;color:#2F1B41">The terms and conditions of the site</a><br /><a style="font-weight:normal;color:#2F1B41">The rules of the game</a></label>
+		<div style="position:absolute;bottom:0;right:0;">
+			<div style='overflow:hidden;background: rgba(0,0,0,0.2);'>
+				<div id="chat-text" style="width:350px; max-height: 150px;overflow-y:scroll">
 				</div>
-
 			</div>
-		</div>
 
 
 
-		<div class="modal fade bs-example-modal-sm" id="alerta" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-		  <div class="modal-dialog modal-sm" role="document">
-		    <div class="modal-content">
-
-						<div class="text-center">
-							<label id = "tituloModal" class="ModalTitle">Esto es incomodo...</label>
-							<label id = "textoModal" class="">Parece que no se pueden crear accounts</label>
-						</div>
-
-		    </div>
-		  </div>
-		</div>
-
-		<div id="gameDiv" style="display:none;">
-
-			<canvas id = "ThreeCanvas" style = "position:absolute;top:0px;left:0px;"></canvas>
-
-			<canvas id="ctx" style = "position:absolute;top:0px;left:0px;" ></canvas>
-
-			<canvas id="ctx-ui" width="500" height="500" style="position:absolute;top:1px;left:1px;"></canvas>
-
-
-
-			<div style="position:absolute;bottom:0;right:0;">
-				<div style='overflow:hidden;background: rgba(0,0,0,0.2);'>
-					<div id="chat-text" style="width:350px; max-height: 150px;overflow-y:scroll">
-					</div>
-				</div>
-
-
-
-				<form id="chat-form"style="margin-bottom:0px" autocomplete="off">
-				  <div class="input-group" style="width:350px ">
-				      <input id="chat-input" type="text" style =""class = "form-control"style="width:350px"placeholder="This is a chat!"></input>
-				      <span class="input-group-btn">
+			<form id="chat-form" style="margin-bottom:0px" autocomplete="off">
+				<div class="input-group" style="width:350px ">
+					<input id="chat-input" type="text" style="" class="form-control" style="width:350px" placeholder="This is a chat!"></input>
+					<span class="input-group-btn">
 				        <button id="inputButton"class="btn btn-default" type="button"> <span id="iconoChat" class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span></button>
-				      </span>
-				  </div>
-				</form>
+					</span>
+				</div>
+			</form>
 
-			</div>
 		</div>
-		<script src="./client/input.js"></script>
-		<script src="./client/indexScripts.js"></script>
+	</div>
+	<script src="./client/input.js"></script>
+	<script src="./client/indexScripts.js"></script>
 
-	</body>
+</body>
+
 </html>

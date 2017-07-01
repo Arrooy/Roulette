@@ -1,4 +1,4 @@
-input = function(){
+input = function() {
   self = this;
   self.left = false;
   self.right = false;
@@ -13,7 +13,7 @@ input = function(){
   self.LastDir = "";
 
 
-  function ProcessaKeyEvent(key,state){
+  function ProcessaKeyEvent(key, state) {
     switch (key) {
       case 32:
         self.space = state;
@@ -52,10 +52,10 @@ input = function(){
     }
   }
 
-  document.addEventListener('keydown',function(e){
-    ProcessaKeyEvent(e.keyCode,true);
+  document.addEventListener('keydown', function(e) {
+    ProcessaKeyEvent(e.keyCode, true);
   });
-  document.addEventListener('keyup',function(e){
-    ProcessaKeyEvent(e.keyCode,false);
+  document.addEventListener('keyup', function(e) {
+    ProcessaKeyEvent(e.keyCode, false);
   });
 }
