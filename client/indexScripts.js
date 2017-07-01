@@ -462,11 +462,16 @@
 
 		}
 
-		document.onkeyup = function(event){
+		/*document.onkeyup = function(event){
 			var letra = event.keyCode;
 
 			//socket.emit('keyPress',{inputId:'key',key: letra,state:false});
 		}
+		document.onkeydown = function(event){
+			var letra = event.keyCode;
+			input.ProcessaKeyEvent(letra,true);
+			//socket.emit('keyPress',{inputId:'key',key: letra,state:false});
+		}*/
 
 	document.onmousedown = function(event){
 		socket.emit('keyPress',{inputId:'press',x:event.clientX,y:event.clientY,state:true});
