@@ -22,3 +22,35 @@ body {
 }
 
 </style>
+
+
+
+Bases en las 4 esquinas, son fortalezas. guardan las unidades de cada jugador.
+Los jugadores son mouses. Cada jugador puede atacar a las unidades enemigas siempre que estaas esten fuera de la base.
+Para atacar a las unidades enemigas, hay que pulsar encima de ellas.
+El objetivo del juego: conseguir oro para comprar + unidades y finalmente destruir las bases enemigas.
+Para conseguir oro, hay que contractar mineros.
+        mineros: unidades que salen de la base hacia la unidad de oro mas cerca. recolectan oro i lo devuelven a base.
+        Nota: Todas las unidades son bots, el usuario simplemente compra unidades. decide a quin enviar a fuera?
+        Se puede elegir en lugar de atacar a los mineros enemigos, clickar la basa para generar oro.
+        Clicar un soldado enemigo significa enviar las unidades contra ellos para luchar
+        Se pueden comprar guardianes en la base, para defenderse de ataques.
+        Tambien pueden incluirse defensas en la base de todo tipo: trincheras,torretas...
+        Es possible comprar escudos para las trobas(escudos aerios) para que no se puedan matar con clicks.o con mas de la cuenta(matar dificil).
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+GRAB THE MOUSE:
+  los jugadores han de atrapar al raton del otro jugador. Quanto mas tiempo lo tienen atrapado, mejor.
+  Para escapar hay que hacer una serie de movimientos.

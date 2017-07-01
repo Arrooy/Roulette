@@ -378,12 +378,12 @@
 	  self.draw = function() {
 
 
-	    if (selfId != self.id) {
+	    //if (selfId != self.id) {
 	      if (self.cur != undefined) {
-	        ctx.drawImage(Img.cursor, 0, 0, Img.cursor.width, Img.cursor.height, self.x - Img.cursor.width / 2, self.y - Img.cursor.height / 2, Img.cursor.width, Img.cursor.height);
+	        ctx.drawImage(Img.cursor, 0, 0, Img.cursor.width/3, Img.cursor.height/3, self.x - Img.cursor.width / 2, self.y - Img.cursor.height / 2, Img.cursor.width, Img.cursor.height);
 	      }
 	      return;
-	    }
+	    //}
 
 	  }
 
