@@ -361,8 +361,30 @@
 
 	Img.cursor = new Image();
 
+	Img.minero = new Image();
+	Img.mine = new Image();
+	Img.explode = new Image();
+	Img.minerIco = new Image();
+
+	Img.grass = new Image();
+	var knight = [];
+	for(var x = 1;x <= 29;x++){
+		knight[x] = new Image();
+		knight[x].src = 'client/img/bronze_knight/' + x + '.png';
+	}
+	//all + 1
+	//0-3 attack
+	//4-9 dead
+	//10 - 13 hurt
+	//14 - 18 idle
+	// 19 - 23 run
+	//24 - 28 walk
 
 
+	var angle = 0;
+	var i = 21;
+	var j = 0;
+	var prevTime = 0;
 	var Player = function(initPack) {
 	  var self = {};
 	  self.id = initPack.id;
@@ -374,17 +396,42 @@
 	  self.x = initPack.x;
 	  self.y = initPack.y;
 	  Img.cursor.src = '/client/img/' + self.cur + '.png';
+		Img.minero.src = '/client/img/Miner.png';
+		Img.mine.src = '/client/img/mine.png';
+		Img.explode.src = '/client/img/explosion.png';
+		Img.minerIco.src = '/client/img/minerIco.png';
+		Img.grass.src = '/client/img/grass.png';
+
 
 	  self.draw = function() {
 
-
+			var AnimationSpeed = 150;
 	    //if (selfId != self.id) {
 	      if (self.cur != undefined) {
-	        ctx.drawImage(Img.cursor, 0, 0, Img.cursor.width/3, Img.cursor.height/3, self.x - Img.cursor.width / 2, self.y - Img.cursor.height / 2, Img.cursor.width, Img.cursor.height);
+
+						//rotarImagen("ctx",Img.minero,0,self.x,self.y,"CENTER","SpriteVertical",0,i*72,72,72);
+						//rotarImagen("ctx",Img.mine,0,self.x,self.y,"CENTER","SpriteVertical",0,i*96,96,96);
+						//rotarImagen("ctx",Img.explode,0,self.x,self.y,"CENTER","SpriteVertical",i*64,j * 64,64,64);
+						//rotarImagen("ctx",Img.minerIco,0,self.x,self.y,"CENTER");
+						//rotarImagen("ctx",Img.grass,0,self.x,self.y,"CENTER");
+						//rotarImagen("ctx",knight[i],0,j*20,self.y,"CENTER");
+
+						curTime = +new Date();
+						if(curTime - prevTime >= AnimationSpeed){
+							i++;
+							prevTime = curTime;
+						}
+						if(i == 26){
+							i = 21;
+
+						}
+						j++;
+						if(j == 100){
+							j=0;
+						}
 	      }
 	      return;
-	    //}
-
+	   //}
 	  }
 
 	  Player.list[self.id] = self;
@@ -415,7 +462,6 @@
 	        p.xp = pack.xp;
 	      if (pack.lvl !== undefined)
 	        p.lvl = pack.lvl;
-
 	      if (pack.team !== undefined)
 	        p.team = pack.team;
 	      if (pack.cur !== undefined)
@@ -493,3 +539,72 @@
 	document.oncontextmenu = function(event) {
 	  event.preventDefault();
 	}
+
+	rotarImagen = function(NombreCanvas,Img,angle,x,y,Locations,Type,initx,inity,width,height){
+		angle = angle * Math.PI / 180;
+		if(Type === "SpriteVertical"){
+			ctxx = document.getElementById(NombreCanvas).getContext("2d");
+			ctxx.save();
+			ctxx.translate(x, y);
+			ctxx.rotate(angle);
+			ctxx.drawImage(Img,initx,inity,width,height,width / -2,height / -2,width,height);
+			ctxx.restore();
+		}else{
+			if(Locations === "center" ||Locations === "Center"||Locations === "CENTER"){
+				ctxx = document.getElementById(NombreCanvas).getContext("2d");
+				ctxx.save();
+				ctxx.translate(x, y);
+				ctxx.rotate(angle);
+				if(width == undefined ||height == undefined){
+					ctxx.drawImage(Img,Img.width / -2,Img.height / -2, Img.width, Img.height);
+				}else{
+					ctxx.drawImage(Img,width / -2,height / -2, width, height);
+				}
+				ctxx.restore();
+			}else if(Locations === "leftUp"||Locations === "left-up"||Locations === "leftup"||Locations === "LeftUp"||Locations === "LEFTUP"){
+				ctxx = document.getElementById(NombreCanvas).getContext("2d");
+				ctxx.save();
+				ctxx.translate(x - Img.width / 2 , y - Img.height / 2);
+				ctxx.rotate(angle);
+				ctxx.drawImage(Img,Img.width / 2, Img.height / 2, Img.width, Img.height);
+				ctxx.restore();
+			}
+		}
+	}
+
+OrientadoA = function(Px,Py,Ox,Oy,Quadrante){
+
+	var AB =  Vector.Create(Px,Py,Ox,Oy);
+var Neutro;
+	if(Quadrante === 0){
+	  Neutro = Vector.Create(0,0,1,0);
+	}else if(Quadrante ===1 ){
+		Neutro = Vector.Create(1,0,0,0);
+	}else if(Quadrante ===2 ){
+		Neutro = Vector.Create(0,0,1,0);
+	}else if(Quadrante ===3 ){
+		Neutro = Vector.Create(1,0,0,0);
+	}
+
+	var jeje = Vector.Angle(AB,Neutro);
+	return jeje / Math.PI*180;
+}
+
+Distancia = function(Px,Py,Ox,Oy){
+	return (Math.sqrt(Math.pow((Px-Ox),2)+Math.pow((Py-Oy),2)));
+}
+
+var Vector = {
+	"Create": function(Px,Py,Ox,Oy){
+		return [Math.abs(-Px+Ox),Math.abs(-Py+Oy)];
+	},
+	"Angle": function(vec1,vec2){
+		return Math.acos( (Vector.ProducteEscalar(vec1,vec2)) / ( Vector.Modulo(vec1) * Vector.Modulo(vec2) ) );
+	},
+	"Modulo": function(array){
+		return Math.sqrt(Math.pow(array[0],2)+Math.pow(array[1],2));
+	},
+	"ProducteEscalar":function(vec1,vec2){
+		return (vec1[0]*vec2[0] + vec1[1]*vec2[1]);
+	}
+}
