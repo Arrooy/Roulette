@@ -379,7 +379,11 @@
 	//14 - 18 idle
 	// 19 - 23 run
 	//24 - 28 walk
-
+	Img.minero.src = '/client/img/Miner.png';
+	Img.mine.src = '/client/img/mine.png';
+	Img.explode.src = '/client/img/explosion.png';
+	Img.minerIco.src = '/client/img/minerIco.png';
+	Img.grass.src = '/client/img/grass.png';
 
 	var angle = 0;
 	var i = 21;
@@ -396,17 +400,13 @@
 	  self.x = initPack.x;
 	  self.y = initPack.y;
 	  Img.cursor.src = '/client/img/' + self.cur + '.png';
-		Img.minero.src = '/client/img/Miner.png';
-		Img.mine.src = '/client/img/mine.png';
-		Img.explode.src = '/client/img/explosion.png';
-		Img.minerIco.src = '/client/img/minerIco.png';
-		Img.grass.src = '/client/img/grass.png';
+
 
 
 	  self.draw = function() {
 
 			var AnimationSpeed = 150;
-	    //if (selfId != self.id) {
+	    if (selfId != self.id) {
 	      if (self.cur != undefined) {
 
 						//rotarImagen("ctx",Img.minero,0,self.x,self.y,"CENTER","SpriteVertical",0,i*72,72,72);
@@ -431,7 +431,7 @@
 						}
 	      }
 	      return;
-	   //}
+	   }
 	  }
 
 	  Player.list[self.id] = self;
