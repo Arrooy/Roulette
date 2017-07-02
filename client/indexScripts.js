@@ -222,7 +222,7 @@
 	});
 
 	socket.on('signInResponse', function(data) {
-	  console.log("Data succes = " + data.success);
+
 	  if (data.success) {
 	    signDiv.style.display = 'none';
 	    gameDiv.style.display = 'inline-block';
@@ -379,14 +379,10 @@
 	//14 - 18 idle
 	// 19 - 23 run
 	//24 - 28 walk
-	Img.minero.src = '/client/img/Miner.png';
-	Img.mine.src = '/client/img/mine.png';
-	Img.explode.src = '/client/img/explosion.png';
-	Img.minerIco.src = '/client/img/minerIco.png';
-	Img.grass.src = '/client/img/grass.png';
+
 
 	var angle = 0;
-	var i = 21;
+	var i = 0;
 	var j = 0;
 	var prevTime = 0;
 	var Player = function(initPack) {
@@ -400,18 +396,22 @@
 	  self.x = initPack.x;
 	  self.y = initPack.y;
 	  Img.cursor.src = '/client/img/' + self.cur + '.png';
-
+		Img.minero.src = '/client/img/Miner.png';
+		Img.mine.src = '/client/img/mine.png';
+		Img.explode.src = '/client/img/explosion.png';
+		Img.minerIco.src = '/client/img/minerIco.png';
+		Img.grass.src = '/client/img/grass.png';
 
 
 	  self.draw = function() {
 
-			var AnimationSpeed = 150;
+			var AnimationSpeed = 100;
 	    if (selfId != self.id) {
 	      if (self.cur != undefined) {
 
 						//rotarImagen("ctx",Img.minero,0,self.x,self.y,"CENTER","SpriteVertical",0,i*72,72,72);
 						//rotarImagen("ctx",Img.mine,0,self.x,self.y,"CENTER","SpriteVertical",0,i*96,96,96);
-						//rotarImagen("ctx",Img.explode,0,self.x,self.y,"CENTER","SpriteVertical",i*64,j * 64,64,64);
+						rotarImagen("ctx",Img.explode,0,self.x,self.y,"CENTER","SpriteVertical",i*64,j * 64,64,64);
 						//rotarImagen("ctx",Img.minerIco,0,self.x,self.y,"CENTER");
 						//rotarImagen("ctx",Img.grass,0,self.x,self.y,"CENTER");
 						//rotarImagen("ctx",knight[i],0,j*20,self.y,"CENTER");
@@ -421,12 +421,12 @@
 							i++;
 							prevTime = curTime;
 						}
-						if(i == 26){
-							i = 21;
-
+						if(i == 8){
+							i = 0;
+							j++;
 						}
-						j++;
-						if(j == 100){
+
+						if(j == 3){
 							j=0;
 						}
 	      }
