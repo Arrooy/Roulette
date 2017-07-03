@@ -111,7 +111,7 @@
 	    }
 	  }
 	  if (NoError == 1) {
-	    if (UserAge > LimitedAge) {
+	    if (UserAge > LimitedAge || UserAge > 100) {
 	      NoError = 0;
 	      //ErrorType = 4;
 	      //$('#alerta').modal('toggle')
@@ -411,7 +411,7 @@
 
 						//rotarImagen("ctx",Img.minero,0,self.x,self.y,"CENTER","SpriteVertical",0,i*72,72,72);
 						//rotarImagen("ctx",Img.mine,0,self.x,self.y,"CENTER","SpriteVertical",0,i*96,96,96);
-						rotarImagen("ctx",Img.explode,0,self.x,self.y,"CENTER","SpriteVertical",i*64,j * 64,64,64);
+					//rotarImagen("ctx",Img.explode,0,self.x,self.y,"CENTER","SpriteVertical",i*64,j * 64,64,64);
 						//rotarImagen("ctx",Img.minerIco,0,self.x,self.y,"CENTER");
 						//rotarImagen("ctx",Img.grass,0,self.x,self.y,"CENTER");
 						//rotarImagen("ctx",knight[i],0,j*20,self.y,"CENTER");
@@ -480,7 +480,55 @@
 	  }
 	});
 
+
+
+
+
+	var FrameMina = 0;
+	var Minax=[];
+	var Minay=[];
+
+	var millis = 0;
+	var lastMillis = 0;
+
+	
+	Distancia = function(Px,Py,Ox,Oy){
+		return (Math.sqrt(Math.pow((Px-Ox),2)+Math.pow((Py-Oy),2)));
+	}
+
+buildMines = function(Index,SegundoIndex,NumeroMinas,widthMina,heightMina){
+
+	for (var s = Index;s<NumeroMinas;s++){
+		var valorx = Math.random()*window.innerWidth;
+		var valory = Math.random()*window.innerHeight;
+
+		if(valorx < widthMina)
+			valorx = widthMina;
+		if(valorx > window.innerWidth - widthMina)
+			valorx = window.innerWidth - widthMina;
+		if(valory < heightMina)
+			valory = heightMina;
+		if(valory > window.innerHeight - heightMina)
+			valory = window.innerHeight - heightMina;
+
+	do{
+		var flag = 0;
+		for(var a = SegundoIndex;a < s;a++){
+			while(Distancia(Minax[a],Minay[a],valorx,valory) < widthMina || Distancia(Minax[a],Minay[a],valorx,valory) < heightMina){
+				valorx = Math.random()*window.innerWidth;
+				valory = Math.random()*window.innerHeight;
+				flag = 1;
+			}
+		}
+	}while(flag == 1);
+		Minax[s] = valorx;
+		Minay[s] = valory;
+	}
+}
+buildMines(0,0,400,40,40);
+
 	setInterval(function() {
+		millis = +new Date();
 	  if (adminColor === true) {
 	    var a = document.getElementsByName('admin');
 	    var i = 0;
@@ -494,8 +542,27 @@
 
 	  ctx.clearRect(0, 0, document.getElementById('ctx').width, document.getElementById('ctx').height);
 
-	  for (var i in Player.list)
-	    Player.list[i].draw();
+
+
+
+		for(var x = -1;x < 24;x++){
+			for(var y = -1;y < 11;y++){
+				ctx.drawImage(Img.grass,x*Img.grass.width,y*Img.grass.height, Img.grass.width+1, Img.grass.height+1);
+			}
+		}
+
+		for(var x = 0;x < NumeroMinas;x++){
+
+			rotarImagen("ctx",Img.mine,0,Minax[x],Minay[x],"CENTER","SpriteVertical",0,FrameMina*96,96,96,widthMina,heightMina);
+
+			FrameMina = Math.round(Math.random()*1);
+
+
+
+		}
+
+		for (var i in Player.list)
+			Player.list[i].draw();
 
 	}, 40);
 
@@ -540,14 +607,19 @@
 	  event.preventDefault();
 	}
 
-	rotarImagen = function(NombreCanvas,Img,angle,x,y,Locations,Type,initx,inity,width,height){
+	rotarImagen = function(NombreCanvas,Img,angle,x,y,Locations,Type,initx,inity,width,height,desiredSizex,desiredSizey){
 		angle = angle * Math.PI / 180;
 		if(Type === "SpriteVertical"){
 			ctxx = document.getElementById(NombreCanvas).getContext("2d");
 			ctxx.save();
 			ctxx.translate(x, y);
 			ctxx.rotate(angle);
-			ctxx.drawImage(Img,initx,inity,width,height,width / -2,height / -2,width,height);
+			if(desiredSizey == undefined){
+				ctxx.drawImage(Img,initx,inity,width,height,width / -2,height / -2,width,height);
+			}else{
+				ctxx.drawImage(Img,initx,inity,width,height,width / -2,height / -2,desiredSizex,desiredSizey);
+			}
+
 			ctxx.restore();
 		}else{
 			if(Locations === "center" ||Locations === "Center"||Locations === "CENTER"){
