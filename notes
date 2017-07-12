@@ -1,29 +1,3 @@
-https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css
-
-
-<style id="generalStyle"type="text/css">
-body {
-    overflow:hidden;
-}
-	::-webkit-scrollbar {
-    width: 12px;
-}
-
-::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-    border-radius: 10px;
-	border-radius: 100px;
-
-}
-
-::-webkit-scrollbar-thumb {
-      border-radius: 100px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.7);
-}
-
-</style>
-
-
 
 Bases en las 4 esquinas, son fortalezas. guardan las unidades de cada jugador.
 Los jugadores son mouses. Cada jugador puede atacar a las unidades enemigas siempre que estaas esten fuera de la base.
@@ -45,19 +19,3 @@ Para conseguir oro, hay que contractar mineros.
 
             Partidas de 4 jugadores
             Partida global: seleciona equipo, chat solo grupal. Se elige una classe: recolector - atacante - defensor
-
-
-
-
-
-
-
-
-
-
-
-
-
-GRAB THE MOUSE:
-  los jugadores han de atrapar al raton del otro jugador. Quanto mas tiempo lo tienen atrapado, mejor.
-  Para escapar hay que hacer una serie de movimientos.

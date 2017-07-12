@@ -293,68 +293,7 @@
 	})
 
 	//chat
-	var chatText = document.getElementById('chat-text');
-	var chatInput = document.getElementById('chat-input');
-	var chatForm = document.getElementById('chat-form');
-	var EverChatSow;
-
-
-	$("#chat-input").focus(function() {
-	  if (EverChatSow == 1) {
-	    chatText.style.display = "inline-block";
-	  }
-
-
-
-	}).blur(function() {
-	  chatText.style.display = "none";
-	});
-
-
-	socket.on('addToChat', function(data) {
-
-	  if (data.admin === true) {
-	    chatText.innerHTML += '<div id = "Comment" name="admin" style ="color:' + data.color + '">' + data.message + '</div>';
-	    adminColor = true;
-	  } else {
-	    var divisios = [];
-	    var numberN = 0;
-	    for (var i = data.message.length / 40; i >= 0; i--) {
-	      chatText.innerHTML += '<div id = "Comment" style ="color:' + data.color + '">' + data.message.slice(numberN, numberN + 40) + '</div>';
-	      numberN += 40;
-	    }
-	  }
-
-	  chatText.scrollTop = chatText.scrollHeight;
-	});
-
-	chatForm.onsubmit = function(e) {
-	  EverChatSow = 1;
-	  e.preventDefault();
-	  if (chatInput.value[0] === '@') {
-
-	    if (chatInput.value.indexOf(",") !== -1) {
-	      if (chatInput.value.slice(1, chatInput.value.indexOf(',')) !== Player.list[selfId].name) {
-
-	        socket.emit('sendPmToServer', {
-	          username: chatInput.value.slice(1, chatInput.value.indexOf(',')),
-	          message: chatInput.value.slice(chatInput.value.indexOf(',') + 1),
-	        });
-
-	      } else {
-	        chatText.innerHTML += '<div style ="color:#000000">Que solo estas...</div>';
-	      }
-
-	    } else {
-	      chatText.innerHTML += '<div style ="color:#000000">Error, La sintaxis requiere @USERNAME,MESSAGE</div>';
-	    }
-
-	  } else {
-	    socket.emit('sendMsgToServer', chatInput.value);
-	  }
-	  chatInput.value = '';
-	}
-
+var Chat = new chat;
 
 
 	var Img = {};
@@ -366,12 +305,13 @@
 	Img.explode = new Image();
 	Img.minerIco = new Image();
 
-	Img.grass = new Image();
-	var knight = [];
+	Img.groundBasic = new Image();
+	Img.limit = new Image();
+	/*var knight = [];
 	for(var x = 1;x <= 29;x++){
 		knight[x] = new Image();
 		knight[x].src = 'client/img/bronze_knight/' + x + '.png';
-	}
+	}*/
 	//all + 1
 	//0-3 attack
 	//4-9 dead
@@ -400,7 +340,8 @@
 		Img.mine.src = '/client/img/mine.png';
 		Img.explode.src = '/client/img/explosion.png';
 		Img.minerIco.src = '/client/img/minerIco.png';
-		Img.grass.src = '/client/img/grass.png';
+		Img.groundBasic.src = '/client/img/grass.png';
+		Img.limit.src = '/client/img/Limits.png';
 
 
 	  self.draw = function() {
@@ -413,7 +354,7 @@
 						//rotarImagen("ctx",Img.mine,0,self.x,self.y,"CENTER","SpriteVertical",0,i*96,96,96);
 					//rotarImagen("ctx",Img.explode,0,self.x,self.y,"CENTER","SpriteVertical",i*64,j * 64,64,64);
 						//rotarImagen("ctx",Img.minerIco,0,self.x,self.y,"CENTER");
-						//rotarImagen("ctx",Img.grass,0,self.x,self.y,"CENTER");
+						//rotarImagen("ctx",Img.groundBasic,0,self.x,self.y,"CENTER");
 						//rotarImagen("ctx",knight[i],0,j*20,self.y,"CENTER");
 
 						curTime = +new Date();
@@ -484,48 +425,22 @@
 
 
 
-	var FrameMina = 0;
-	var Minax=[];
-	var Minay=[];
+
 
 	var millis = 0;
 	var lastMillis = 0;
 
-	
-	Distancia = function(Px,Py,Ox,Oy){
-		return (Math.sqrt(Math.pow((Px-Ox),2)+Math.pow((Py-Oy),2)));
-	}
+	Mines = new buildMines(0,0,12,40,40);
 
-buildMines = function(Index,SegundoIndex,NumeroMinas,widthMina,heightMina){
+			var intento = 20;
+			do{
+				var result = window.innerWidth / intento;
+				error = Distancia();
+				intento+=0.1;
+			}while(error > 1.5)
+			console.log(intento);
 
-	for (var s = Index;s<NumeroMinas;s++){
-		var valorx = Math.random()*window.innerWidth;
-		var valory = Math.random()*window.innerHeight;
 
-		if(valorx < widthMina)
-			valorx = widthMina;
-		if(valorx > window.innerWidth - widthMina)
-			valorx = window.innerWidth - widthMina;
-		if(valory < heightMina)
-			valory = heightMina;
-		if(valory > window.innerHeight - heightMina)
-			valory = window.innerHeight - heightMina;
-
-	do{
-		var flag = 0;
-		for(var a = SegundoIndex;a < s;a++){
-			while(Distancia(Minax[a],Minay[a],valorx,valory) < widthMina || Distancia(Minax[a],Minay[a],valorx,valory) < heightMina){
-				valorx = Math.random()*window.innerWidth;
-				valory = Math.random()*window.innerHeight;
-				flag = 1;
-			}
-		}
-	}while(flag == 1);
-		Minax[s] = valorx;
-		Minay[s] = valory;
-	}
-}
-buildMines(0,0,400,40,40);
 
 	setInterval(function() {
 		millis = +new Date();
@@ -536,30 +451,45 @@ buildMines(0,0,400,40,40);
 	      a[i].style.color = '#' + (0x1000000 + (Math.random()) * 0xffffff).toString(16).substr(1, 6);
 	    }
 	  }
+		console.log(window.innerWidth + " " + window.innerHeight);
 
 	  if (!selfId)
 	    return;
 
+
 	  ctx.clearRect(0, 0, document.getElementById('ctx').width, document.getElementById('ctx').height);
 
 
-
-
-		for(var x = -1;x < 24;x++){
-			for(var y = -1;y < 11;y++){
-				ctx.drawImage(Img.grass,x*Img.grass.width,y*Img.grass.height, Img.grass.width+1, Img.grass.height+1);
+    //Terrain
+		for(var x = -1;x < window.innerWidth / Img.groundBasic.width ;x++){
+			for(var y = -1;y < window.innerHeight / Img.groundBasic.height ;y++){
+				ctx.drawImage(Img.groundBasic,x*Img.groundBasic.width,y*Img.groundBasic.height, Img.groundBasic.width+1, Img.groundBasic.height+1);
 			}
 		}
 
-		for(var x = 0;x < NumeroMinas;x++){
 
-			rotarImagen("ctx",Img.mine,0,Minax[x],Minay[x],"CENTER","SpriteVertical",0,FrameMina*96,96,96,widthMina,heightMina);
-
-			FrameMina = Math.round(Math.random()*1);
-
-
-
+		for(var x = 0;x < window.innerWidth / intento ;x++){
+			//ctx.drawImage(Img.limit,x*Img.limit.width,0, Img.limit.width, Img.limit.height);
+			rotarImagen("ctx",Img.limit,0,intento/2 + x*intento,150,"leftUp","SpriteVertical",0,0,64,64,intento,intento);
+		}/*
+		for(var x = 0;x < window.innerWidth / Img.limit.width ;x++){
+			ctx.drawImage(Img.limit,x*Img.limit.width,window.innerHeight - Img.limit.height/2, Img.limit.width, Img.limit.height);
 		}
+		for(var y = 0;y < window.innerHeight / Img.limit.height ;y++){
+			ctx.drawImage(Img.limit,Img.limit.width,Img.limit.height * y, Img.limit.width, Img.limit.height);
+		}
+		for(var y = 0;y < window.innerHeight / Img.limit.height ;y++){
+			ctx.drawImage(Img.limit,window.innerWidth - Img.limit.width/2,Img.limit.height * y, Img.limit.width, Img.limit.height);
+		}
+*/
+
+
+    //Minas
+		for(var x = 0;x < Mines.numeroMinas;x++){
+			rotarImagen("ctx",Img.mine,0,Mines.Minax[x],Mines.Minay[x],"CENTER","SpriteVertical",0,Mines.FrameMina[x]*96,96,96,Mines.widthMina,Mines.heightMina);
+			FrameMina = Math.round(Math.random()*1);
+		}
+
 
 		for (var i in Player.list)
 			Player.list[i].draw();
