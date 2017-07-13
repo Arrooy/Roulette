@@ -115,6 +115,7 @@ io.sockets.on('connection', function(socket) {
     });
 
   });
+
   socket.on('signUp', function(data) {
     isUsernameTaken(data, function(res) {
       if (res) {

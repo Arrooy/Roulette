@@ -9,7 +9,6 @@
 	var signDivSignUp = document.getElementById('signDiv-signUp');
 	var signDivPassword = document.getElementById('signDiv-password');
 	var ctx = document.getElementById("ctx").getContext("2d");
-	var ctxUi = document.getElementById("ctx-ui").getContext("2d");
 
 	var Fase1 = document.getElementById('CrearCuenta1');
 	var Fase2 = document.getElementById('CrearCuenta2');
@@ -228,8 +227,7 @@
 	    gameDiv.style.display = 'inline-block';
 	    ctx.canvas.width = window.innerWidth;
 	    ctx.canvas.height = window.innerHeight;
-	    ctxUi.canvas.width = "0px";
-	    ctxUi.canvas.height = "0px";
+
 
 	  } else {
 	    ErrorType = 2;
@@ -307,24 +305,13 @@
 
 	Img.groundBasic = new Image();
 	Img.limit = new Image();
-	/*var knight = [];
-	for(var x = 1;x <= 29;x++){
-		knight[x] = new Image();
-		knight[x].src = 'client/img/bronze_knight/' + x + '.png';
-	}*/
-	//all + 1
-	//0-3 attack
-	//4-9 dead
-	//10 - 13 hurt
-	//14 - 18 idle
-	// 19 - 23 run
-	//24 - 28 walk
 
 
 	var angle = 0;
 	var i = 0;
 	var j = 0;
 	var prevTime = 0;
+
 	var Player = function(initPack) {
 	  var self = {};
 	  self.id = initPack.id;
@@ -421,6 +408,7 @@
 
 	var Resolution = window.innerWidth / window.innerHeight;
 
+	var intento = 10;
 	$(window).resize(function() {
 	  location.reload();
 	});
