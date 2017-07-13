@@ -1,24 +1,8 @@
 	var socket = io();
-
 	var ErrorAnimation = "shake"
 
-	//sign
-	var signDiv = document.getElementById('signDiv');
-	var signDivUsername = document.getElementById('signDiv-username');
-	var signDivSignIn = document.getElementById('signDiv-signIn');
-	var signDivSignUp = document.getElementById('signDiv-signUp');
-	var signDivPassword = document.getElementById('signDiv-password');
-	var ctx = document.getElementById("ctx").getContext("2d");
-
-	var Fase1 = document.getElementById('CrearCuenta1');
-	var Fase2 = document.getElementById('CrearCuenta2');
-	var NextStep1 = document.getElementById('Step1');
-
-	var CreateAccount = document.getElementById('CA');
-
-	var ReHOme = document.getElementById('Step0');
-	var GoInicio = document.getElementById('GoInicio');
-
+	ctx = $("#GameCanvas")[0].getContext('2d');
+	//Error detection
 	var ErrorType = 0;
 	var tryedandFailedEmail = 0;
 	var tryedandFailedAge = 0;
@@ -26,49 +10,27 @@
 	var tryedandFailedPass2 = 0;
 	var tryedandFailedPass3 = 0;
 	var tryedandFailedUsername = 0;
-	var ChatOpened;
-	var adminColor = false;
 
-	var CEmail = document.getElementById('CEmail');
-
-	var CUsername = document.getElementById('CUsername');
-
-	var CColor = document.getElementById('CColor');
-
-	var CAge = document.getElementById('CAge');
-
-
-	var CPassword1 = document.getElementById('CPassword1');
-
-	var CPassword2 = document.getElementById('CPassword2');
-
-
-
-	var Input = new input();
-
+	//Input help load
 	$(function() {
 	  $('[data-toggle="tooltip"]').tooltip()
 	})
-
-
-
-	GoInicio.onclick = function() {
-	  Fase1.style.display = 'none';
-	  Fase2.style.display = 'none';
-	  signDiv.style.display = '';
+	//SignUp - SignIn Dynamics
+	$("#GoInicio").click(function() {
+	  $("#CrearCuenta1").css("display", "none");
+	  $("#CrearCuenta2").css("display", "none");
+	  $("#signDiv").css("display", "");
 	  $("#ContainerMail").removeClass('animated infinite  ' + ErrorAnimation);
 	  $("#CAgediv").removeClass('animated infinite  ' + ErrorAnimation);
-	}
-
-	ReHOme.onclick = function() {
-	  Fase1.style.display = '';
-	  Fase2.style.display = 'none';
-	  signDiv.style.display = 'none';
+	});
+	$("#Step0").click(function() {
+	  $("#CrearCuenta1").css("display", "");
+	  $("#CrearCuenta2").css("display", "none");
+	  $("#signDiv").css("display", "none");
 	  $("#ContainerMail").removeClass('animated infinite  ' + ErrorAnimation);
 	  $("#CAgediv").removeClass('animated infinite  ' + ErrorAnimation);
-	}
-
-	NextStep1.onclick = function() {
+	});
+	$("#Step1").click(function() {
 	  $("#divPass1").removeClass('animated infinite  ' + ErrorAnimation);
 	  $("#divPass2").removeClass('animated infinite  ' + ErrorAnimation);
 
@@ -79,18 +41,15 @@
 	  tryedandFailedPass3 = 0;
 	  tryedandFailedUsername = 0;
 	  var NoError = 1;
-	  var data = CAge.value.split('-');
+	  var data = $("#CAge").val().split('-');
 	  var UserAge = new Date();
-	  UserAge.setFullYear(data[0], data[1] - 1, data[2]);
 	  var LimitedAge = new Date();
+	  UserAge.setFullYear(data[0], data[1] - 1, data[2]);
 	  LimitedAge.setFullYear(1999, 11, 31);
 	  var countError = 0;
-	  if (CEmail.value.indexOf('@') == -1) {
+
+	  if ($("#CEmail").val().indexOf('@') == -1) {
 	    NoError = 0;
-
-	    //ErrorType = 3;
-	    //$('#alerta').modal('toggle');
-
 	    tryedandFailedEmail = 1;
 	    $("#CEmailLabel").css('color', '#F05941');
 	    $("#ContainerMail").addClass('animated infinite ' + ErrorAnimation);
@@ -112,9 +71,6 @@
 	  if (NoError == 1) {
 	    if (UserAge > LimitedAge || UserAge > 100) {
 	      NoError = 0;
-	      //ErrorType = 4;
-	      //$('#alerta').modal('toggle')
-
 	      tryedandFailedAge = 1;
 	      $("#LabelCAge").css('color', '#F05941');
 	      $("#CAgediv").addClass('animated infinite  ' + ErrorAnimation);
@@ -123,14 +79,13 @@
 	    }
 	  }
 	  if (NoError === 1) {
-
-	    Fase1.style.display = 'none';
-	    Fase2.style.display = '';
-	    signDiv.style.display = 'none';
+	    $("#CrearCuenta1").css("display", "none");
+	    $("#CrearCuenta2").css("display", "");
+	    $("#signDiv").css("display", "none");
 	  }
 
-	}
-	CreateAccount.onclick = function() {
+	});
+	$("#CA").click(function() {
 	  tryedandFailedEmail = 0;
 	  tryedandFailedAge = 0;
 	  tryedandFailedPass1 = 0;
@@ -138,7 +93,7 @@
 	  tryedandFailedPass3 = 0;
 	  tryedandFailedUsername = 0;
 	  var error = 0;
-	  if (CPassword1.value == "") {
+	  if ($("#CPassword1").val() == "") {
 	    $("#Pass1").css('color', '#F05941');
 	    $('#divPass1').addClass('animated infinite  ' + ErrorAnimation);
 	    error = 1;
@@ -147,7 +102,7 @@
 	    $("#Pass1").css('color', '#2F1B41');
 	  }
 
-	  if (CPassword2.value == "") {
+	  if ($("#CPassword2").val() == "") {
 	    $("#Pass2").css('color', '#F05941');
 	    $('#divPass2').addClass('animated infinite  ' + ErrorAnimation);
 	    error = 1;
@@ -155,43 +110,35 @@
 	  } else {
 	    $("#Pass2").css('color', '#2F1B41');
 	  }
-	  if (CPassword1.value != CPassword2.value) {
+	  if ($("#CPassword1").val() != $("#CPassword2").val()) {
 	    error = 1;
 	    $("#Pass1").css('color', '#F05941');
 	    $("#Pass2").css('color', '#F05941');
-
-	    /*ErrorType = 5;
-	    $('#alerta').modal('toggle')*/
-
 	    tryedandFailedPass3 = 1;
 	    $('#divPass1').addClass('animated  infinite  ' + ErrorAnimation);
 	    $('#divPass2').addClass('animated  infinite  ' + ErrorAnimation);
 	  }
 	  if (error == 0) {
-	    flag = -1;
 	    socket.emit('signUp', {
-	      email: CEmail.value,
-	      username: CUsername.value,
-	      age: CAge.value,
-	      color: CColor.value,
-	      password: CPassword1.value
+	      email: $("#CEmail").val(),
+	      username: $("#CUsername").val(),
+	      age: $("#CAge").val(),
+	      color: $("#CColor").val(),
+	      password: $("#CPassword1").val()
 	    });
 	  }
-
-
-	}
-	signDivSignIn.onclick = function() {
+	});
+	$("#signDiv-signIn").click(function() {
 	  socket.emit('signIn', {
-	    username: signDivUsername.value,
-	    password: signDivPassword.value
+	    username: $("#signDiv-username").val(),
+	    password: $("#signDiv-password").val()
 	  });
-	}
-	signDivSignUp.onclick = function() {
-	  Fase1.style.display = '';
-	  Fase2.style.display = 'none';
-	  signDiv.style.display = 'none';
-	}
-
+	});
+	$("#signDiv-signUp").click(function() {
+	  $("#CrearCuenta1").css("display", "");
+	  $("#CrearCuenta2").css("display", "none");
+	  $("#signDiv").css("display", "none");
+	});
 	$("#CEmail").hover(function() {
 	  if (tryedandFailedEmail === 1) {
 	    $("#ContainerMail").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
@@ -219,12 +166,34 @@
 	    $("#ContainerUsername").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
 	  }
 	});
+	$('#alerta').on('show.bs.modal', function(event) {
+	  var modal = $(this)
+	  switch (ErrorType) {
+	    case 1: //Error signUp
+	      modal.find('#tituloModal').text('This is weird...');
+	      modal.find('#textoModal').text('Your account Username is taken! Try with another one please');
+	      $("#CrearCuenta1").css("display", "");
+	      $("#CrearCuenta2").css("display", "none");
+	      $("#signDiv").css("display", "none");
+	      break;
+	    case 2: //Error signUp
+	      modal.find('#tituloModal').text('Well...');
+	      modal.find('#textoModal').text('Combination wrong. Feel free to try again!');
+	      break;
+	    default:
+	      modal.find('#tituloModal').text('OH')
+	      modal.find('#textoModal').text('Our tech group failed, report us')
+
+	  }
+	});
 
 	socket.on('signInResponse', function(data) {
 
 	  if (data.success) {
-	    signDiv.style.display = 'none';
-	    gameDiv.style.display = 'inline-block';
+	    $("#gameDiv").css("display", "inline-block");
+	    $("#signDiv").css("display", "none");
+
+
 	    ctx.canvas.width = window.innerWidth;
 	    ctx.canvas.height = window.innerHeight;
 
@@ -236,13 +205,11 @@
 
 	  //
 	});
-
 	socket.on('signUpResponse', function(data) {
 	  if (data.success) {
-
-	    Fase1.style.display = 'none';
-	    Fase2.style.display = 'none';
-	    signDiv.style.display = '';
+	    $("#CrearCuenta1").css("display", "none");
+	    $("#CrearCuenta2").css("display", "none");
+	    $("#signDiv").css("display", "");
 	    $("#CUsernameLabel").css('color', '#2F1B41');
 	  } else {
 	    ErrorType = 1;
@@ -254,63 +221,17 @@
 	  }
 	});
 
-	$('#alerta').on('show.bs.modal', function(event) {
-	  var modal = $(this)
-
-	  switch (ErrorType) {
-	    case 1: //Error signUp
-	      modal.find('#tituloModal').text('This is weird...');
-	      modal.find('#textoModal').text('Your account Username is taken! Try with another one please');
-	      Fase1.style.display = '';
-	      Fase2.style.display = 'none';
-	      signDiv.style.display = 'none';
-	      break;
-
-	    case 2: //Error signUp
-	      modal.find('#tituloModal').text('Well...');
-	      modal.find('#textoModal').text('Combination wrong. Feel free to try again!');
-	      break;
-	      /*case 3://Error signUp
-	      modal.find('#tituloModal').text('Email error!')
-	      modal.find('#textoModal').text('What about using a correct E-MAIL')
-	      	break;*/
-	      /*case 4://Error signUp
-	      modal.find('#tituloModal').text('Too little: ')
-	      modal.find('#textoModal').text('This game ROULES doesnt let you come in. You must be 18 to play.')
-	      	break;*/
-	      /*case 5://Error signUp
-	      modal.find('#tituloModal').text('Passwords arent the same')
-	      modal.find('#textoModal').text('Try to insert the SAME password in both fields.')
-	      	break;*/
-	    default:
-	      modal.find('#tituloModal').text('OH')
-	      modal.find('#textoModal').text('Our tech group failed, report us')
-
-	  }
-
-	})
-
-	//chat
-	var Chat = new chat;
-
+	var Input = new input();
 
 	var Img = {};
-
 	Img.cursor = new Image();
-
 	Img.minero = new Image();
 	Img.mine = new Image();
 	Img.explode = new Image();
 	Img.minerIco = new Image();
-
 	Img.groundBasic = new Image();
 	Img.limit = new Image();
 
-
-	var angle = 0;
-	var i = 0;
-	var j = 0;
-	var prevTime = 0;
 
 	var Player = function(initPack) {
 	  var self = {};
@@ -353,9 +274,9 @@
 
 	  return self;
 	}
-	Player.list = {};
 
 	var selfId = null;
+	Player.list = {};
 
 	socket.on('init', function(data) {
 	  if (data.selfId)
@@ -396,11 +317,6 @@
 	});
 
 
-
-
-
-
-
 	var millis = 0;
 	var lastMillis = 0;
 
@@ -415,20 +331,21 @@
 
 	setInterval(function() {
 	  millis = +new Date();
-	  if (adminColor === true) {
-	    var a = document.getElementsByName('admin');
-	    var i = 0;
-	    for (i = 0; i < a.length; i++) {
-	      a[i].style.color = '#' + (0x1000000 + (Math.random()) * 0xffffff).toString(16).substr(1, 6);
-	    }
+
+	  var a = document.getElementsByName('admin');
+	  var i = 0;
+	  for (i = 0; i < a.length; i++) {
+	    a[i].style.color = '#' + (0x1000000 + (Math.random()) * 0xffffff).toString(16).substr(1, 6);
 	  }
+
 	  console.log(window.innerWidth + " " + window.innerHeight);
+
 
 	  if (!selfId)
 	    return;
 
 
-	  ctx.clearRect(0, 0, document.getElementById('ctx').width, document.getElementById('ctx').height);
+	  ctx.clearRect(0, 0, $("#GameCanvas").css("width"), $("#GameCanvas").css("height"));
 
 
 	  //Terrain
@@ -441,7 +358,7 @@
 
 	  for (var x = 0; x < window.innerWidth / intento; x++) {
 	    //ctx.drawImage(Img.limit,x*Img.limit.width,0, Img.limit.width, Img.limit.height);
-	    rotarImagen("ctx", Img.limit, 0, intento / 2 + x * intento, 150, "leftUp", "SpriteVertical", 0, 0, 64, 64, intento, intento);
+	    rotarImagen("GameCanvas", Img.limit, 0, intento / 2 + x * intento, 150, "leftUp", "SpriteVertical", 0, 0, 64, 64, intento, intento);
 	  }
 	  /*
 	  		for(var x = 0;x < window.innerWidth / Img.limit.width ;x++){
@@ -458,7 +375,7 @@
 
 	  //Minas
 	  for (var x = 0; x < Mines.numeroMinas; x++) {
-	    rotarImagen("ctx", Img.mine, 0, Mines.Minax[x], Mines.Minay[x], "CENTER", "SpriteVertical", 0, Mines.FrameMina[x] * 96, 96, 96, Mines.widthMina, Mines.heightMina);
+	    rotarImagen("GameCanvas", Img.mine, 0, Mines.Minax[x], Mines.Minay[x], "CENTER", "SpriteVertical", 0, Mines.FrameMina[x] * 96, 96, 96, Mines.widthMina, Mines.heightMina);
 	    FrameMina = Math.round(Math.random() * 1);
 	  }
 
@@ -468,46 +385,6 @@
 
 	}, 40);
 
-	document.onkeypress = function(event) {
-	  var letra = event.keyCode;
-	  //socket.emit('keyPress',{inputId:'key',key: letra,state:true});
-	  if ($('#signDiv').css('display') == 'block') {
-	    if (letra === 13) {
-	      $('#signDiv-signIn').trigger('click');
-	    }
-	  } else {
-	    //Inside game
-	  }
-
-	}
-
-	document.onmousedown = function(event) {
-	  socket.emit('keyPress', {
-	    inputId: 'press',
-	    x: event.clientX,
-	    y: event.clientY,
-	    state: true
-	  });
-	}
-	document.onmouseup = function(event) {
-	  socket.emit('keyPress', {
-	    inputId: 'press',
-	    x: event.clientX,
-	    y: event.clientY,
-	    state: false
-	  });
-	}
-	document.onmousemove = function(event) {
-	  socket.emit('keyPress', {
-	    inputId: 'mouseMoved',
-	    x: event.clientX,
-	    y: event.clientY
-	  });
-	}
-
-	document.oncontextmenu = function(event) {
-	  event.preventDefault();
-	}
 
 	rotarImagen = function(NombreCanvas, Img, angle, x, y, Locations, Type, initx, inity, width, height, desiredSizex, desiredSizey) {
 	  angle = angle * Math.PI / 180;

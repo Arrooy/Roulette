@@ -44,15 +44,24 @@ input = function() {
       case 39:
         self.aright = state;
         break;
-        case 40:
-          self.adown = state;
-          break;
+      case 40:
+        self.adown = state;
+        break;
 
-          case 13:
-            self.return = state;
-            break;
+      case 13:
+        self.return = state;
+        break;
       default:
 
+    }
+
+    //socket.emit('keyPress',{inputId:'key',key: event.keyCode,state:true});
+    if ($('#signDiv').css('display') == 'block') {
+      if (self.return === true) {
+        $('#signDiv-signIn').trigger('click');
+      }
+    } else {
+      //Inside game
     }
   }
 
@@ -62,4 +71,32 @@ input = function() {
   document.addEventListener('keyup', function(e) {
     ProcessaKeyEvent(e.keyCode, false);
   });
+}
+
+document.onmousedown = function(event) {
+  socket.emit('keyPress', {
+    inputId: 'press',
+    x: event.clientX,
+    y: event.clientY,
+    state: true
+  });
+}
+document.onmouseup = function(event) {
+  socket.emit('keyPress', {
+    inputId: 'press',
+    x: event.clientX,
+    y: event.clientY,
+    state: false
+  });
+}
+document.onmousemove = function(event) {
+  socket.emit('keyPress', {
+    inputId: 'mouseMoved',
+    x: event.clientX,
+    y: event.clientY
+  });
+}
+
+document.oncontextmenu = function(event) {
+  event.preventDefault();
 }
