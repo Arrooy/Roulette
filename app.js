@@ -3,8 +3,9 @@
 
 
 var mongoClient = require("mongojs");
-var url = "mongodb://roulette:hn85YJZ9pNpaTbxiTGtMKodxJroA8JvyKlwzs8K764TdFRSUx7bMv0xupDCFMQ8wdSmAJy9WtNtSipiqoA2E1A==@roulette.documents.azure.com:10255/?ssl=true";
-var db = mongoClient(url, ['account']);
+var url = "mongodb://<goldworld>:<goldworld>@ds161042.mlab.com:61042/goldworld";
+//var url = "mongodb://roulette:hn85YJZ9pNpaTbxiTGtMKodxJroA8JvyKlwzs8K764TdFRSUx7bMv0xupDCFMQ8wdSmAJy9WtNtSipiqoA2E1A==@roulette.documents.azure.com:10255/?ssl=true";
+var db = mongoClient(url, ['accounts']);
 
 require('./Entity');
 
@@ -23,10 +24,14 @@ console.log("Server started.");
 
 SOCKET_LIST = {};
 
-db.on('error', function() {
-  console.log('we had an error.');
-});
-
+db.on('error', function(err) {
+  console.log('database error', err)
+})
+db.runCommand({
+  ping: 1
+}, function(err, res) {
+  if (!err && res.ok) console.log('we\'re up')
+})
 
 var isValidPassword = function(data, cb) {
 
@@ -74,11 +79,13 @@ var addUser = function(data, cb) {
   });
 }
 var consultaInfo = function(socket, data) {
+  console.log("Checking username & password");
   db.account.find({
     username: data.username,
     password: data.password
   }, function(err, res) {
     Player.onConnect(socket, res);
+    console.log("User registered, going in!");
     socket.emit('signInResponse', {
       success: true
     });

@@ -1,79 +1,67 @@
-buildMines = function(Index,SegundoIndex,NumeroMinas,widthMina,heightMina){
-	self = this;
-	self.Minax	=	[];
-	self.Minay	=	[];
-	self.widthMina = widthMina;
-	self.heightMina = heightMina;
-	self.numeroMinas = NumeroMinas;
-	self.FrameMina = [];
+var map = {
+  "Minax": [],
+  "Minay": [],
+  "widthMina": 0,
+  "heightMina": 0,
+  "numeroMinas": 0,
+  "FrameMina": [],
+  "MarginSize": 16,
 
-var dontExplode = 0;
+  "generateMinasLoc": function(numeroMinas, widthMina, heightMina) {
+    map.numeroMinas = numeroMinas;
+    map.widthMina = widthMina;
+    map.heightMina = heightMina;
 
-	for (var s = Index;s < self.numeroMinas;s++){
-/*
-		if(s < 3){
-			self.FrameMina[s] = 1;
-			self.Minax[s] =  self.heightMina*2;
-			self.Minay[s] = window.innerHeight / 2 - self.heightMina * 4 + s * self.heightMina;
-		}else if(s<=5 && s >= 3){
-			self.FrameMina[s] = 1;
-			self.Minax[s] =  self.heightMina*2;
-			self.Minay[s] = window.innerHeight / 2 + self.heightMina + s * self.heightMina;
-		}else if (s<=8 && s>= 6){
-			self.FrameMina[s] = 1;
-			self.Minax[s] =  window.innerWidth - self.heightMina*0.5;
-			self.Minay[s] = window.innerHeight / 2 - self.heightMina * 4 + (s-6) * self.heightMina;
-		}else {
-			self.FrameMina[s] = 1;
-			self.Minax[s] =  window.innerWidth - self.heightMina*0.5;
-			self.Minay[s] = window.innerHeight / 2 + self.heightMina + (s-6) * self.heightMina;
-		}
-*/
-		if(s >= 6){
-			self.FrameMina[s] = 1;
-			self.Minax[s] =  window.innerWidth - self.heightMina*0.5;
-			self.Minay[s] = window.innerHeight / 2 - self.heightMina * 2 + (s-6) * self.heightMina;
-		}else{
-			self.FrameMina[s] = 0;
-			self.Minax[s] =  self.heightMina*2;
-			self.Minay[s] = window.innerHeight / 2 - self.heightMina * 2 + s * self.heightMina;
-		}
-	}
+    for (var s = 0; s < map.numeroMinas; s++) {
 
-		/*
-		var valorx = Math.random()*window.innerWidth;
-		var valory = Math.random()*window.innerHeight;
+      if (s >= 6) {
+        map.FrameMina[s] = 1;
+        map.Minax[s] = window.innerWidth - map.heightMina * 0.5;
+        map.Minay[s] = window.innerHeight / 2 - map.heightMina * 2 + (s - 6) * map.heightMina;
+      } else {
+        map.FrameMina[s] = 0;
+        map.Minax[s] = map.heightMina * 2;
+        map.Minay[s] = window.innerHeight / 2 - map.heightMina * 2 + s * map.heightMina;
+      }
+    }
+  },
+  "printMinas": function() {
+    for (var x = 0; x < map.numeroMinas; x++) {
+      rotarImagen("GameCanvas", Img.mine, 0, map.Minax[x], map.Minay[x], "CENTER", "SpriteVertical", 0, map.FrameMina[x] * 96, 96, 96, map.widthMina, map.heightMina);
+      FrameMina = Math.round(Math.random() * 1);
+    }
+  },
+  "printLimits": function() {
+    for (var x = 0; x <= Math.round(window.innerWidth / MarginSize); x++) {
+      rotarImagen("GameCanvas", Img.limit, 0, MarginSize + x * MarginSize, MarginSize * 2, "leftUp", "SpriteVertical", 0, 0, 64, 64, MarginSize, MarginSize);
+    }
 
-		if(valorx < widthMina)
-			valorx = widthMina;
-		if(valorx > window.innerWidth - widthMina)
-			valorx = window.innerWidth - widthMina;
-		if(valory < heightMina)
-			valory = heightMina;
-		if(valory > window.innerHeight - heightMina)
-			valory = window.innerHeight - heightMina;
+    for (var x = 0; x <= Math.round(window.innerWidth / MarginSize); x++) {
+      rotarImagen("GameCanvas", Img.limit, 0, MarginSize + x * MarginSize, window.innerHeight - MarginSize, "leftUp", "SpriteVertical", 0, 0, 64, 64, MarginSize, MarginSize);
+    }
 
-		var dontExplode = 0;
-	do{
-		var flag = 0;
-		for(var a = SegundoIndex;a < s;a++){
-			while((Distancia(self.Minax[a],self.Minay[a],valorx,valory) < self.widthMina || Distancia(self.Minax[a],self.Minay[a],valorx,valory) < self.heightMina)){
-				valorx = Math.random()*window.innerWidth;
-				valory = Math.random()*window.innerHeight;
-				flag = 1;
-				dontExplode++;
-				if(dontExplode >= 500){
-					console.log("QUICK FORCE QUIT DUE TO BITCHES");
-					dontExplode = 0;
-					break;
-				}
-			}
-		}
-
-	}while(flag == 1);
-		self.Minax[s] = valorx;
-		self.Minay[s] = valory;
-		self.FrameMina[s] = 1;
-	}*/
+    for (var x = 0; x <= Math.round((window.innerHeight - MarginSize * 2.8) / MarginSize); x++) {
+      rotarImagen("GameCanvas", Img.limit, 0, MarginSize * 2, MarginSize + x * MarginSize, "leftUp", "SpriteVertical", 0, 0, 64, 64, MarginSize, MarginSize);
+    }
+    for (var x = 0; x <= Math.round(window.innerHeight / MarginSize); x++) {
+      rotarImagen("GameCanvas", Img.limit, 0, window.innerWidth + MarginSize + 2, MarginSize + x * MarginSize, "leftUp", "SpriteVertical", 0, 0, 64, 64, MarginSize, MarginSize);
+    }
+  },
+  "printTerrain": function() {
+    for (var x = -1; x < window.innerWidth / Img.groundBasic.width; x++) {
+      for (var y = -1; y < window.innerHeight / Img.groundBasic.height; y++) {
+        ctx.drawImage(Img.groundBasic, x * Img.groundBasic.width, y * Img.groundBasic.height, Img.groundBasic.width + 1, Img.groundBasic.height + 1);
+      }
+    }
+  },
+  "resizeON": 0,
+  "checkForScreenResize": function() {
+    if (map.resizeON === 1) {
+      ctx.canvas.width = window.innerWidth;
+      ctx.canvas.height = window.innerHeight;
+      map.generateMinasLoc(12, 40, 40);
+      map.resizeON = 0;
+    }
+  }
 
 }

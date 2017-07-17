@@ -6,6 +6,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
+	<link rel="shortcut icon" type="image/png" href="./client/img/favicon.png" />
 	<link rel="stylesheet" href="./client/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="./client/Style.css">
 
@@ -16,7 +17,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 	<!--<link rel="stylesheet" href="./client/animate.css/animate.min.css">-->
 
-	<title>Title</title>
+	<title>GoldWorld</title>
 
 </head>
 
@@ -121,9 +122,11 @@
 
 
 		<canvas id="GameCanvas" style="position:absolute;top:0px;left:0px;">Your browser does not support the HTML5 canvas tag.</canvas>
+		<div style="position:absolute;bottom:0;left:0;">
+			<div id="UI" style="width:100%">
 
-
-
+			</div>
+		</div>
 		<div style="position:absolute;bottom:0;right:0;">
 			<div style='overflow:hidden;background: rgba(0,0,0,0.2);'>
 				<div id="chat-text" style="width:350px; max-height: 150px;overflow-y:scroll">
@@ -141,15 +144,19 @@
 				</div>
 			</form>
 
+
+
 		</div>
 	</div>
 
 	<script src="./client/input.js"></script>
 	<script src="./client/map.js"></script>
+	<script src="./client/indexScripts.js"></script>
+
 
 	<script src="./client/troops.js"></script>
 	<script src="./client/vectors.js"></script>
-	<script src="./client/indexScripts.js"></script>
+
 	<script src="./client/chat.js"></script>
 
 </body>

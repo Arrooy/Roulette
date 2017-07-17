@@ -249,7 +249,7 @@
 	  Img.explode.src = '/client/img/explosion.png';
 	  Img.minerIco.src = '/client/img/minerIco.png';
 	  Img.groundBasic.src = '/client/img/grass.png';
-	  Img.limit.src = '/client/img/Limits.png';
+	  Img.limit.src = '/client/img/Box.png';
 
 
 	  self.draw = function() {
@@ -317,19 +317,19 @@
 	});
 
 
+	$(window).resize(function() {
+	  map.resizeON = 1;
+	});
+
+	map.generateMinasLoc(12, 40, 40);
+
 	var millis = 0;
 	var lastMillis = 0;
 
-	Mines = new buildMines(0, 0, 12, 40, 40);
-
-	var Resolution = window.innerWidth / window.innerHeight;
-
-	var intento = 10;
-	$(window).resize(function() {
-	  location.reload();
-	});
-
 	setInterval(function() {
+
+	  map.checkForScreenResize();
+
 	  millis = +new Date();
 
 	  var a = document.getElementsByName('admin');
@@ -338,52 +338,25 @@
 	    a[i].style.color = '#' + (0x1000000 + (Math.random()) * 0xffffff).toString(16).substr(1, 6);
 	  }
 
-	  console.log(window.innerWidth + " " + window.innerHeight);
-
-
 	  if (!selfId)
 	    return;
 
 
 	  ctx.clearRect(0, 0, $("#GameCanvas").css("width"), $("#GameCanvas").css("height"));
-
-
 	  //Terrain
-	  for (var x = -1; x < window.innerWidth / Img.groundBasic.width; x++) {
-	    for (var y = -1; y < window.innerHeight / Img.groundBasic.height; y++) {
-	      ctx.drawImage(Img.groundBasic, x * Img.groundBasic.width, y * Img.groundBasic.height, Img.groundBasic.width + 1, Img.groundBasic.height + 1);
-	    }
-	  }
-
-
-	  for (var x = 0; x < window.innerWidth / intento; x++) {
-	    //ctx.drawImage(Img.limit,x*Img.limit.width,0, Img.limit.width, Img.limit.height);
-	    rotarImagen("GameCanvas", Img.limit, 0, intento / 2 + x * intento, 150, "leftUp", "SpriteVertical", 0, 0, 64, 64, intento, intento);
-	  }
-	  /*
-	  		for(var x = 0;x < window.innerWidth / Img.limit.width ;x++){
-	  			ctx.drawImage(Img.limit,x*Img.limit.width,window.innerHeight - Img.limit.height/2, Img.limit.width, Img.limit.height);
-	  		}
-	  		for(var y = 0;y < window.innerHeight / Img.limit.height ;y++){
-	  			ctx.drawImage(Img.limit,Img.limit.width,Img.limit.height * y, Img.limit.width, Img.limit.height);
-	  		}
-	  		for(var y = 0;y < window.innerHeight / Img.limit.height ;y++){
-	  			ctx.drawImage(Img.limit,window.innerWidth - Img.limit.width/2,Img.limit.height * y, Img.limit.width, Img.limit.height);
-	  		}
-	  */
-
-
-	  //Minas
-	  for (var x = 0; x < Mines.numeroMinas; x++) {
-	    rotarImagen("GameCanvas", Img.mine, 0, Mines.Minax[x], Mines.Minay[x], "CENTER", "SpriteVertical", 0, Mines.FrameMina[x] * 96, 96, 96, Mines.widthMina, Mines.heightMina);
-	    FrameMina = Math.round(Math.random() * 1);
-	  }
-
+	  map.printTerrain();
+	  map.printMinas();
+	  map.printLimits();
 
 	  for (var i in Player.list)
 	    Player.list[i].draw();
 
 	}, 40);
+
+
+
+
+
 
 
 	rotarImagen = function(NombreCanvas, Img, angle, x, y, Locations, Type, initx, inity, width, height, desiredSizex, desiredSizey) {

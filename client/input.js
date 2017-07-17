@@ -72,31 +72,34 @@ input = function() {
     ProcessaKeyEvent(e.keyCode, false);
   });
 }
+if (1) {
 
-document.onmousedown = function(event) {
-  socket.emit('keyPress', {
-    inputId: 'press',
-    x: event.clientX,
-    y: event.clientY,
-    state: true
-  });
-}
-document.onmouseup = function(event) {
-  socket.emit('keyPress', {
-    inputId: 'press',
-    x: event.clientX,
-    y: event.clientY,
-    state: false
-  });
-}
-document.onmousemove = function(event) {
-  socket.emit('keyPress', {
-    inputId: 'mouseMoved',
-    x: event.clientX,
-    y: event.clientY
-  });
-}
 
-document.oncontextmenu = function(event) {
-  event.preventDefault();
+  document.onmousedown = function(event) {
+    socket.emit('keyPress', {
+      inputId: 'press',
+      x: event.clientX,
+      y: event.clientY,
+      state: true
+    });
+  }
+  document.onmouseup = function(event) {
+    socket.emit('keyPress', {
+      inputId: 'press',
+      x: event.clientX,
+      y: event.clientY,
+      state: false
+    });
+  }
+  document.onmousemove = function(event) {
+    socket.emit('keyPress', {
+      inputId: 'mouseMoved',
+      x: event.clientX,
+      y: event.clientY
+    });
+  }
+
+  document.oncontextmenu = function(event) {
+    event.preventDefault();
+  }
 }
