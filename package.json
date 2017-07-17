@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "express": "^4.13.4",
-    "mongojs": "^8",
+    "mongojs": "^2.4.0",
     "socket.io": "^1.4.5"
   },
   "devDependencies": {},
