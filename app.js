@@ -5,7 +5,9 @@
 var mongoClient = require("mongojs");
 var url = "mongodb://<goldworld>:<goldworld>@ds161042.mlab.com:61042/goldworld";
 //var url = "mongodb://roulette:hn85YJZ9pNpaTbxiTGtMKodxJroA8JvyKlwzs8K764TdFRSUx7bMv0xupDCFMQ8wdSmAJy9WtNtSipiqoA2E1A==@roulette.documents.azure.com:10255/?ssl=true";
-var db = mongoClient(url, ['accounts']);
+var db = mongoClient(url, ['accounts'], {
+  authMechanism: 'ScramSHA1'
+});
 
 require('./Entity');
 
