@@ -122,13 +122,19 @@
 
 
 		<canvas id="GameCanvas" style="position:absolute;top:0px;left:0px;">Your browser does not support the HTML5 canvas tag.</canvas>
+
 		<div style="position:absolute;bottom:0;left:0;">
-			<div id="UI" style="width:100%">
+			<div id="UI" style="max-height: 34px;" class="btn-group" role="group">
+
+				<button type="button" class="btn btn-default">Left</button>
+				<button type="button" class="btn btn-default">Middle</button>
+				<button type="button" class="btn btn-default">Right</button>
 
 			</div>
 		</div>
+
 		<div style="position:absolute;bottom:0;right:0;">
-			<div style='overflow:hidden;background: rgba(0,0,0,0.2);'>
+			<div style='overflow:hidden;background: rgba(0,0,0,0.3);'>
 				<div id="chat-text" style="width:350px; max-height: 150px;overflow-y:scroll">
 				</div>
 			</div>
@@ -148,16 +154,16 @@
 
 		</div>
 	</div>
-
+	<script src="./client/logIn.js"></script>
 	<script src="./client/input.js"></script>
 	<script src="./client/map.js"></script>
-	<script src="./client/indexScripts.js"></script>
-
-
 	<script src="./client/troops.js"></script>
 	<script src="./client/vectors.js"></script>
-
 	<script src="./client/chat.js"></script>
+	<script src="./client/main.js"></script>
+
+
+
 
 </body>
 

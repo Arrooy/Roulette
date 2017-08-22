@@ -57,3 +57,11 @@ chatForm.onsubmit = function(e) {
   }
   chatInput.value = '';
 }
+
+var checkForAdmins = function() {
+  var a = document.getElementsByName('admin');
+  var i = 0;
+  for (i = 0; i < a.length; i++) {
+    a[i].style.color = '#' + (0x1000000 + (Math.random()) * 0xffffff).toString(16).substr(1, 6);
+  }
+}

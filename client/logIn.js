@@ -1,3 +1,4 @@
+	console.log("Loaded logIn");
 	var socket = io();
 	var ErrorAnimation = "shake"
 
@@ -11,6 +12,7 @@
 	var tryedandFailedPass3 = 0;
 	var tryedandFailedUsername = 0;
 
+	var gameStart = 0;
 	//Input help load
 	$(function() {
 	  $('[data-toggle="tooltip"]').tooltip()
@@ -190,14 +192,7 @@
 	socket.on('signInResponse', function(data) {
 
 	  if (data.success) {
-	    $("#gameDiv").css("display", "inline-block");
-	    $("#signDiv").css("display", "none");
-
-
-	    ctx.canvas.width = window.innerWidth;
-	    ctx.canvas.height = window.innerHeight;
-
-
+	    setUp();
 	  } else {
 	    ErrorType = 2;
 	    $('#alerta').modal('toggle')
@@ -221,214 +216,13 @@
 	  }
 	});
 
-	var Input = new input();
 
-	var Img = {};
-	Img.cursor = new Image();
-	Img.minero = new Image();
-	Img.mine = new Image();
-	Img.explode = new Image();
-	Img.minerIco = new Image();
-	Img.groundBasic = new Image();
-	Img.limit = new Image();
-
-
-	var Player = function(initPack) {
-	  var self = {};
-	  self.id = initPack.id;
-	  self.xp = initPack.xp;
-	  self.name = initPack.name;
-	  self.lvl = initPack.lvl;
-	  self.team = initPack.team;
-	  self.cur = initPack.cur;
-	  self.x = initPack.x;
-	  self.y = initPack.y;
-	  Img.cursor.src = '/client/img/' + self.cur + '.png';
-	  Img.minero.src = '/client/img/Miner.png';
-	  Img.mine.src = '/client/img/mine.png';
-	  Img.explode.src = '/client/img/explosion.png';
-	  Img.minerIco.src = '/client/img/minerIco.png';
-	  Img.groundBasic.src = '/client/img/grass.png';
-	  Img.limit.src = '/client/img/Box.png';
-
-
-	  self.draw = function() {
-
-	    var AnimationSpeed = 100;
-	    if (selfId != self.id) {
-	      if (self.cur != undefined) {
-
-	        //rotarImagen("ctx",Img.minero,0,self.x,self.y,"CENTER","SpriteVertical",0,i*72,72,72);
-	        //rotarImagen("ctx",Img.mine,0,self.x,self.y,"CENTER","SpriteVertical",0,i*96,96,96);
-	        //rotarImagen("ctx",Img.explode,0,self.x,self.y,"CENTER","SpriteVertical",i*64,j * 64,64,64);
-	        //rotarImagen("ctx",Img.minerIco,0,self.x,self.y,"CENTER");
-	        //rotarImagen("ctx",Img.groundBasic,0,self.x,self.y,"CENTER");
-	        //rotarImagen("ctx",knight[i],0,j*20,self.y,"CENTER");
-
-	      }
-	      return;
-	    }
-	  }
-
-	  Player.list[self.id] = self;
-
-	  return self;
-	}
-
-	var selfId = null;
-	Player.list = {};
-
-	socket.on('init', function(data) {
-	  if (data.selfId)
-	    selfId = data.selfId;
-
-	  for (var i = 0; i < data.player.length; i++) {
-	    new Player(data.player[i]);
-	  }
-	});
-
-	socket.on('update', function(data) {
-
-	  for (var i = 0; i < data.player.length; i++) {
-	    var pack = data.player[i];
-	    var p = Player.list[pack.id];
-	    if (p) {
-
-	      if (pack.xp !== undefined)
-	        p.xp = pack.xp;
-	      if (pack.lvl !== undefined)
-	        p.lvl = pack.lvl;
-	      if (pack.team !== undefined)
-	        p.team = pack.team;
-	      if (pack.cur !== undefined)
-	        p.cur = pack.cur;
-	      if (pack.x !== undefined)
-	        p.x = pack.x;
-	      if (pack.y !== undefined)
-	        p.y = pack.y;
-	    }
-	  }
-	});
-
-	socket.on('remove', function(data) {
-	  for (var i = 0; i < data.player.length; i++) {
-	    delete Player.list[data.player[i]];
-	  }
-	});
-
-
-	$(window).resize(function() {
-	  map.resizeON = 1;
-	});
-
-	map.generateMinasLoc(12, 40, 40);
-
-	var millis = 0;
-	var lastMillis = 0;
-
-	setInterval(function() {
-
-	  map.checkForScreenResize();
-
-	  millis = +new Date();
-
-	  var a = document.getElementsByName('admin');
-	  var i = 0;
-	  for (i = 0; i < a.length; i++) {
-	    a[i].style.color = '#' + (0x1000000 + (Math.random()) * 0xffffff).toString(16).substr(1, 6);
-	  }
-
-	  if (!selfId)
-	    return;
-
-
-	  ctx.clearRect(0, 0, $("#GameCanvas").css("width"), $("#GameCanvas").css("height"));
-	  //Terrain
-	  map.printTerrain();
-	  map.printMinas();
-	  map.printLimits();
-
-	  for (var i in Player.list)
-	    Player.list[i].draw();
-
-	}, 40);
-
-
-
-
-
-
-
-	rotarImagen = function(NombreCanvas, Img, angle, x, y, Locations, Type, initx, inity, width, height, desiredSizex, desiredSizey) {
-	  angle = angle * Math.PI / 180;
-	  if (Type === "SpriteVertical") {
-	    ctxx = document.getElementById(NombreCanvas).getContext("2d");
-	    ctxx.save();
-	    ctxx.translate(x, y);
-	    ctxx.rotate(angle);
-	    if (desiredSizey == undefined) {
-	      ctxx.drawImage(Img, initx, inity, width, height, width / -2, height / -2, width, height);
-	    } else {
-	      ctxx.drawImage(Img, initx, inity, width, height, width / -2, height / -2, desiredSizex, desiredSizey);
-	    }
-
-	    ctxx.restore();
-	  } else {
-	    if (Locations === "center" || Locations === "Center" || Locations === "CENTER") {
-	      ctxx = document.getElementById(NombreCanvas).getContext("2d");
-	      ctxx.save();
-	      ctxx.translate(x, y);
-	      ctxx.rotate(angle);
-	      if (width == undefined || height == undefined) {
-	        ctxx.drawImage(Img, Img.width / -2, Img.height / -2, Img.width, Img.height);
-	      } else {
-	        ctxx.drawImage(Img, width / -2, height / -2, width, height);
-	      }
-	      ctxx.restore();
-	    } else if (Locations === "leftUp" || Locations === "left-up" || Locations === "leftup" || Locations === "LeftUp" || Locations === "LEFTUP") {
-	      ctxx = document.getElementById(NombreCanvas).getContext("2d");
-	      ctxx.save();
-	      ctxx.translate(x - Img.width / 2, y - Img.height / 2);
-	      ctxx.rotate(angle);
-	      ctxx.drawImage(Img, Img.width / 2, Img.height / 2, Img.width, Img.height);
-	      ctxx.restore();
-	    }
-	  }
-	}
-
-	OrientadoA = function(Px, Py, Ox, Oy, Quadrante) {
-
-	  var AB = Vector.Create(Px, Py, Ox, Oy);
-	  var Neutro;
-	  if (Quadrante === 0) {
-	    Neutro = Vector.Create(0, 0, 1, 0);
-	  } else if (Quadrante === 1) {
-	    Neutro = Vector.Create(1, 0, 0, 0);
-	  } else if (Quadrante === 2) {
-	    Neutro = Vector.Create(0, 0, 1, 0);
-	  } else if (Quadrante === 3) {
-	    Neutro = Vector.Create(1, 0, 0, 0);
-	  }
-
-	  var jeje = Vector.Angle(AB, Neutro);
-	  return jeje / Math.PI * 180;
-	}
-
-	Distancia = function(Px, Py, Ox, Oy) {
-	  return (Math.sqrt(Math.pow((Px - Ox), 2) + Math.pow((Py - Oy), 2)));
-	}
-
-	var Vector = {
-	  "Create": function(Px, Py, Ox, Oy) {
-	    return [Math.abs(-Px + Ox), Math.abs(-Py + Oy)];
-	  },
-	  "Angle": function(vec1, vec2) {
-	    return Math.acos((Vector.ProducteEscalar(vec1, vec2)) / (Vector.Modulo(vec1) * Vector.Modulo(vec2)));
-	  },
-	  "Modulo": function(array) {
-	    return Math.sqrt(Math.pow(array[0], 2) + Math.pow(array[1], 2));
-	  },
-	  "ProducteEscalar": function(vec1, vec2) {
-	    return (vec1[0] * vec2[0] + vec1[1] * vec2[1]);
-	  }
+	var setUp = function() {
+	  ctx.canvas.width = window.innerWidth;
+	  ctx.canvas.height = window.innerHeight;
+	  $("#UI").css("width", window.innerWidth - 350);
+	  $("#gameDiv").css("display", "inline-block");
+	  $("#signDiv").css("display", "none");
+	  console.log("gameStart = 1")
+	  gameStart = 1;
 	}

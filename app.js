@@ -1,13 +1,6 @@
-//var mongojs = require("mongojs");
-//var db = null;//mongojs('localhost:27017/myGame', ['account','progress']);
-
-
 var mongoClient = require("mongojs");
-var url = "mongodb://<goldworld>:<goldworld>@ds161042.mlab.com:61042/goldworld";
-//var url = "mongodb://roulette:hn85YJZ9pNpaTbxiTGtMKodxJroA8JvyKlwzs8K764TdFRSUx7bMv0xupDCFMQ8wdSmAJy9WtNtSipiqoA2E1A==@roulette.documents.azure.com:10255/?ssl=true";
-var db = mongoClient(url, ['accounts'], {
-  authMechanism: 'ScramSHA1'
-});
+var url = 'mongodb://arroyoarroyo:adriaarroyo@ds161042.mlab.com:61042/goldworld?authMechanism=SCRAM-SHA-1';
+var db = mongoClient(url, []);
 
 require('./Entity');
 
@@ -32,7 +25,7 @@ db.on('error', function(err) {
 db.runCommand({
   ping: 1
 }, function(err, res) {
-  if (!err && res.ok) console.log('we\'re up')
+  if (!err && res.ok) console.log('Connection done')
 })
 
 var isValidPassword = function(data, cb) {
