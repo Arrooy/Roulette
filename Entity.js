@@ -103,18 +103,6 @@ Player.onConnect = function(socket, data) {
     team: data[0].team,
   });
 
-  socket.on('keyPress', function(data) {
-    if (data.inputId === 'press') {
-      player.press = data.state;
-      player.x = data.x;
-      player.y = data.y;
-    } else if (data.inputId === 'mouseMoved') {
-      player.x = data.x;
-      player.y = data.y;
-    } else if (data.inputId === 'key') {
-
-    }
-  });
 
   socket.on('sendMsgToServer', function(data) {
     var admin = false;
