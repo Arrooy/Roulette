@@ -48,7 +48,7 @@ function setup() {
 }
 
 function draw() {
-  for (var a = 0; a < 100; a++) {
+  for (var a = 0; a < 300; a++) {
     background(127);
 
     // Draw the start and target positions
