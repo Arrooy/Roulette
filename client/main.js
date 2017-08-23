@@ -1,5 +1,3 @@
-var Input = new input();
-
 var Player = function(initPack) {
   var self = {};
   self.id = initPack.id;
@@ -11,20 +9,12 @@ var Player = function(initPack) {
   self.x = initPack.x;
   self.y = initPack.y;
 
-
-
   self.draw = function() {
 
-    var AnimationSpeed = 100;
     if (selfId != self.id) {
       if (self.cur != undefined) {
 
-        //rotarImagen("ctx",Img.minero,0,self.x,self.y,"CENTER","SpriteVertical",0,i*72,72,72);
-        //rotarImagen("ctx",Img.mine,0,self.x,self.y,"CENTER","SpriteVertical",0,i*96,96,96);
-        //rotarImagen("ctx",Img.explode,0,self.x,self.y,"CENTER","SpriteVertical",i*64,j * 64,64,64);
-        //rotarImagen("ctx",Img.minerIco,0,self.x,self.y,"CENTER");
-        //rotarImagen("ctx",Img.groundBasic,0,self.x,self.y,"CENTER");
-        //rotarImagen("ctx",knight[i],0,j*20,self.y,"CENTER");
+
 
       }
       return;
@@ -79,37 +69,19 @@ socket.on('remove', function(data) {
 
 
 $(window).resize(function() {
-  map.resizeON = 1;
+
 });
 
-
-
-var millis = 0;
-var lastMillis = 0;
-console.log(gameStart);
-
-
 setInterval(function() {
-  if (gameStart === 1) {
 
-    map.generateMinasLoc(12, 40, 40);
-    map.loadResources();
-    console.log("LLEGAMOS");
-    map.printTerrain();
-    console.log("LLEGAMOS2");
-    map.printMinas();
-    console.log("LLEGAMOS3");
-    map.printLimits();
-    console.log("EASY");
-  }
-  millis = +new Date();
-  map.checkForScreenResize();
-  checkForAdmins();
+  //Public stuff
 
 
   if (!selfId)
     return;
 
+  //Private stuff
+  //Update canvas
   ctx.clearRect(0, 0, $("#GameCanvas").css("width"), $("#GameCanvas").css("height"));
 
   for (var i in Player.list)
