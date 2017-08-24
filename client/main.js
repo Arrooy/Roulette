@@ -77,15 +77,15 @@ setInterval(function() {
   //Public stuff
   var Objective = punto.Crear(10, 10);
   console.log(Objective);
+
   if (!selfId)
     return;
 
   //Private stuff
   //Update canvas
   ctx.clearRect(0, 0, $("#GameCanvas").css("width"), $("#GameCanvas").css("height"));
-}
 
-for (var i in Player.list)
-  Player.list[i].draw();
+  for (var i in Player.list)
+    Player.list[i].draw();
 
 }, 40);
