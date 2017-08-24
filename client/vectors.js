@@ -13,8 +13,8 @@ var punto = {
 }
 
 var Vector = {
-  "Restar": function(Px, Py, Ox, Oy) {
-    return [Math.abs(-Px + Ox), Math.abs(-Py + Oy)];
+  "Restar": function(Px, Py) {
+    return [Math.abs(-Px[0] + Px[1]), Math.abs(-Py[0] + Py[1])];
   },
   "Angle": function(vec1, vec2) {
     return Math.acos((Vector.ProducteEscalar(vec1, vec2)) / (Vector.Modulo(vec1) * Vector.Modulo(vec2)));

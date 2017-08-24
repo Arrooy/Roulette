@@ -75,9 +75,11 @@ $(window).resize(function() {
 
 setInterval(function() {
   //Public stuff
-  var Objective = punto.Crear(10, 10);
-  console.log(Objective);
-
+  var p1 = punto.Crear(10, 10);
+  var p2 = punto.Crear(45, 20);
+  console.log(p1 + "  " + p2);
+  var result = Vector.Restar(p1, p2);
+  console.log("Resta es " + result);
   if (!selfId)
     return;
 
