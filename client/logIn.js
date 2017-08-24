@@ -1,7 +1,7 @@
 var socket = io();
 var ErrorAnimation = "shake"
 
-ctx = $("#GameCanvas")[0].getContext('2d');
+ctx = $("#GameCanvas")[0].getContext('2d'); //HEROORR
 //Error detection
 var ErrorType = 0;
 var tryedandFailedEmail = 0;
