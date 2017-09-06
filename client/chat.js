@@ -1,17 +1,15 @@
 var chatText = document.getElementById('chat-text');
 var chatInput = document.getElementById('chat-input');
 var chatForm = document.getElementById('chat-form');
-var EverChatSow;
 
-$("#chat-input").focus(function() {
-  if (EverChatSow == 1) {
-    chatText.style.display = "inline-block";
-  }
 
-}).blur(function() {
-  chatText.style.display = "none";
+$("#chat-input").onmouseover(function() {
+  chatText.style.display = "inline-block";
 });
 
+$("#chat-input").onmouseleave(function() {
+  chatText.style.display = "none";
+});
 
 socket.on('addToChat', function(data) {
 
@@ -31,7 +29,7 @@ socket.on('addToChat', function(data) {
 });
 
 chatForm.onsubmit = function(e) {
-  EverChatSow = 1;
+
   e.preventDefault();
 
   if (chatInput.value[0] === '@') {

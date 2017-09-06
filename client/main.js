@@ -105,12 +105,13 @@ var loop = function() {
 }
 
 document.onmousemove = function(e) {
-  console.log("x: " + e.pageX + " Y: " + e.pageY);
+  socket.emit("mouseMoved", {
+    x: e.pageX,
+    y: e.pageY
+  });
 };
 
-document.onmouseout = function() {
 
-};
 
 /*
 document.addEventListener("onmousemove",function(){
