@@ -105,12 +105,12 @@ var loop = function() {
 }
 
 document.onmousemove = function(e) {
-console.log("x: " + e.pageX + " Y: " + e.pageY);
-});
+  console.log("x: " + e.pageX + " Y: " + e.pageY);
+};
 
 document.onmouseout = function() {
 
-});
+};
 
 /*
 document.addEventListener("onmousemove",function(){
