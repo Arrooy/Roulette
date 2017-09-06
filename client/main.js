@@ -105,7 +105,7 @@ var loop = function() {
 }
 
 document.addEventListener("onmousemove", function(e) {
-  console.log("x: " + e.clientX + " Y: " + e.clientY);
+  console.log("x: " + e.pageX + " Y: " + e.pageY);
 });
 
 document.addEventListener("onmouseout", function() {
