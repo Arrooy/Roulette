@@ -1,6 +1,6 @@
 var socket = io();
 var ErrorAnimation = "shake"
-
+var start = 0;
 ctx = $("#GameCanvas")[0].getContext('2d'); //HEROORR
 //Error detection
 var ErrorType = 0;
@@ -221,4 +221,5 @@ var setUp = function() {
   ctx.canvas.height = window.innerHeight;
   $("#gameDiv").css("display", "inline-block");
   $("#signDiv").css("display", "none");
+  start = 1;
 }

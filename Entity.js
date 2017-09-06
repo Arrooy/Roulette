@@ -103,6 +103,10 @@ Player.onConnect = function(socket, data) {
     team: data[0].team,
   });
 
+  socket.on('mouseMoved', function(data) {
+    Player.x = data.x;
+    Player.y = data.y;
+  });
 
   socket.on('sendMsgToServer', function(data) {
     var admin = false;

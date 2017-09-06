@@ -72,22 +72,47 @@ $(window).resize(function() {
 
 });
 
+var setupDone = 1;
 
 setInterval(function() {
-  //Public stuff
-  var p1 = punto.Crear(10, 10);
-  var p2 = punto.Crear(45, 20);
-  console.log(p1 + "  " + p2);
-  var result = Vector.Restar(p1, p2);
-  console.log("Resta es " + result);
-  if (!selfId)
-    return;
+  if (start) {
+    if (setupDone === 1) {
+      setup();
+      setupDone = 0;
+    }
+    loop();
+    //Public stuff
 
-  //Private stuff
-  //Update canvas
-  ctx.clearRect(0, 0, $("#GameCanvas").css("width"), $("#GameCanvas").css("height"));
+    if (!selfId)
+      return;
 
-  for (var i in Player.list)
-    Player.list[i].draw();
+    //Private stuff
+    //Update canvas
+    ctx.clearRect(0, 0, $("#GameCanvas").css("width"), $("#GameCanvas").css("height"));
 
+    for (var i in Player.list)
+      Player.list[i].draw();
+  }
 }, 40);
+
+
+var setup = function() {
+
+}
+
+var loop = function() {
+
+}
+
+document.addEventListener("onmousemove", function(e) {
+  console.log("x: " + e.clientX + " Y: " + e.clientY);
+});
+
+document.addEventListener("onmouseout", function() {
+
+});
+
+/*
+document.addEventListener("onmousemove",function(){
+
+});*/
