@@ -104,11 +104,11 @@ var loop = function() {
 
 }
 
-document.addEventListener("onmousemove", function(e) {
-  console.log("x: " + e.pageX + " Y: " + e.pageY);
+document.onmousemove = function(e) {
+console.log("x: " + e.pageX + " Y: " + e.pageY);
 });
 
-document.addEventListener("onmouseout", function() {
+document.onmouseout = function() {
 
 });
 
