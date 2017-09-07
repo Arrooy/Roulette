@@ -47,7 +47,7 @@ $("#Step1").click(function() {
   var LimitedAge = new Date();
   UserAge.setFullYear(data[0], data[1] - 1, data[2]);
   LimitedAge.setFullYear(1999, 11, 31);
-  var countError = 0;
+
 
   if ($("#CEmail").val().indexOf('@') == -1) {
     NoError = 0;
@@ -58,10 +58,19 @@ $("#Step1").click(function() {
   } else {
     $("#CEmailLabel").css('color', '#2F1B41');
   }
+
+
+  if ($("#CUsername").val().length < 5) {
+    NoError = 0;
+    tryedandFailedUsername = 1;
+    $("#CUsernameLabel").css('color', '#F05941');
+    $("#ContainerUsername").addClass('animated infinite  ' + ErrorAnimation);
+  }
+
   if (NoError == 1) {
     if (data[0] == "" || data[1] == undefined || data[2] == undefined) {
       NoError = 0;
-      countError = 1;
+
       tryedandFailedAge = 1;
       $("#LabelCAge").css('color', '#F05941');
       $("#CAgediv").addClass('animated infinite  ' + ErrorAnimation);
@@ -79,6 +88,7 @@ $("#Step1").click(function() {
       $("#LabelCAge").css('color', '#2F1B41');
     }
   }
+
   if (NoError === 1) {
     $("#CrearCuenta1").css("display", "none");
     $("#CrearCuenta2").css("display", "");
@@ -189,7 +199,15 @@ $('#alerta').on('show.bs.modal', function(event) {
 });
 
 document.addEventListener('keypress', function(e) {
-  if (!ready && e.keyCode === 13) {
+
+  if ($("#CrearCuenta2").css("display") !== "none" && e.keyCode === 13) {
+    $('#CA').click();
+  }
+
+  if ($("#CrearCuenta1").css("display") !== "none" && e.keyCode === 13) {
+    $('#Step1').click();
+  }
+  if ($("#signDiv").css("display") !== "none" && e.keyCode === 13) {
     $('#signDiv-signIn').click();
   }
 });

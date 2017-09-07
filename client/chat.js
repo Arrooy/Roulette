@@ -7,12 +7,12 @@ var chatTextSize = 14;
 
 $("#comment-container").mouseover(function() {
   //chatText.style.display = "inline-block";
-  $("#chat-text").css('max-height', window.innerHeight + "px")
+  $("#chat-text").css('max-height', window.innerHeight + "px");
 });
 
 $("#comment-container").mouseleave(function() {
   //chatText.style.display = "none";
-  $("#chat-text").css('max-height', '150px')
+  $("#chat-text").css('max-height', '150px');
 });
 
 socket.on('addToChat', function(data) {
