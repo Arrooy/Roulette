@@ -1,5 +1,5 @@
 var mongoClient = require("mongojs");
-var url = 'mongodb://arroyoarroyo:adriaarroyo@ds161042.mlab.com:61042/goldworld?authMechanism=SCRAM-SHA-1';
+var url = 'mongodb://arroyoarroyo:adriaarroyo@ds127864.mlab.com:27864/accounts_ruleta?authMechanism=SCRAM-SHA-1';
 var db = mongoClient(url, []);
 
 require('./Entity');
