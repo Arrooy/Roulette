@@ -1,6 +1,6 @@
 var socket = io();
 var ErrorAnimation = "shake"
-var start = 0;
+var ready = 0;
 ctx = $("#GameCanvas")[0].getContext('2d'); //HEROORR
 //Error detection
 var ErrorType = 0;
@@ -188,6 +188,12 @@ $('#alerta').on('show.bs.modal', function(event) {
   }
 });
 
+document.addEventListener('keypress', function(e) {
+  if (!ready && e.keyCode === 13) {
+    $('#signDiv-signIn').click();
+  }
+});
+
 socket.on('signInResponse', function(data) {
 
   if (data.success) {
@@ -215,11 +221,10 @@ socket.on('signUpResponse', function(data) {
   }
 });
 
-
 var setUp = function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
   $("#gameDiv").css("display", "inline-block");
   $("#signDiv").css("display", "none");
-  start = 1;
+  ready = 1;
 }

@@ -8,16 +8,17 @@ var Player = function(initPack) {
   self.cur = initPack.cur;
   self.x = initPack.x;
   self.y = initPack.y;
-
+  self.admin = initPack.admin;
+  self.ImageCursor = new Image();
+  self.ImageCursor.src = "./client/img/" + self.cur + ".png";
   self.draw = function() {
 
     if (selfId != self.id) {
       if (self.cur != undefined) {
 
-
-
+        ctx.drawImage(self.ImageCursor, self.x, self.y);
       }
-      return;
+
     }
   }
 
@@ -69,13 +70,14 @@ socket.on('remove', function(data) {
 
 
 $(window).resize(function() {
-
+  ctx.canvas.width = window.innerWidth;
+  ctx.canvas.height = window.innerHeight;
 });
 
 var setupDone = 1;
 
 setInterval(function() {
-  if (start) {
+  if (ready) {
     if (setupDone === 1) {
       setup();
       setupDone = 0;
@@ -88,7 +90,10 @@ setInterval(function() {
 
     //Private stuff
     //Update canvas
-    ctx.clearRect(0, 0, $("#GameCanvas").css("width"), $("#GameCanvas").css("height"));
+
+    ctx.clearRect(0, 0, $("#GameCanvas").width(), $("#GameCanvas").height());
+
+
 
     for (var i in Player.list)
       Player.list[i].draw();
@@ -104,16 +109,11 @@ var loop = function() {
 
 }
 
-document.onmousemove = function(e) {
-  socket.emit("mouseMoved", {
-    x: e.pageX,
-    y: e.pageY
-  });
-};
-
-
-
-/*
-document.addEventListener("onmousemove",function(){
-
-});*/
+document.addEventListener('mousemove', function(e) {
+  if (ready) {
+    socket.emit("mouseMoved", {
+      x: e.pageX,
+      y: e.pageY
+    });
+  }
+});

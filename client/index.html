@@ -38,7 +38,7 @@
 			</div>
 			<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
 				<label style="color:#2F1B41" for="signDiv-password">Password</label>
-				<input type="password" class="form-control" id="signDiv-password" placeholder="Password" onkeypress="if(event.keyCode === 13 && $('signDiv').css('display') === 'inline-block' ) $('#signDiv-signIn').click()">
+				<input type="password" class="form-control" id="signDiv-password" placeholder="Password">
 			</div>
 			<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
 				<a style="color:#2F1B41" href="https://www.google.es/search?q=brain+not+found&newwindow=1&source=lnms&sa=X&ved=0ahUKEwiStMTDor7UAhVSI1AKHdZiCnoQ_AUIBSgA&biw=1242&bih=589&dpr=1.1">Forgot your username or password?</a>
@@ -94,7 +94,6 @@
 				<input type="password" class="form-control" id="CPassword2" placeholder="Same Password again" data-toggle="tooltip" data-placement="top" title="Just repeat the password to verificate you didnt mistyped something">
 			</div>
 
-			inline-block
 			<div class="form-group col-md-4 col-md-offset-4 col-xs-4 col-xs-offset-4">
 				<button type="button" id="Step0" class="btn btn-warning">Previous step</button>
 				<button type="button" id="CA" class="btn btn-warning">Create Account</button>
@@ -126,15 +125,14 @@
 
 
 
-		<canvas id="GameCanvas" style="position:absolute;top:0px;left:0px;">Your browser does not support the HTML5 canvas tag.</canvas>
+		<canvas id="GameCanvas" style="position:absolute;top:0px;left:0px;cursor: none;">Your browser does not support the HTML5 canvas tag.</canvas>
 
 
 
-		<div style="position:absolute;bottom:0;right:0;">
-			<div style='overflow:hidden;background: rgba(0,0,0,0.3);'>
-				<div id="chat-text" style="width:350px; max-height: 150px;overflow-y:scroll">
-				</div>
+		<div id="comment-container" style="position:absolute;bottom:0;right:0;overflow:hidden;background: rgba(0,0,0,0.3);">
+			<div id="chat-text" style="width:350px; max-height: 150px;overflow-y:scroll">
 			</div>
+
 
 
 

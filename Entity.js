@@ -47,12 +47,13 @@ Player = function(param) {
   var self = Entity(param);
 
   self.name = param.name;
-  self.xp = 1;
+  self.xp = param.xp;
   self.color = param.color;
   self.team = param.team;
   self.press = false;
-  self.cur = ["cursorBasic"];
+  self.cur = param.cur;
   self.actualCur = 0;
+  self.admin = param.admin;
 
   self.update = function() {
 
@@ -65,9 +66,10 @@ Player = function(param) {
       name: self.name,
       lvl: self.lvl,
       team: self.team,
-      cur: self.cur[0],
+      cur: self.cur[self.actualCur],
       x: self.x,
-      y: self.y
+      y: self.y,
+      admin: self.admin
     };
   }
   self.getUpdatePack = function() {
@@ -98,34 +100,32 @@ Player.onConnect = function(socket, data) {
     name: data[0].username,
     socket: socket,
     color: data[0].color,
-    cur: data[0].cur[0],
+    cur: data[0].cur,
     xp: data[0].xp,
     team: data[0].team,
+    admin: data[0].admin
   });
 
   socket.on('mouseMoved', function(data) {
-    Player.x = data.x;
-    Player.y = data.y;
+    Player.list[socket.id].x = data.x;
+    Player.list[socket.id].y = data.y;
   });
 
   socket.on('sendMsgToServer', function(data) {
-    var admin = false;
+
     for (var i in SOCKET_LIST) {
-      if (Player.list[socket.id].name === "Admin") {
-        adminId = socket.id;
-        admin = true;
-      }
-      if (admin === true) {
+      if (Player.list[socket.id].admin === true) {
         SOCKET_LIST[i].emit('addToChat', {
-          message: "RandomAdmin" + ': ' + data,
+          message: data,
           color: Player.list[socket.id].color,
-          admin: admin
+          name: Player.list[socket.id].name,
+          admin: true
         });
       } else {
         SOCKET_LIST[i].emit('addToChat', {
           message: Player.list[socket.id].name + ': ' + data,
           color: Player.list[socket.id].color,
-          admin: admin
+          admin: false
         });
       }
 

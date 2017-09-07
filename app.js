@@ -68,7 +68,8 @@ var addUser = function(data, cb) {
     xp: 0,
     team: "none",
     cur: ["cursorBasic"],
-    lvl: 0
+    lvl: 0,
+    admin: false
   }, function(err, doc) {
     return cb();
   });
