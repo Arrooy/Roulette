@@ -17,6 +17,7 @@ var Player = function(initPack) {
       if (self.cur != undefined) {
 
         ctx.drawImage(self.ImageCursor, self.x, self.y);
+
       }
 
     }
@@ -75,7 +76,16 @@ $(window).resize(function() {
 });
 
 var setupDone = 1;
+var as = 0;
+var OrignialSizeX = 1842;
+var OrignialSizeY = 1014;
 
+Ruleta16 = new Image();
+Ruleta16.src = "./client/img/RuletaBasica.png";
+GoldSelector = new Image();
+GoldSelector.src = "./client/img/GoldSelector.png";
+
+var GoldAngle = 270;
 setInterval(function() {
   if (ready) {
     if (setupDone === 1) {
@@ -87,29 +97,36 @@ setInterval(function() {
 
     if (!selfId)
       return;
-
     //Private stuff
     //Update canvas
 
     ctx.clearRect(0, 0, $("#GameCanvas").width(), $("#GameCanvas").height());
 
-
+    if (as >= 360)
+      as = 0;
 
     for (var i in Player.list)
       Player.list[i].draw();
+
+    //indicador(window.innerWidth / 2, window.innerHeight / 2, as += 10, 350, 10);
+
+    indicador(Player.list[selfId].x, Player.list[selfId].y, as += 1, (350 * ctx.canvas.width) / OrignialSizeX, (10 * ctx.canvas.height) / OrignialSizeY);
+    ctx.drawImage(Ruleta16, Player.list[selfId].x - 420 / 2, Player.list[selfId].y - 420 / 2);
   }
 }, 40);
+//JO = Player.list[selfId]
 
+var setup = function() {}
 
-var setup = function() {
+var loop = function() {}
 
-}
-
-var loop = function() {
-
-}
+/*
+document.addEventListener('mousedown', function(e) {
+  ctx.clearRect(0, 0, $("#GameCanvas").width(), $("#GameCanvas").height());
+});*/
 
 document.addEventListener('mousemove', function(e) {
+
   if (ready) {
     socket.emit("mouseMoved", {
       x: e.pageX,
@@ -117,3 +134,37 @@ document.addEventListener('mousemove', function(e) {
     });
   }
 });
+
+var indicador = function(x, y, degrees, width, height) {
+  var sizeCasillaX = 70 / OrignialSizeX * ctx.canvas.width;
+  var sizeCasillaY = 113 / OrignialSizeY * ctx.canvas.height;
+
+  ctx.save();
+  ctx.beginPath();
+  x = x - width / 2;
+  y = y - height / 2;
+  ctx.translate(x + width / 2, y + height / 2);
+  ctx.rotate(degrees * Math.PI / 180);
+  ctx.fillStyle = "black";
+  ctx.rect(-width / 2, -height / 2, width, height);
+  ctx.fill();
+  /*  ctx.beginPath();
+    ctx.fillStyle = "rgba(247, 239, 31, 0.54)";
+    ctx.rect(width / 2, -sizeCasillaY / 2, sizeCasillaX, sizeCasillaY);
+    ctx.fill();*/
+  /*ctx.beginPath();
+  ctx.fillStyle = "rgba(247, 239, 31, 0.54)";
+  ctx.rect(-width - sizeCasillaX, -sizeCasillaY / 2, sizeCasillaX, sizeCasillaY);
+  ctx.fill();*/
+  golder(GoldSelector, width, sizeCasillaY);
+
+
+  ctx.restore();
+
+
+
+}
+
+var golder = function(GoldSelector, width, sizeCasillaY) {
+  ctx.drawImage(GoldSelector, width / 2, -sizeCasillaY / 2);
+}

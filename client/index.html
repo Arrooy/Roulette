@@ -129,25 +129,40 @@
 
 
 
-		<div id="comment-container" style="position:absolute;bottom:0;right:0;overflow:hidden;background: rgba(0,0,0,0.3);">
-			<div id="chat-text" style="width:350px; max-height: 150px;overflow-y:scroll">
-			</div>
-
-
+		<div id="comment-container" style="position:absolute;bottom:0;right:0;background: rgba(0,0,0,0.3);">
+			<div id="chat-text" style="width:350px; max-height: 150px;overflow-y:scroll;overflow-x:hidden"></div>
 
 
 			<form id="chat-form" style="margin-bottom:0px" autocomplete="off">
 				<div class="input-group" style="width:350px ">
 					<input id="chat-input" type="text" style="" class="form-control" style="width:350px" placeholder="This is a chat!"></input>
+
 					<span class="input-group-btn">
-				        <button id="inputButton"class="btn btn-default" type="button"> <span id="iconoChat" class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span></button>
-					</span>
+						<div class="btn-group">
+							<div class="dropup">
+
+
+							<button type="button" id="inputButton"class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span id="iconoChat" class="glyphicon glyphicon-option-vertical"></span></button>
+					<ul class="dropdown-menu dropdown-menu-right" style="background-color:rgba(20, 20, 20, 0.75)">
+						<button type="button" id="a" class="btn btn-warning">Previous step</button>
+						<button type="button" id="b" class="btn btn-warning">Create Account</button>
+					</ul>
 				</div>
-			</form>
-
-
-
 		</div>
+
+		</span>
+
+	</div>
+	</form>
+
+
+
+
+	</div>
+
+
+
+
 	</div>
 	<script src="./client/logIn.js"></script>
 
