@@ -111,7 +111,13 @@ setInterval(function() {
     //indicador(window.innerWidth / 2, window.innerHeight / 2, as += 10, 350, 10);
 
     indicador(Player.list[selfId].x, Player.list[selfId].y, as += 1, (350 * ctx.canvas.width) / OrignialSizeX, (10 * ctx.canvas.height) / OrignialSizeY);
-    ctx.drawImage(Ruleta16, Player.list[selfId].x - 420 / 2, Player.list[selfId].y - 420 / 2);
+    var masPeke;
+    if (ctx.canvas.width < ctx.canvas.height) {
+      masPeke = ctx.canvas.width;
+    } else {
+      masPeke = ctx.canvas.height;
+    }
+    ctx.drawImage(Ruleta16, Player.list[selfId].x - ((420 * masPeke) / OrignialSizeX) / 2, Player.list[selfId].y - ((420 * masPeke) / OrignialSizeY) / 2, (420 * masPeke) / OrignialSizeX, (420 * masPeke) / OrignialSizeY);
   }
 }, 40);
 //JO = Player.list[selfId]
@@ -164,7 +170,7 @@ var indicador = function(x, y, degrees, width, height) {
 
 
 }
-
+//adapt de angle + teh size of all fotos to be responsive!
 var golder = function(GoldSelector, width, sizeCasillaY) {
   ctx.drawImage(GoldSelector, width / 2, -sizeCasillaY / 2);
 }
