@@ -1,3 +1,27 @@
+var OrignialSizeX = 1842;
+var OrignialSizeY = 1014;
+var setupDone = 0;
+var D = [];
+var R = new Image();
+var I = new Image();
+
+var R_Big_S = "./client/img/R_Big.png";
+var R_Nor_S = "./client/img/R_Nor.png";
+var R_Small_S = "./client/img/R_Small.png";
+
+var I_Big_S = "./client/img/I_Big.png";
+var I_Nor_S = "./client/img/I_Nor.png";
+var I_Small_S = "./client/img/I_Small.png";
+
+var images = [
+  "./client/img/R_Big.png",
+  "./client/img/R_Nor.png",
+  "./client/img/R_Small.png",
+  "./client/img/I_Big.png",
+  "./client/img/I_Nor.png",
+  "./client/img/I_Small.png"
+];
+
 var Player = function(initPack) {
   var self = {};
   self.id = initPack.id;
@@ -9,6 +33,7 @@ var Player = function(initPack) {
   self.x = initPack.x;
   self.y = initPack.y;
   self.admin = initPack.admin;
+
   self.ImageCursor = new Image();
   self.ImageCursor.src = "./client/img/" + self.cur + ".png";
   self.draw = function() {
@@ -73,27 +98,13 @@ socket.on('remove', function(data) {
 $(window).resize(function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
+  loadImage(images);
+  SelectImages();
 });
 
-var setupDone = 1;
-var as = 0;
-var OrignialSizeX = 1842;
-var OrignialSizeY = 1014;
-
-Ruleta16 = new Image();
-Ruleta16.src = "./client/img/RuletaBasica.png";
-GoldSelector = new Image();
-GoldSelector.src = "./client/img/GoldSelector.png";
-
-var GoldAngle = 270;
 setInterval(function() {
-  if (ready) {
-    if (setupDone === 1) {
-      setup();
-      setupDone = 0;
-    }
-    loop();
-    //Public stuff
+
+  if (ready1 && ready2) {
 
     if (!selfId)
       return;
@@ -102,33 +113,25 @@ setInterval(function() {
 
     ctx.clearRect(0, 0, $("#GameCanvas").width(), $("#GameCanvas").height());
 
-    if (as >= 360)
-      as = 0;
 
     for (var i in Player.list)
       Player.list[i].draw();
 
-    //indicador(window.innerWidth / 2, window.innerHeight / 2, as += 10, 350, 10);
+    indicador(window.innerWidth / 2, window.innerHeight / 2, 0, 350, 10);
 
-    indicador(Player.list[selfId].x, Player.list[selfId].y, as += 1, (350 * ctx.canvas.width) / OrignialSizeX, (10 * ctx.canvas.height) / OrignialSizeY);
 
-    ctx.drawImage(Ruleta16, Player.list[selfId].x - ((420 * ctx.canvas.width) / OrignialSizeX) / 2, Player.list[selfId].y - ((420 * ctx.canvas.height) / OrignialSizeY) / 2, (420 * ctx.canvas.width) / OrignialSizeX, (420 * ctx.canvas.height) / OrignialSizeY);
+    //indicador(Player.list[selfId].x, Player.list[selfId].y, 0 /*Angle*/ , (350 * ctx.canvas.width) / OrignialSizeX, (10 * ctx.canvas.height) / OrignialSizeY);
+
+    ctx.drawImage(R, window.innerWidth / 2 - R.width / 2, window.innerHeight / 2 - R.height / 2, R.width, R.height);
+
   }
 }, 40);
 //JO = Player.list[selfId]
 
-var setup = function() {}
-
-var loop = function() {}
-
-/*
-document.addEventListener('mousedown', function(e) {
-  ctx.clearRect(0, 0, $("#GameCanvas").width(), $("#GameCanvas").height());
-});*/
 
 document.addEventListener('mousemove', function(e) {
 
-  if (ready) {
+  if (ready1 && ready2) {
     socket.emit("mouseMoved", {
       x: e.pageX,
       y: e.pageY
@@ -157,15 +160,108 @@ var indicador = function(x, y, degrees, width, height) {
   ctx.fillStyle = "rgba(247, 239, 31, 0.54)";
   ctx.rect(-width - sizeCasillaX, -sizeCasillaY / 2, sizeCasillaX, sizeCasillaY);
   ctx.fill();*/
-  golder(GoldSelector, width, sizeCasillaY);
-
+  //  golder(I, width, sizeCasillaY);
+  ctx.drawImage(I, width / 2, -sizeCasillaY / 2);
 
   ctx.restore();
 
 
 
 }
-//adapt de angle + teh size of all fotos to be responsive!
-var golder = function(GoldSelector, width, sizeCasillaY) {
-  ctx.drawImage(GoldSelector, width / 2, -sizeCasillaY / 2);
+
+var SelectImages = function() {
+  //console.log(D[0]);
+  if (D[0] === undefined) {
+    console.log("getting a timeout");
+    setTimeout(function() {
+
+
+      loadImage(images);
+
+    }, 100);
+  } else {
+
+
+    if (window.innerWidth >= D[0].width) {
+      //Big
+      console.log("BIG");
+      R.src = R_Big_S;
+      I.src = I_Big_S;
+
+    } else if (window.innerWidth > D[1].width) {
+      //Normal
+      console.log("NORMAL");
+      R.src = R_Nor_S;
+      I.src = I_Nor_S;
+
+    } else {
+      //small
+      console.log("SMALL");
+      R.src = R_Small_S;
+      I.src = I_Small_S;
+    }
+  }
+
 }
+
+
+
+window.addEventListener('load', function() {
+  ctx.canvas.width = window.innerWidth;
+  ctx.canvas.height = window.innerHeight;
+  loadImage(images);
+  SelectImages();
+}, false);
+
+function loadImage(images) {
+
+  if (!images.length) {
+    ready2 = 1;
+    return;
+  }
+
+  // Define a "worker" function that should eventually resolve or reject the deferred object.
+
+  function deferLoading(deferred) {
+    var url = images.shift();
+
+    var image = new Image();
+
+    // Set up event handlers to know when the image has loaded
+    // or fails to load due to an error or abort.
+    image.onload = loaded;
+    image.onerror = errored; // URL returns 404, etc
+    image.onabort = errored; // IE may call this if user clicks "Stop"
+
+    // Setting the src property begins loading the image.
+    image.src = url;
+
+    function loaded() {
+      unbindEvents();
+      // Calling resolve means the image loaded sucessfully and is ready to use.
+      deferred.resolve(image);
+      deferred.done(function(image) {
+        D.push(image);
+      });
+    }
+
+    function errored() {
+      unbindEvents();
+      // Calling reject means we failed to load the image (e.g. 404, server offline, etc).
+
+      deferred.reject(image);
+    }
+
+    function unbindEvents() {
+      // Ensures the event callbacks only get called once.
+      image.onload = null;
+      image.onerror = null;
+      image.onabort = null;
+    }
+  };
+
+  var Deferred = $.Deferred(deferLoading);
+  loadImage(images);
+
+  return Deferred;
+};

@@ -1,6 +1,7 @@
 var socket = io();
 var ErrorAnimation = "shake"
-var ready = 0;
+var ready1 = 0;
+var ready2 = 0;
 ctx = $("#GameCanvas")[0].getContext('2d'); //HEROORR
 //Error detection
 var ErrorType = 0;
@@ -240,9 +241,7 @@ socket.on('signUpResponse', function(data) {
 });
 
 var setUp = function() {
-  ctx.canvas.width = window.innerWidth;
-  ctx.canvas.height = window.innerHeight;
   $("#gameDiv").css("display", "inline-block");
   $("#signDiv").css("display", "none");
-  ready = 1;
+  ready1 = 1;
 }
