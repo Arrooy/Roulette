@@ -2,6 +2,7 @@ var OrignialSizeX = 1842;
 var OrignialSizeY = 1014;
 var setupDone = 0;
 var D = [];
+
 var R = new Image();
 var I = new Image();
 
@@ -102,6 +103,9 @@ $(window).resize(function() {
   SelectImages();
 });
 
+var Degree = 0;
+var DegreeItself = 0;
+var sumator = 90;
 setInterval(function() {
 
   if (ready1 && ready2) {
@@ -117,12 +121,17 @@ setInterval(function() {
     for (var i in Player.list)
       Player.list[i].draw();
 
-    indicador(window.innerWidth / 2, window.innerHeight / 2, 0, 350, 10);
+    if(Degree >= 360)
+      Degree = 0;
+    if(DegreeItself >= 360)
+      DegreeItself = 0;
+    if(sumator <= 0)
+      sumator = 0;
+
+    indicador(window.innerWidth / 2, window.innerHeight / 2, Degree+=sumator-=1,75, 350, 10);
 
 
-    //indicador(Player.list[selfId].x, Player.list[selfId].y, 0 /*Angle*/ , (350 * ctx.canvas.width) / OrignialSizeX, (10 * ctx.canvas.height) / OrignialSizeY);
-
-    ctx.drawImage(R, window.innerWidth / 2 - R.width / 2, window.innerHeight / 2 - R.height / 2, R.width, R.height);
+    ctx.drawImage(R, window.innerWidth / 2 - R.width / 2, window.innerHeight / 2 - R.height / 2);
 
   }
 }, 40);
@@ -132,6 +141,7 @@ setInterval(function() {
 document.addEventListener('mousemove', function(e) {
 
   if (ready1 && ready2) {
+
     socket.emit("mouseMoved", {
       x: e.pageX,
       y: e.pageY
@@ -139,29 +149,22 @@ document.addEventListener('mousemove', function(e) {
   }
 });
 
-var indicador = function(x, y, degrees, width, height) {
-  var sizeCasillaX = 70 / OrignialSizeX * ctx.canvas.width;
-  var sizeCasillaY = 113 / OrignialSizeY * ctx.canvas.height;
+var indicador = function(x, y, degrees,degrees2, width, height) {
 
   ctx.save();
   ctx.beginPath();
-  x = x - width / 2;
-  y = y - height / 2;
+  x = x - width/2;
+  y = y - height/2;
   ctx.translate(x + width / 2, y + height / 2);
   ctx.rotate(degrees * Math.PI / 180);
-  ctx.fillStyle = "black";
-  ctx.rect(-width / 2, -height / 2, width, height);
-  ctx.fill();
-  /*  ctx.beginPath();
-    ctx.fillStyle = "rgba(247, 239, 31, 0.54)";
-    ctx.rect(width / 2, -sizeCasillaY / 2, sizeCasillaX, sizeCasillaY);
-    ctx.fill();*/
-  /*ctx.beginPath();
-  ctx.fillStyle = "rgba(247, 239, 31, 0.54)";
-  ctx.rect(-width - sizeCasillaX, -sizeCasillaY / 2, sizeCasillaX, sizeCasillaY);
-  ctx.fill();*/
-  //  golder(I, width, sizeCasillaY);
-  ctx.drawImage(I, width / 2, -sizeCasillaY / 2);
+
+  ctx.translate(width/2 + I.width/2,height/2 - I.height / 2);
+
+  ctx.rotate(degrees2 * Math.PI / 180);
+
+  ctx.translate((width/2 + I.width/2)*-1,(height/2 - I.height / 2)*-1);
+
+  ctx.drawImage(I, width / 2, -I.height/3);
 
   ctx.restore();
 
@@ -170,33 +173,32 @@ var indicador = function(x, y, degrees, width, height) {
 }
 
 var SelectImages = function() {
-  //console.log(D[0]);
+
   if (D[0] === undefined) {
-    console.log("getting a timeout");
+
     setTimeout(function() {
 
-
       loadImage(images);
+      SelectImages();
 
     }, 100);
   } else {
 
-
-    if (window.innerWidth >= D[0].width) {
+    if (window.innerWidth >= D[0].width && window.innerHeight >= D[0].height) {
       //Big
-      console.log("BIG");
+
       R.src = R_Big_S;
       I.src = I_Big_S;
 
-    } else if (window.innerWidth > D[1].width) {
+    } else if (window.innerWidth > D[1].width && window.innerHeight > D[1].height) {
       //Normal
-      console.log("NORMAL");
+
       R.src = R_Nor_S;
       I.src = I_Nor_S;
 
-    } else {
+    } else{
       //small
-      console.log("SMALL");
+
       R.src = R_Small_S;
       I.src = I_Small_S;
     }
@@ -248,7 +250,6 @@ function loadImage(images) {
     function errored() {
       unbindEvents();
       // Calling reject means we failed to load the image (e.g. 404, server offline, etc).
-
       deferred.reject(image);
     }
 
