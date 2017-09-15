@@ -1,3 +1,3 @@
-cd C:\Users\pollo\Desktop\Roulette
+cd C:\Users\pollo\Desktop\Programacio\JavaScript\Roulette
 node app.js
 pause

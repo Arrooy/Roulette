@@ -1,3 +1,7 @@
+var OFFLINE = true;
+
+
+
 var mongoClient = require("mongojs");
 var url = 'mongodb://arroyoarroyo:adriaarroyo@ds127864.mlab.com:27864/accounts_ruleta?authMechanism=SCRAM-SHA-1';
 var db = mongoClient(url, []);
@@ -18,15 +22,19 @@ serv.listen(process.env.PORT || 2000);
 console.log("Server started.");
 
 SOCKET_LIST = {};
+if(OFFLINE){
 
-db.on('error', function(err) {
-  console.log('database error', err)
-})
-db.runCommand({
-  ping: 1
-}, function(err, res) {
-  if (!err && res.ok) console.log('Connection done')
-})
+}else{
+  db.on('error', function(err) {
+    console.log('database error', err)
+  })
+  db.runCommand({
+    ping: 1
+  }, function(err, res) {
+    if (!err && res.ok) console.log('Connection done')
+  })
+}
+
 
 var isValidPassword = function(data, cb) {
 
@@ -96,26 +104,38 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('signIn', function(data) {
 
-    isValidPassword(data, function(res) {
-      if (res) {
-        consultaInfo(socket, data);
-      } else {
-        db.account.find({
-          email: data.username,
-          password: data.password
-        }, function(err, res) {
-          if (res.length > 0) {
-            consultaInfo(socket, data);
-          } else {
-            socket.emit('signInResponse', {
-              success: false
-            });
-          }
-        });
+    if(OFFLINE){
+      Player.onConnect(socket,
+          [{
+        username: "OflineModeON",
+        cur:["cursorBasic"],
+        admin: true,
+      }]);
+      socket.emit('signInResponse', {
+        success: true
+      });
+    }else{
 
-      }
 
-    });
+        isValidPassword(data, function(res) {
+        if (res) {
+          consultaInfo(socket, data);
+        } else {
+          db.account.find({
+            email: data.username,
+            password: data.password
+          }, function(err, res) {
+            if (res.length > 0) {
+              consultaInfo(socket, data);
+            } else {
+              socket.emit('signInResponse', {
+                success: false
+              });
+            }
+          });
+        }
+      });
+    }
 
   });
 

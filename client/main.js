@@ -101,11 +101,17 @@ $(window).resize(function() {
   ctx.canvas.height = window.innerHeight;
   loadImage(images);
   SelectImages();
+  console.log("R_src "+R.src+" I_src "+I.src);
+  console.log("R_widthOnCenter "+R.width/2+" I_WidthOnCenter "+ I.width);
+  console.log("Result of resta ="+(R.width/2 - I.width));
+  console.log("Result of resta with good height of I="+(R.width/2 - I.height));
+
 });
 
-var Degree = 0;
-var DegreeItself = 0;
-var sumator = 90;
+var Degree = 270;
+var velocidad = 180;
+var freno = 3;
+
 setInterval(function() {
 
   if (ready1 && ready2) {
@@ -117,58 +123,118 @@ setInterval(function() {
 
     ctx.clearRect(0, 0, $("#GameCanvas").width(), $("#GameCanvas").height());
 
-
     for (var i in Player.list)
       Player.list[i].draw();
 
-    if(Degree >= 360)
-      Degree = 0;
-    if(DegreeItself >= 360)
-      DegreeItself = 0;
-    if(sumator <= 0)
-      sumator = 0;
-
-    indicador(window.innerWidth / 2, window.innerHeight / 2, Degree+=sumator-=1,75, 350, 10);
+    //console.log(Degree);
 
 
+    //console.log((R.width - I.width )+ " or height "  + (R.height - I.height));
+
+
+    indicador(window.innerWidth / 2, window.innerHeight / 2, Degree,73.2);//350 10     (R.height - I.height)
+    updateRouletteMovement();
     ctx.drawImage(R, window.innerWidth / 2 - R.width / 2, window.innerHeight / 2 - R.height / 2);
 
   }
 }, 40);
 //JO = Player.list[selfId]
-
-
+var updateRouletteMovement = function(){
+  //Degree = Degree + velocidad;
+  velocidad = velocidad - freno;
+  if(Degree >= 360) Degree = 0;
+  if(velocidad <= 0){
+    freno = 0;
+    velocidad = 0;
+    decideSide();
+  }
+}
+var decideSide = function(){}
+var roll = function(){
+  Degree = Math.round(rand(0,360));
+  velocidad = Math.round(rand(90,360));
+  freno = Math.round(rand(1,5));
+  console.log("Degree");
+  console.log(Degree);
+  console.log(velocidad);
+  console.log(freno);
+}
+var rand = function(min,max){
+  return (Math.random() * (min - max) + max)
+}
 document.addEventListener('mousemove', function(e) {
 
   if (ready1 && ready2) {
-
+    //Degree++;
     socket.emit("mouseMoved", {
       x: e.pageX,
       y: e.pageY
     });
   }
 });
+var line = function(x,y,dx,dy){
+  ctx.moveTo(x,y);
+  ctx.lineTo(dx,dy);
+  //var afd = "rgb("+rand(0,255)+", "+rand(0,255)+", "+rand(0,255)+")";
+  //console.log(afd);
+ctx.stroke();
 
-var indicador = function(x, y, degrees,degrees2, width, height) {
+}
+var indicador = function(x, y, degrees,degrees2) {
 
   ctx.save();
-  ctx.beginPath();
-  x = x - width/2;
-  y = y - height/2;
-  ctx.translate(x + width / 2, y + height / 2);
-  ctx.rotate(degrees * Math.PI / 180);
 
-  ctx.translate(width/2 + I.width/2,height/2 - I.height / 2);
+  ctx.beginPath();
+
+ctx.strokeStyle = "black";
+  line(x,y,x+R.width/2,y);
+  line(x,y,x,y+R.height/2);
+  line(x,y,x-R.width/2,y);
+  line(x,y,x,y-R.height/2);
+ctx.beginPath();
+  ctx.strokeStyle = "white";
+
+  line(x,y,x+R.width/2 - I.height,y);//dreta
+  line(x,y,x,y+R.height/2 - I.height);//abaix
+  line(x,y,x-R.width/2 + I.width ,y);//esquerra
+  line(x,y,x,y-R.height/2 + I.height);//adalt
+
+
+
+  ctx.translate(x, y); //origen = centre pantalla
+
+  ctx.fillStyle = "blue";
+  ctx.fillRect(0-5,0-5,10,10);
+  ctx.fill();
+
+
+  ctx.rotate(degrees * Math.PI / 180);//Rotem tot el canvas uns degrees
+  ctx.fillStyle = "green";
+  ctx.fillRect(R.width/2 - I.height, 0,5,5);
+  ctx.fill();
+/*rgb(88, 11, 44)
+  ctx.translate(R.width/2 - I.height , - I.height / 2);
+  //ctx.translate((R.width - I.width)/2 + I.width/2, - I.height / 2);
+
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(- I.width/2,0-5,10,10);
+        ctx.fill();
 
   ctx.rotate(degrees2 * Math.PI / 180);
 
-  ctx.translate((width/2 + I.width/2)*-1,(height/2 - I.height / 2)*-1);
 
-  ctx.drawImage(I, width / 2, -I.height/3);
 
+  ctx.translate((R.width/2 - I.height + I.width/2)*-1,+ I.height / 2);
+
+
+  ctx.fillStyle = "black";
+  ctx.fillRect (R.width/2 - I.height, -I.height/2,5,5);
+  ctx.fill();
+
+
+  ctx.drawImage(I, R.width/2 - I.height, -I.height/2);
+*/
   ctx.restore();
-
-
 
 }
 
@@ -213,6 +279,7 @@ window.addEventListener('load', function() {
   ctx.canvas.height = window.innerHeight;
   loadImage(images);
   SelectImages();
+  //roll();
 }, false);
 
 function loadImage(images) {
