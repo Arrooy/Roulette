@@ -25,6 +25,7 @@ Entity = function(param) {
   }
   return self;
 }
+
 Entity.getFrameUpdateDate = function() {
   var pack = {
     initPack: {
