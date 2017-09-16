@@ -101,16 +101,16 @@ $(window).resize(function() {
   ctx.canvas.height = window.innerHeight;
   loadImage(images);
   SelectImages();
-  console.log("R_src "+R.src+" I_src "+I.src);
-  console.log("R_widthOnCenter "+R.width/2+" I_WidthOnCenter "+ I.width);
-  console.log("Result of resta ="+(R.width/2 - I.width));
-  console.log("Result of resta with good height of I="+(R.width/2 - I.height));
-
 });
 
-var Degree = 270;
+var Degree = 0;
 var velocidad = 180;
 var freno = 3;
+var notDecidedYet = true;
+var ElectedSector = 0;
+
+
+var lastMillis = 0;
 
 setInterval(function() {
 
@@ -120,124 +120,147 @@ setInterval(function() {
       return;
     //Private stuff
     //Update canvas
-
+    console.log();
     ctx.clearRect(0, 0, $("#GameCanvas").width(), $("#GameCanvas").height());
 
     for (var i in Player.list)
       Player.list[i].draw();
 
-    //console.log(Degree);
+    indicador(window.innerWidth / 2, window.innerHeight / 2, Degree, 73.2); //350 10     (R.height - I.height)
 
 
-    //console.log((R.width - I.width )+ " or height "  + (R.height - I.height));
+    if (updateRouletteMovement() == true && notDecidedYet === true) {
+      setTimeout(function() {
+        ElectedSector = decideSide(Degree);
+        notDecidedYet = false;
+      }, 1000);
 
+    }
+    //Si ja ha evaluat on anar i pertant ha parat. Moure al Sector adecuat.
+    if (notDecidedYet === false) {
+      Degree += moveToSector(ElectedSector, Degree);
 
-    indicador(window.innerWidth / 2, window.innerHeight / 2, Degree,73.2);//350 10     (R.height - I.height)
-    updateRouletteMovement();
-    ctx.drawImage(R, window.innerWidth / 2 - R.width / 2, window.innerHeight / 2 - R.height / 2);
+    }
+    ctx.drawImage(R, window.innerWidth / 2 - R.width / 2 + 1, window.innerHeight / 2 - R.height / 2);
 
   }
 }, 40);
+
 //JO = Player.list[selfId]
-var updateRouletteMovement = function(){
-  //Degree = Degree + velocidad;
+
+map = function(v, isa, ist, osa, ost) {
+  return osa + (ost - osa) * ((v - isa) / (ist - isa));
+}
+var millis = function() {
+  var d = new Date();
+  var n = d.getTime();
+  return n;
+}
+var moveToSector = function(Sector, alfa) {
+  var beta = Sector * 22.5;
+  var returner = 0;
+
+  if (alfa > beta) {
+    returner = -0.5;
+  } else if (alfa < beta) {
+    returner = +0.5;
+  }
+
+  return returner;
+}
+
+
+var updateRouletteMovement = function() {
+  var returner = false;
+  Degree = Degree + velocidad;
   velocidad = velocidad - freno;
-  if(Degree >= 360) Degree = 0;
-  if(velocidad <= 0){
+  if (Degree >= 360) Degree = 0;
+  if (velocidad <= 0) {
     freno = 0;
     velocidad = 0;
-    decideSide();
+    returner = true;
+    //lastMillis = millis();
   }
+  return returner;
 }
-var decideSide = function(){}
-var roll = function(){
-  Degree = Math.round(rand(0,360));
-  velocidad = Math.round(rand(90,360));
-  freno = Math.round(rand(1,5));
-  console.log("Degree");
-  console.log(Degree);
-  console.log(velocidad);
-  console.log(freno);
+var decideSide = function(alfa) {
+  //cada 22.5 alfas, cambiamos de sector
+  //recordem que primer sector es el 0 lultim el 15
+  var SectorAnterior = 0;
+  var SectorPosterior = 0;
+  var resultado = 0;
+  //Se puede reducir a añadir el i+1 como al posterior. pero el tamaño de GOLD puede variar.
+  for (var i = 0; i < 16; i++) {
+    if (i * 22.5 < alfa) {
+      SectorAnterior = i;
+    } else {
+      SectorPosterior = i;
+      break;
+    }
+  }
+
+  //Degree es el punt esquerra dreta situat en la circumferencia.
+  if (alfa < (SectorAnterior * 22.5 + 11.25)) {
+    resultado = SectorAnterior;
+  } else if (alfa > (SectorAnterior * 22.5 + 11.25)) {
+    resultado = SectorPosterior;
+  } else {
+    console.log("EL RECTANGULO ESTA EN LA MITAD");
+    //Spatch
+    if (Math.round(rand(0, 1)) == 0)
+      resultado = SectorAnterior;
+    else
+      resultado = SectorPosterior;
+  }
+  console.log("Sector = " + resultado);
+
+  return resultado;
 }
-var rand = function(min,max){
-  return (Math.random() * (min - max) + max)
-}
+
 document.addEventListener('mousemove', function(e) {
 
   if (ready1 && ready2) {
-    //Degree++;
+    //  Degree++;
     socket.emit("mouseMoved", {
       x: e.pageX,
       y: e.pageY
     });
   }
 });
-var line = function(x,y,dx,dy){
-  ctx.moveTo(x,y);
-  ctx.lineTo(dx,dy);
-  //var afd = "rgb("+rand(0,255)+", "+rand(0,255)+", "+rand(0,255)+")";
-  //console.log(afd);
-ctx.stroke();
 
-}
-var indicador = function(x, y, degrees,degrees2) {
+var indicador = function(x, y, degrees, degrees2) {
 
   ctx.save();
 
-  ctx.beginPath();
-
-ctx.strokeStyle = "black";
-  line(x,y,x+R.width/2,y);
-  line(x,y,x,y+R.height/2);
-  line(x,y,x-R.width/2,y);
-  line(x,y,x,y-R.height/2);
-ctx.beginPath();
-  ctx.strokeStyle = "white";
-
-  line(x,y,x+R.width/2 - I.height,y);//dreta
-  line(x,y,x,y+R.height/2 - I.height);//abaix
-  line(x,y,x-R.width/2 + I.width ,y);//esquerra
-  line(x,y,x,y-R.height/2 + I.height);//adalt
-
-
-
   ctx.translate(x, y); //origen = centre pantalla
 
-  ctx.fillStyle = "blue";
-  ctx.fillRect(0-5,0-5,10,10);
-  ctx.fill();
+  ctx.rotate(degrees * Math.PI / 180); //Rotem tot el canvas uns degrees
 
+  if (window.innerWidth >= D[0].width && window.innerHeight >= D[0].height) {
+    //Big
+    ctx.translate(0, -R.width / 2 + 1);
 
-  ctx.rotate(degrees * Math.PI / 180);//Rotem tot el canvas uns degrees
-  ctx.fillStyle = "green";
-  ctx.fillRect(R.width/2 - I.height, 0,5,5);
-  ctx.fill();
-/*rgb(88, 11, 44)
-  ctx.translate(R.width/2 - I.height , - I.height / 2);
-  //ctx.translate((R.width - I.width)/2 + I.width/2, - I.height / 2);
+  } else if (window.innerWidth > D[1].width && window.innerHeight > D[1].height) {
+    //medium
+    ctx.translate(0, -R.width / 2 + 1);
+  } else {
+    //small
+    ctx.translate(0, -R.width / 2 + 1);
+  }
 
-        ctx.fillStyle = "yellow";
-        ctx.fillRect(- I.width/2,0-5,10,10);
-        ctx.fill();
-
-  ctx.rotate(degrees2 * Math.PI / 180);
-
-
-
-  ctx.translate((R.width/2 - I.height + I.width/2)*-1,+ I.height / 2);
-
-
-  ctx.fillStyle = "black";
-  ctx.fillRect (R.width/2 - I.height, -I.height/2,5,5);
-  ctx.fill();
-
-
-  ctx.drawImage(I, R.width/2 - I.height, -I.height/2);
-*/
+  rotateImageCenter(I, 0, 0, 0.5);
   ctx.restore();
 
 }
-
+var rotateImageCenter = function(image, Px, Py, degrees) {
+  ctx.save();
+  ctx.translate(Px, Py);
+  ctx.rotate(degrees * Math.PI / 180);
+  ctx.drawImage(image, -Px / 2, -Py / 2);
+  //return to initial state
+  ctx.restore();
+  ctx.translate(-Px / 2, -Py / 2);
+}
 var SelectImages = function() {
 
   if (D[0] === undefined) {
@@ -262,7 +285,7 @@ var SelectImages = function() {
       R.src = R_Nor_S;
       I.src = I_Nor_S;
 
-    } else{
+    } else {
       //small
 
       R.src = R_Small_S;
@@ -271,16 +294,28 @@ var SelectImages = function() {
   }
 
 }
+window.addEventListener('click', function() {
+  notDecidedYet = true;
+  roll();
 
-
-
+});
 window.addEventListener('load', function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
   loadImage(images);
   SelectImages();
-  //roll();
+  roll();
 }, false);
+
+var roll = function() {
+  Degree = Math.round(rand(0, 360));
+  velocidad = Math.round(rand(90, 360));
+  freno = Math.round(rand(1, 5));
+  //lastMillis = millis();
+}
+var rand = function(min, max) {
+  return (Math.random() * (min - max) + max)
+}
 
 function loadImage(images) {
 
