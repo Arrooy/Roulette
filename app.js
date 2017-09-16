@@ -254,7 +254,11 @@ var startGame = function() {
   startMovingCorrection = false;
   justRestartingGameOnce = true;
 }
-
+var millis = function() {
+  var d = new Date();
+  var n = d.getTime();
+  return n;
+}
 setInterval(function() {
   var packs = Entity.getFrameUpdateDate();
 

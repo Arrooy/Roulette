@@ -96,12 +96,6 @@ socket.on('remove', function(data) {
 });
 
 var Degree = 0;
-var velocidad = 180;
-var freno = 3;
-
-var notDecidedYet = true;
-var ElectedSector = 0;
-var lastMillis = 0;
 
 socket.on('roulette', function(data) {
   Degree = data;
@@ -133,34 +127,10 @@ setInterval(function() {
 
     indicador(window.innerWidth / 2, window.innerHeight / 2, Degree);
     ctx.drawImage(R, window.innerWidth / 2 - R.width / 2 + 1, window.innerHeight / 2 - R.height / 2);
-
-    /*
-        if (updateRouletteMovement() == true && notDecidedYet === true) {
-          setTimeout(function() {
-            ElectedSector = decideSide(Degree);
-            notDecidedYet = false;
-          }, 1000);
-
-        }
-        //Si ja ha evaluat on anar i pertant ha parat. Moure al Sector adecuat.
-        if (notDecidedYet === false) {
-          Degree += moveToSector(ElectedSector, Degree);
-        }*/
-
-
   }
 }, 40);
 
 //JO = Player.list[selfId]
-
-map = function(v, isa, ist, osa, ost) {
-  return osa + (ost - osa) * ((v - isa) / (ist - isa));
-}
-var millis = function() {
-  var d = new Date();
-  var n = d.getTime();
-  return n;
-}
 
 document.addEventListener('mousemove', function(e) {
 
