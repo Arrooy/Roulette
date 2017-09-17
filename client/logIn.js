@@ -2,6 +2,7 @@ var socket = io();
 var ErrorAnimation = "shake"
 var ready1 = 0;
 var ready2 = 0;
+var ready3 = 0;
 ctx = $("#GameCanvas")[0].getContext('2d'); //HEROORR
 //Error detection
 var ErrorType = 0;

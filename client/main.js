@@ -5,18 +5,7 @@ var D = [];
 var Temp = [];
 
 
-var images = [
-  "https://arroyo.herokuapp.com/client/img/R_Big.png",
-  "https://arroyo.herokuapp.com/client/img/R_Nor.png",
-  "https://arroyo.herokuapp.com/client/img/R_Small.png",
-  "https://arroyo.herokuapp.com/client/img/I_Big.png",
-  "https://arroyo.herokuapp.com/client/img/I_Nor.png",
-  "https://arroyo.herokuapp.com/client/img/I_Small.png",
-  "https://arroyo.herokuapp.com/client/img/S_Big.png",
-  "https://arroyo.herokuapp.com/client/img/S_Nor.png",
-  "https://arroyo.herokuapp.com/client/img/S_Small.png"
-];
-var imageTemp = [
+var imageArray = [
   "https://arroyo.herokuapp.com/client/img/R_Big.png",
   "https://arroyo.herokuapp.com/client/img/R_Nor.png",
   "https://arroyo.herokuapp.com/client/img/R_Small.png",
@@ -137,14 +126,13 @@ var millis = function() {
 $(window).resize(function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
-  loadImage(images);
-  SelectImages();
+
 
 });
 
 setInterval(function() {
 
-  if (ready1 && ready2) {
+  if (ready1 && ready2 & ready3) {
 
 
     if (!selfId)
@@ -254,7 +242,7 @@ var indicarTiempo = function(x, y) {
 
 
 document.addEventListener('mousemove', function(e) {
-  if (ready1 && ready2) {
+  if (ready1 && ready2 && ready3) {
     var radi = [];
 
     switch (WindowSize) {
@@ -313,113 +301,51 @@ var rotateImageCenter = function(image, Px, Py, degrees) {
   ctx.restore();
   ctx.translate(-Px / 2, -Py / 2);
 }
-var SelectImages = function() {
 
-  var needToRecursive = false;
-  for (var i = 0; i < imageTemp.length; i++) {
-    if (D[i] === undefined) {
-      needToRecursive = true;
-    }
-  }
-
-  if (needToRecursive === true) {
-
-    //setTimeout(function() {
-    console.log("relauching load images with images = " + images);
-    SelectImages();
-
-    //}, 100);
-  } else {
-    console.log("all loaded: " + D);
-
-    if (window.innerWidth >= D[0].width && window.innerHeight >= D[0].height) {
-      //Big
-      WindowSize = 0;
-
-    } else if (window.innerWidth > D[1].width && window.innerHeight > D[1].height) {
-      //Normal
-      WindowSize = 1;
-
-    } else if (window.innerWidth > D[2].width && window.innerHeight > D[2].height) {
-      //small
-      WindowSize = 2;
-
-    } else {
-      //SUPER SMALL
-    }
-  }
-
-}
 window.addEventListener('load', function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
-  console.log(D);
-  loadImage(images);
-  console.log(D);
-
-  SelectImages();
+  loadImages(imageArray, run);
+  console.log(images);
 }, false);
 
 
 
 
 
-function loadImage(images) {
+function run(images) {
+  if (window.innerWidth >= images[0].width && window.innerHeight >= images[0].height) {
+    //Big
+    WindowSize = 0;
 
-  if (!images.length) {
-    ready2 = 1;
-    return;
+  } else if (window.innerWidth > images[1].width && window.innerHeight > images[1].height) {
+    //Normal
+    WindowSize = 1;
+
+  } else if (window.innerWidth > images[2].width && window.innerHeight > images[2].height) {
+    //small
+    WindowSize = 2;
+
+  } else {
+    //SUPER SMALL
+  }
+  ready3 = 1;
+}
+
+function loadImages(names, callback) {
+
+  var n, name,
+    result = {},
+    count = names.length,
+    onload = function() {
+      if (--count == 0) callback(result);
+    };
+
+  for (n = 0; n < names.length; n++) {
+    name = names[n];
+    result[name] = document.createElement('img');
+    result[name].addEventListener('load', onload);
+    result[name].src = "name";
   }
 
-  // Define a "worker" function that should eventually resolve or reject the deferred object.
-
-  var contador = 0;
-  var drift = 0;
-
-  function deferLoading(deferred) {
-
-    var url = images.shift();
-
-    var image = new Image();
-
-    // Set up event handlers to know when the image has loaded
-    // or fails to load due to an error or abort.
-    image.onload = loaded;
-    image.onerror = errored; // URL returns 404, etc
-    image.onabort = errored; // IE may call this if user clicks "Stop"
-
-    // Setting the src property begins loading the image.
-    image.src = url;
-
-    function loaded() {
-      unbindEvents();
-      // Calling resolve means the image loaded sucessfully and is ready to use.
-      deferred.resolve(image);
-      deferred.done(function(image) {
-
-
-        D.push(image);
-
-
-      });
-    }
-
-    function errored() {
-      unbindEvents();
-      // Calling reject means we failed to load the image (e.g. 404, server offline, etc).
-      deferred.reject(image);
-    }
-
-    function unbindEvents() {
-      // Ensures the event callbacks only get called once.
-      image.onload = null;
-      image.onerror = null;
-      image.onabort = null;
-    }
-  };
-
-  var Deferred = $.Deferred(deferLoading);
-  loadImage(images);
-
-  return Deferred;
-};
+}
