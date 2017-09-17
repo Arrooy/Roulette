@@ -3,3 +3,5 @@ UPGRADE LIST:
 - Chat box (input) -> RESPONSIVE
 - Make all decisions off-Client  -> ADD SERVERSIDE RANDOMNESS
 - Upgrade MovilePhone Usage -> Principal menu interface / looking.
+- WTF CARE WITH THE ORDER OF LOADING AT PHOTOS!
+- COUNTER ATRAS JUST WORKS FOR A PLAYER, Better to make it inside draw function and via server side!
