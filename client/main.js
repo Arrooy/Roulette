@@ -324,13 +324,13 @@ var SelectImages = function() {
 
   if (needToRecursive === true) {
 
-    setTimeout(function() {
-      console.log("relauching load images with images = " + images);
-      loadImage(images);
-      SelectImages();
+    //setTimeout(function() {
+    console.log("relauching load images with images = " + images);
+    SelectImages();
 
-    }, 100);
+    //}, 100);
   } else {
+    console.log("all loaded: " + D);
 
     if (window.innerWidth >= D[0].width && window.innerHeight >= D[0].height) {
       //Big
