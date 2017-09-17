@@ -344,7 +344,7 @@ function loadImages(names, callback) {
     name = names[n];
     result[name] = document.createElement('img');
     result[name].addEventListener('load', onload);
-    result[name].src = "name";
+    result[name].src = name;
   }
 
 }
