@@ -152,7 +152,7 @@ var start = function(D) {
 
 
     if (ready1 && ready2 & ready3) {
-
+      console.log(D);
       if (oneOne === true) {
         checkSize(D);
         oneOne = false;
