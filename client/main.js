@@ -14,7 +14,6 @@ var images = [
   "./client/img/S_Big.png",
   "./client/img/S_Nor.png",
   "./client/img/S_Small.png"
-
 ];
 
 var Player = function(initPack) {
@@ -128,6 +127,7 @@ $(window).resize(function() {
   ctx.canvas.height = window.innerHeight;
   loadImage(images);
   SelectImages();
+
 });
 
 setInterval(function() {
@@ -368,6 +368,7 @@ function loadImage(images) {
       deferred.resolve(image);
       deferred.done(function(image) {
         D.push(image);
+        console.log(image.src);
       });
     }
 
