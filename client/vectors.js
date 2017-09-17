@@ -63,7 +63,7 @@ var Vector = {
     return temporalVector;
   },
   "Angle": function(vec1, vec2) {
-    return Math.acos((Vector.ProducteEscalar(vec1, vec2)) / (Vector.Modulo(vec1) * Vector.Modulo(vec2)));
+    return (Math.acos((Vector.ProducteEscalar(vec1, vec2)) / (Vector.Modulo(vec1) * Vector.Modulo(vec2))) * 180 / 3.141592);
   },
   "Modulo": function(array) {
     return Math.sqrt(Math.pow(array[0], 2) + Math.pow(array[1], 2));

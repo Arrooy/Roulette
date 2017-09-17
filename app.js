@@ -33,7 +33,7 @@ if (OFFLINE) {
     ping: 1
   }, function(err, res) {
     if (!err && res.ok) {
-      startGame();
+      roll();
       console.log('Connection done')
     }
   })
@@ -78,7 +78,7 @@ var addUser = function(data, cb) {
     color: data.color,
     age: data.age,
     xp: 0,
-    team: "none",
+    pasta: 0,
     cur: ["cursorBasic"],
     lvl: 0,
     admin: false
@@ -174,12 +174,16 @@ var Degree = 0;
 var velocidad = 180;
 var freno = 3;
 
-var WeFinishedMoving = false;
+var Stop = false;
 var finishedRound = false;
 var justElectOneTime = true;
-var justRestartingGameOnce = true;
+
 var winnerSector = 0;
 var startMovingCorrection = false;
+
+var timeLeft = 0;
+
+var lastMillis = 0;
 
 var roll = function() {
   Degree = Math.round(rand(0, 360));
@@ -236,61 +240,88 @@ var moveToSector = function(Sector, alfa) {
   var beta = Sector * 22.5;
   var returner = 0;
 
+
+
   if (alfa > beta) {
-    returner = -0.5;
+    if (Sector == 0) {
+      returner = +0.5;
+      if (alfa + 0.5 > 360)
+        alfa = 0;
+    } else {
+      returner = -0.5;
+    }
+
+
   } else if (alfa < beta) {
-    returner = +0.5;
+
+    if (Sector == 0) {
+      returner = -0.5;
+      if (alfa - 0.5 < 0)
+        alfa = 360;
+    } else {
+      returner = +0.5;
+    }
+
   } else {
     finishedRound = true;
   }
 
+
   return returner;
 }
-var startGame = function() {
-  roll();
-  WeFinishedMoving = false;
+var RestartVarsNewGame = function() {
   finishedRound = false;
   justElectOneTime = true;
   startMovingCorrection = false;
-  justRestartingGameOnce = true;
+  lastMillis = millis();
 }
 var millis = function() {
   var d = new Date();
   var n = d.getTime();
   return n;
 }
+var DecideWinner = function() {
+
+  if (justElectOneTime === true) {
+
+    setTimeout(function() {
+      winnerSector = decideSide(Degree);
+      startMovingCorrection = true;
+    }, 500);
+
+    justElectOneTime = false;
+  }
+
+  if (startMovingCorrection == true) {
+    Degree += moveToSector(winnerSector, Degree);
+  }
+}
+
+var justOneTime = true;
+var justOne = true;
 setInterval(function() {
   var packs = Entity.getFrameUpdateDate();
 
+  Stop = updateRouletteMovement();
 
-
-  WeFinishedMoving = updateRouletteMovement();
-
-
-  if (WeFinishedMoving == true) {
-    if (justElectOneTime === true) {
-
-      setTimeout(function() {
-        winnerSector = decideSide(Degree);
-        startMovingCorrection = true;
-      }, 500);
-      justElectOneTime = false;
-    }
-    if (startMovingCorrection == true) {
-      Degree += moveToSector(winnerSector, Degree);
-    }
+  if (Stop == true) {
+    DecideWinner();
   }
 
   if (finishedRound == true) {
-    if (justRestartingGameOnce == true) {
-      setTimeout(function() {
-        console.log("Finished round with winner = " + winnerSector + " starting new round");
-        startGame();
-      }, 1000);
-      justRestartingGameOnce = false;
-    }
-  }
+    if (justOneTime == true) {
 
+      setTimeout(function() {
+        //  socket.emit('SectorWinner', winnerSector);
+        RestartVarsNewGame();
+        roll();
+        justOneTime = true;
+        justOne = true;
+      }, 7500);
+      justOneTime = false;
+    }
+
+  }
 
   for (var i in SOCKET_LIST) {
     var socket = SOCKET_LIST[i];
@@ -298,7 +329,10 @@ setInterval(function() {
     socket.emit('update', packs.updatePack);
     socket.emit('remove', packs.removePack);
     socket.emit('roulette', Degree);
+
+    if (finishedRound == true && justOne == true) {
+      socket.emit('SectorWinner', winnerSector);
+      justOne = false;
+    }
   }
-
-
 }, 1000 / 25);

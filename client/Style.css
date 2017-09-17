@@ -6,6 +6,8 @@
 #872341
 #BE3144
 #F05941
+#31BE5E
+
 */
 
 body {
@@ -30,6 +32,13 @@ canvas {
   overflow: auto;
 }
 
+.centerScreen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .LogIn {
   position: relative;
   top: calc(100vh/7);
@@ -41,6 +50,16 @@ canvas {
   color: #F05941;
   font-family: BlackDiamonds;
 }
+
+
+/*
+.display-1 {
+  font-family: "Segoe UI";
+  font-size: 12rem;
+  font-weight: 300;
+  line-height: 1.1;
+  color: #2F1B41;
+}*/
 
 .LogInTitle {
   position: relative;

@@ -50,14 +50,18 @@ Player = function(param) {
   self.name = param.name;
   self.xp = param.xp;
   self.color = param.color;
-  self.team = param.team;
+  self.pasta = param.pasta;
   self.press = false;
   self.cur = param.cur;
   self.actualCur = 0;
   self.admin = param.admin;
+  self.selection = 16;
+  self.ableToBet = false;
 
   self.update = function() {
-
+    if (self.selection != 16 && self.press === true && self.ableToBet === true) {
+      //bet
+    }
   }
 
   self.getInitPack = function() {
@@ -66,7 +70,7 @@ Player = function(param) {
       xp: self.xp,
       name: self.name,
       lvl: self.lvl,
-      team: self.team,
+      pasta: self.pasta,
       cur: self.cur[self.actualCur],
       x: self.x,
       y: self.y,
@@ -78,10 +82,11 @@ Player = function(param) {
       id: self.id,
       xp: self.xp,
       lvl: self.lvl,
-      team: self.team,
+      pasta: self.pasta,
       cur: self.cur[self.actualCur],
       x: self.x,
-      y: self.y
+      y: self.y,
+      selection: self.selection
     }
   }
 
@@ -92,7 +97,18 @@ Player = function(param) {
 }
 
 Player.list = {};
-
+dist = function(Px, Py, Ox, Oy) {
+  return (Math.sqrt(Math.pow((Px - Ox), 2) + Math.pow((Py - Oy), 2)));
+}
+var Angle = function(vec1, vec2) {
+  return (Math.acos((ProducteEscalar(vec1, vec2)) / (Modulo(vec1) * Modulo(vec2))) * 180 / 3.141592);
+}
+var Modulo = function(array) {
+  return Math.sqrt(Math.pow(array[0], 2) + Math.pow(array[1], 2));
+}
+var ProducteEscalar = function(vec1, vec2) {
+  return (vec1[0] * vec2[0] + vec1[1] * vec2[1]);
+}
 Player.onConnect = function(socket, data) {
 
   var player = Player({
@@ -103,13 +119,32 @@ Player.onConnect = function(socket, data) {
     color: data[0].color,
     cur: data[0].cur,
     xp: data[0].xp,
-    team: data[0].team,
+    pasta: data[0].pasta,
     admin: data[0].admin
   });
 
   socket.on('mouseMoved', function(data) {
     Player.list[socket.id].x = data.x;
     Player.list[socket.id].y = data.y;
+
+    var SelectionAngle = Angle([data.x - data.cx, data.y - data.cy], [0, -100]);
+
+    if (data.x < data.cx) {
+      SelectionAngle = 360 - SelectionAngle;
+    }
+    SelectionAngle = Math.floor(SelectionAngle / 22.5) * 22.5;
+    var distan = dist(data.cx, data.cy, data.x, data.y);
+
+    if (distan < data.r[0] && distan > data.r[1]) {
+      Player.list[socket.id].selection = SelectionAngle;
+
+    } else {
+      Player.list[socket.id].selection = 16;
+    }
+  });
+
+  socket.on('press', function(data) {
+
   });
 
   socket.on('sendMsgToServer', function(data) {
