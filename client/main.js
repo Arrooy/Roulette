@@ -348,7 +348,9 @@ var SelectImages = function() {
 window.addEventListener('load', function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
+  console.log(D);
   loadImage(images);
+  console.log(D);
   ordenarFotos();
   SelectImages();
 }, false);
@@ -400,7 +402,7 @@ function loadImage(images) {
 
 
         D.push(image);
-        console.log(D);
+
 
       });
     }
