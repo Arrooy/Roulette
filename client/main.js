@@ -358,12 +358,13 @@ var ordenarFotos = function() {
   var ordenado = false;
   var aux = [];
   //images Temp
+  console.log(Temp);
   for (var i = 0; i < Temp.length; i++) {
     console.log(imageTemp[i] + " != " + Temp[i].src);
     if (imageTemp[i] != Temp[i].src) {
-      console.log("Mal ordenado");
+      //Mal ordenado
     } else {
-      console.log("Bien ordenado");
+      //bien ordenado
     }
   }
 
