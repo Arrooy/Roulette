@@ -138,7 +138,6 @@ $(window).resize(function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
   loadImage(images);
-  ordenarFotos();
   SelectImages();
 
 });
@@ -316,12 +315,18 @@ var rotateImageCenter = function(image, Px, Py, degrees) {
 }
 var SelectImages = function() {
 
-  if (D[0] === undefined) {
+  var needToRecursive = false;
+  for (var i = 0; i < imageTemp.length; i++) {
+    if (D[i] === undefined) {
+      needToRecursive = true;
+    }
+  }
+
+  if (needToRecursive === true) {
 
     setTimeout(function() {
-
+      console.log("relauching load images with images = " + images);
       loadImage(images);
-      ordenarFotos();
       SelectImages();
 
     }, 100);
@@ -351,19 +356,10 @@ window.addEventListener('load', function() {
   console.log(D);
   loadImage(images);
   console.log(D);
-  console.log(D[0]);
-  ordenarFotos();
+
   SelectImages();
 }, false);
 
-
-var ordenarFotos = function() {
-  var ordenado = false;
-  var aux = [];
-  //images Temp
-  //  while (D.length < 9);
-
-}
 
 
 
