@@ -358,7 +358,7 @@ var ordenarFotos = function() {
   var ordenado = false;
   var aux = [];
   //images Temp
-  while (D.length < 9);
+  //  while (D.length < 9);
 
 }
 
@@ -400,6 +400,7 @@ function loadImage(images) {
 
 
         D.push(image);
+        console.log(D);
 
       });
     }
