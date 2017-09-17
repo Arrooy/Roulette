@@ -306,7 +306,7 @@ window.addEventListener('load', function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
   loadImages(imageArray, run);
-  console.log(images);
+
 }, false);
 
 
@@ -330,6 +330,7 @@ function run(images) {
     //SUPER SMALL
   }
   ready3 = 1;
+  console.log(images);
 }
 
 function loadImages(names, callback) {
