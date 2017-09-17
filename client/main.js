@@ -358,15 +358,7 @@ var ordenarFotos = function() {
   var ordenado = false;
   var aux = [];
   //images Temp
-  console.log(Temp);
-  for (var i = 0; i < Temp.length; i++) {
-    console.log(imageTemp[i] + " != " + Temp[i].src);
-    if (imageTemp[i] != Temp[i].src) {
-      //Mal ordenado
-    } else {
-      //bien ordenado
-    }
-  }
+  while (D.length < 9);
 
 }
 
@@ -406,10 +398,9 @@ function loadImage(images) {
       deferred.resolve(image);
       deferred.done(function(image) {
 
-        Temp.push(image);
+
         D.push(image);
-        console.log(image)
-        console.log(D)
+
       });
     }
 
