@@ -128,7 +128,7 @@ $(window).resize(function() {
 
 });
 var oneOne = true;
-var checkSize = function() {
+var checkSize = function(images) {
   if (window.innerWidth >= images[0].width && window.innerHeight >= images[0].height) {
     //Big
     WindowSize = 0;
@@ -150,7 +150,7 @@ var checkSize = function() {
 var start = function(D) {
   setInterval(function() {
     if (oneOne === true) {
-      checkSize();
+      checkSize(D);
       oneOne = false;
     }
 
