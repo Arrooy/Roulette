@@ -126,32 +126,56 @@ var millis = function() {
 $(window).resize(function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
-
+  loadImages(imageArray, start);
 
 });
+var oneOne = true;
+var checkSize = function() {
+  if (window.innerWidth >= images[0].width && window.innerHeight >= images[0].height) {
+    //Big
+    WindowSize = 0;
 
-setInterval(function() {
+  } else if (window.innerWidth > images[1].width && window.innerHeight > images[1].height) {
+    //Normal
+    WindowSize = 1;
 
-  if (ready1 && ready2 & ready3) {
+  } else if (window.innerWidth > images[2].width && window.innerHeight > images[2].height) {
+    //small
+    WindowSize = 2;
 
-
-    if (!selfId)
-      return;
-
-    ctx.clearRect(0, 0, $("#GameCanvas").width(), $("#GameCanvas").height());
-
-
-
-    indicarTiempo(window.innerWidth / 2 - D[WindowSize].width, window.innerHeight / 2);
-
-    for (var i in Player.list)
-      Player.list[i].draw();
-
-    indicador(D[WindowSize + imagesPackNumber], window.innerWidth / 2, window.innerHeight / 2, Degree);
-    ctx.drawImage(D[WindowSize], window.innerWidth / 2 - D[WindowSize].width / 2 + 1, window.innerHeight / 2 - D[WindowSize].height / 2);
+  } else {
+    //SUPER SMALL
   }
-}, 40);
+  ready3 = 1;
+}
 
+var start = function() {
+  setInterval(function() {
+    if (oneOne === true) {
+      checkSize();
+      oneOne = false;
+    }
+
+    if (ready1 && ready2 & ready3) {
+
+
+      if (!selfId)
+        return;
+
+      ctx.clearRect(0, 0, $("#GameCanvas").width(), $("#GameCanvas").height());
+
+
+
+      indicarTiempo(window.innerWidth / 2 - D[WindowSize].width, window.innerHeight / 2);
+
+      for (var i in Player.list)
+        Player.list[i].draw();
+
+      indicador(D[WindowSize + imagesPackNumber], window.innerWidth / 2, window.innerHeight / 2, Degree);
+      ctx.drawImage(D[WindowSize], window.innerWidth / 2 - D[WindowSize].width / 2 + 1, window.innerHeight / 2 - D[WindowSize].height / 2);
+    }
+  }, 40);
+}
 //JO = Player.list[selfId]
 
 
@@ -270,7 +294,7 @@ document.addEventListener('mousemove', function(e) {
 });
 
 document.addEventListener('mousedown', function(e) {
-  if (ready1 && ready2) {
+  if (ready1 && ready2 && ready3) {
     socket.emit("press", {
       x: e.pageX,
       y: e.pageY
@@ -305,33 +329,9 @@ var rotateImageCenter = function(image, Px, Py, degrees) {
 window.addEventListener('load', function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
-  loadImages(imageArray, run);
+  loadImages(imageArray, start);
 
 }, false);
-
-
-
-
-
-function run(images) {
-  if (window.innerWidth >= images[0].width && window.innerHeight >= images[0].height) {
-    //Big
-    WindowSize = 0;
-
-  } else if (window.innerWidth > images[1].width && window.innerHeight > images[1].height) {
-    //Normal
-    WindowSize = 1;
-
-  } else if (window.innerWidth > images[2].width && window.innerHeight > images[2].height) {
-    //small
-    WindowSize = 2;
-
-  } else {
-    //SUPER SMALL
-  }
-  ready3 = 1;
-  console.log(images);
-}
 
 function loadImages(names, callback) {
 
@@ -341,7 +341,7 @@ function loadImages(names, callback) {
     onload = function() {
       if (--count == 0) callback(result);
     };
-
+  oneOne = true;
   for (n = 0; n < names.length; n++) {
     name = names[n];
     result[name] = document.createElement('img');
