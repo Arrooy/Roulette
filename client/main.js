@@ -1,18 +1,20 @@
 var OrignialSizeX = 1842;
 var OrignialSizeY = 1014;
 var setupDone = 0;
+var web = 0;
 
+var D = [];
 
 var imageArray = [
-  "https://arroyo.herokuapp.com/client/img/R_Big.png",
-  "https://arroyo.herokuapp.com/client/img/R_Nor.png",
-  "https://arroyo.herokuapp.com/client/img/R_Small.png",
-  "https://arroyo.herokuapp.com/client/img/I_Big.png",
-  "https://arroyo.herokuapp.com/client/img/I_Nor.png",
-  "https://arroyo.herokuapp.com/client/img/I_Small.png",
-  "https://arroyo.herokuapp.com/client/img/S_Big.png",
-  "https://arroyo.herokuapp.com/client/img/S_Nor.png",
-  "https://arroyo.herokuapp.com/client/img/S_Small.png"
+  "R_Big",
+  "R_Nor",
+  "R_Small",
+  "I_Big",
+  "I_Nor",
+  "I_Small",
+  "S_Big",
+  "S_Nor",
+  "S_Small"
 ];
 
 var Player = function(initPack) {
@@ -97,8 +99,7 @@ socket.on('remove', function(data) {
 });
 
 var Degree = 0;
-
-var imagesPackNumber = 3; //NOmbre de images repetides amb diferents sizes
+var imagesPackNumber = 3;
 var WindowSize = 1; //0 = small 2 big
 var rolling = true;
 
@@ -127,7 +128,7 @@ $(window).resize(function() {
   loadImages(imageArray, start);
 
 });
-var oneOne = true;
+
 var checkSize = function(images) {
   if (window.innerWidth >= images[0].width && window.innerHeight >= images[0].height) {
     //Big
@@ -147,24 +148,20 @@ var checkSize = function(images) {
   ready3 = 1;
 }
 
-var start = function(D) {
+var start = function(images) {
+  D = images;
+  checkSize(D);
   setInterval(function() {
 
-
     if (ready1 && ready2 & ready3) {
-      console.log(D);
-      if (oneOne === true) {
-        checkSize(D);
-        oneOne = false;
-      }
+
+
       if (!selfId)
         return;
 
       ctx.clearRect(0, 0, $("#GameCanvas").width(), $("#GameCanvas").height());
 
-
-
-      indicarTiempo(window.innerWidth / 2 - D[WindowSize].width, window.innerHeight / 2);
+      indicarTiempo(window.innerWidth / 2, window.innerHeight / 2);
 
       for (var i in Player.list)
         Player.list[i].draw();
@@ -205,7 +202,7 @@ var indicarTiempo = function(x, y) {
     }
 
     var tempSize = ctx.measureText(timeLeft).width;
-    x += tempSize;
+    //x -= tempSize;
 
     ctx.fillText(timeLeft, x, y);
     switch (WindowSize) {
@@ -243,7 +240,7 @@ var indicarTiempo = function(x, y) {
     }
     ctx.fillStyle = "#F05941";
     var tempSize = ctx.measureText(0).width;
-    x += tempSize;
+    //  x -= tempSize;
 
     ctx.fillText(0, x, y);
     switch (WindowSize) {
@@ -334,17 +331,24 @@ window.addEventListener('load', function() {
 function loadImages(names, callback) {
 
   var n, name,
-    result = {},
+    result = [],
     count = names.length,
     onload = function() {
-      if (--count == 0) callback(result);
+      if (--count == 0) {
+        callback(result);
+        ready2 = 1;
+        ready3 = 1;
+      }
     };
   oneOne = true;
   for (n = 0; n < names.length; n++) {
     name = names[n];
-    result[name] = document.createElement('img');
-    result[name].addEventListener('load', onload);
-    result[name].src = name;
+    result[n] = document.createElement('img');
+    result[n].addEventListener('load', onload);
+    if (web)
+      result[n].src = "https://arroyo.herokuapp.com/client/img/" + name + ".png";
+    else
+      result[n].src = "./client/img/" + name + ".png";
   }
 
 }
