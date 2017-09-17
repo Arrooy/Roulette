@@ -1,8 +1,6 @@
 var OrignialSizeX = 1842;
 var OrignialSizeY = 1014;
 var setupDone = 0;
-var D = [];
-var Temp = [];
 
 
 var imageArray = [
@@ -149,7 +147,7 @@ var checkSize = function() {
   ready3 = 1;
 }
 
-var start = function() {
+var start = function(D) {
   setInterval(function() {
     if (oneOne === true) {
       checkSize();
