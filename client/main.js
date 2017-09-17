@@ -6,15 +6,15 @@ var Temp = [];
 
 
 var images = [
-  "http://localhost:2000/client/img/R_Big.png",
-  "http://localhost:2000/client/img/R_Nor.png",
-  "http://localhost:2000/client/img/R_Small.png",
-  "http://localhost:2000/client/img/I_Big.png",
-  "http://localhost:2000/client/img/I_Nor.png",
-  "http://localhost:2000/client/img/I_Small.png",
-  "http://localhost:2000/client/img/S_Big.png",
-  "http://localhost:2000/client/img/S_Nor.png",
-  "http://localhost:2000/client/img/S_Small.png"
+  "./client/img/R_Big.png",
+  "./client/img/R_Nor.png",
+  "./client/img/R_Small.png",
+  "./client/img/I_Big.png",
+  "./client/img/I_Nor.png",
+  "./client/img/I_Small.png",
+  "./client/img/S_Big.png",
+  "./client/img/S_Nor.png",
+  "./client/img/S_Small.png"
 ];
 var imageTemp = [
   "http://localhost:2000/client/img/R_Big.png",
