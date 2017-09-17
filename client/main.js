@@ -149,14 +149,14 @@ var checkSize = function(images) {
 
 var start = function(D) {
   setInterval(function() {
-    if (oneOne === true) {
-      checkSize(D);
-      oneOne = false;
-    }
+
 
     if (ready1 && ready2 & ready3) {
 
-
+      if (oneOne === true) {
+        checkSize(D);
+        oneOne = false;
+      }
       if (!selfId)
         return;
 
