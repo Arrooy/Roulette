@@ -351,6 +351,7 @@ window.addEventListener('load', function() {
   console.log(D);
   loadImage(images);
   console.log(D);
+  console.log(D[0]);
   ordenarFotos();
   SelectImages();
 }, false);
