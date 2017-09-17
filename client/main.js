@@ -2,18 +2,30 @@ var OrignialSizeX = 1842;
 var OrignialSizeY = 1014;
 var setupDone = 0;
 var D = [];
+var Temp = [];
 
 
 var images = [
-  "./client/img/R_Big.png",
-  "./client/img/R_Nor.png",
-  "./client/img/R_Small.png",
-  "./client/img/I_Big.png",
-  "./client/img/I_Nor.png",
-  "./client/img/I_Small.png",
-  "./client/img/S_Big.png",
-  "./client/img/S_Nor.png",
-  "./client/img/S_Small.png"
+  "http://localhost:2000/client/img/R_Big.png",
+  "http://localhost:2000/client/img/R_Nor.png",
+  "http://localhost:2000/client/img/R_Small.png",
+  "http://localhost:2000/client/img/I_Big.png",
+  "http://localhost:2000/client/img/I_Nor.png",
+  "http://localhost:2000/client/img/I_Small.png",
+  "http://localhost:2000/client/img/S_Big.png",
+  "http://localhost:2000/client/img/S_Nor.png",
+  "http://localhost:2000/client/img/S_Small.png"
+];
+var imageTemp = [
+  "http://localhost:2000/client/img/R_Big.png",
+  "http://localhost:2000/client/img/R_Nor.png",
+  "http://localhost:2000/client/img/R_Small.png",
+  "http://localhost:2000/client/img/I_Big.png",
+  "http://localhost:2000/client/img/I_Nor.png",
+  "http://localhost:2000/client/img/I_Small.png",
+  "http://localhost:2000/client/img/S_Big.png",
+  "http://localhost:2000/client/img/S_Nor.png",
+  "http://localhost:2000/client/img/S_Small.png"
 ];
 
 var Player = function(initPack) {
@@ -126,6 +138,7 @@ $(window).resize(function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
   loadImage(images);
+  ordenarFotos();
   SelectImages();
 
 });
@@ -308,6 +321,7 @@ var SelectImages = function() {
     setTimeout(function() {
 
       loadImage(images);
+      ordenarFotos();
       SelectImages();
 
     }, 100);
@@ -335,8 +349,28 @@ window.addEventListener('load', function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
   loadImage(images);
+  ordenarFotos();
   SelectImages();
 }, false);
+
+
+var ordenarFotos = function() {
+  var ordenado = false;
+  var aux = [];
+  //images Temp
+  for (var i = 0; i < Temp.length; i++) {
+    console.log(imageTemp[i] + " != " + Temp[i].src);
+    if (imageTemp[i] != Temp[i].src) {
+      console.log("Mal ordenado");
+    } else {
+      console.log("Bien ordenado");
+    }
+  }
+
+}
+
+
+
 
 function loadImage(images) {
 
@@ -347,8 +381,11 @@ function loadImage(images) {
 
   // Define a "worker" function that should eventually resolve or reject the deferred object.
 
+  var contador = 0;
+  var drift = 0;
 
   function deferLoading(deferred) {
+
     var url = images.shift();
 
     var image = new Image();
@@ -367,8 +404,9 @@ function loadImage(images) {
       // Calling resolve means the image loaded sucessfully and is ready to use.
       deferred.resolve(image);
       deferred.done(function(image) {
+
+        Temp.push(image);
         D.push(image);
-        console.log(image.src);
       });
     }
 
