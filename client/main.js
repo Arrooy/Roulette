@@ -239,6 +239,8 @@ var indicarTiempo = function(x, y) {
     ctx.fillText("s", x + tempSize, y);
   }
 }
+
+
 document.addEventListener('mousemove', function(e) {
   if (ready1 && ready2) {
     var radi = [];
