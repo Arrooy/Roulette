@@ -408,6 +408,8 @@ function loadImage(images) {
 
         Temp.push(image);
         D.push(image);
+        console.log(image)
+        console.log(D)
       });
     }
 
