@@ -144,7 +144,10 @@ Player.onConnect = function(socket, data) {
   });
 
   socket.on('press', function(data) {
-
+    Player.list[socket.id].press = true;
+  });
+  socket.on('release', function(data) {
+    Player.list[socket.id].press = false;
   });
 
   socket.on('sendMsgToServer', function(data) {
