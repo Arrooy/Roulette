@@ -7,25 +7,15 @@ var chatTextSize = 14;
 
 
 
-$("#comment-container").mouseover(function() {
-  //chatText.style.display = "inline-block";
-  $("#chat-text").css('max-height', window.innerHeight + "px");
 
-});
-
-$("#comment-container").mouseleave(function() {
-  //chatText.style.display = "none";
-  $("#chat-text").css('max-height', '150px');
-  $("#chat-text").scrollTop($('#chat-text').prop('scrollHeight'));
-});
 
 socket.on('addToChat', function(data) {
 
   if (data.admin === true) {
-    console.log("sSI!");
+
     chatText.innerHTML += '<div id = "Comment" style ="color:' + data.color + '">' + '<span class = "label label-success" >' + "Admin" + '</span>' + data.message + '</div > ';
   } else {
-    console.log("NO!!");
+
     var divisios = [];
     var numberN = 0;
     for (var i = data.message.length / 40; i >= 0; i--) {

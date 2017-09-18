@@ -78,7 +78,7 @@ var addUser = function(data, cb) {
     color: data.color,
     age: data.age,
     xp: 0,
-    pasta: 10,
+    pasta: 100,
     cur: ["cursorBasic"],
     lvl: 0,
     admin: false

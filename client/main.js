@@ -120,12 +120,13 @@ socket.on('remove', function(data) {
 
 var Degree = 0;
 var imagesPackNumber = 3;
-var WindowSize = 1; //0 = small 2 big
+var WindowSize = 4; //0 = small 2 big
 var rolling = true;
 
 var lastMillis = 0;
 var timeLeft = 0;
 var winSec = 16;
+
 socket.on('roulette', function(data) {
   Degree = data;
 });
@@ -145,9 +146,13 @@ var millis = function() {
 }
 
 $(window).resize(function() {
+  ready3 = 0;
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
   loadImages(imageArray, start);
+
+
+
 });
 
 var checkSize = function(images) {
@@ -166,8 +171,48 @@ var checkSize = function(images) {
   } else {
     //SUPER SMALL
   }
+
+  //Resize chat
+  var sizes;
+
+
+  switch (WindowSize) {
+    case 0:
+    sizes = 400;
+      break;
+    case 1:
+    sizes = window.innerWidth/2 ;
+      break;
+    case 2:
+    sizes = window.innerWidth;
+      break;
+  }
+
+
+  $("#comment-container").width(sizes);
+  $("#chat-form").width(sizes);
+
   ready3 = 1;
 }
+
+$("#comment-container").mouseover(function() {
+  //chatText.style.display = "inline-block";
+  if(WindowSize === 2){
+    //$("#chat-text").css("display","inline-block");
+    $("#chat-text").css('max-height', window.innerHeight/2 + "px");
+  }else{
+    $("#chat-text").css('max-height', window.innerHeight + "px");
+  }
+
+
+});
+
+$("#comment-container").mouseleave(function() {
+  //chatText.style.display = "none";
+  $("#chat-text").css('max-height', window.innerHeight/6 + "px");
+  $("#chat-text").scrollTop($('#chat-text').prop('scrollHeight'));
+});
+
 
 var start = function(images) {
   D = images;
@@ -366,8 +411,8 @@ var rotateTextCenter = function(text, Px, Py, degrees) {
 window.addEventListener('load', function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
-  loadImages(imageArray, start);
 
+  loadImages(imageArray, start);
 }, false);
 
 function loadImages(names, callback) {
