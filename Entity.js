@@ -1,5 +1,6 @@
 adminId = 0;
 
+require('./app');
 var initPack = {
   player: []
 };
@@ -12,6 +13,7 @@ Entity = function(param) {
     x: 0,
     y: 0,
     id: "",
+    ableToBet:false
   }
   if (param) {
     if (param.x)
@@ -22,6 +24,8 @@ Entity = function(param) {
       self.lvl = param.lvl;
     if (param.id)
       self.id = param.id;
+    if(param.ableToBet)
+      self.ableToBet = param.ableToBet;
   }
   return self;
 }
@@ -43,7 +47,6 @@ Entity.getFrameUpdateDate = function() {
   return pack;
 }
 
-
 Player = function(param) {
   var self = Entity(param);
 
@@ -56,11 +59,39 @@ Player = function(param) {
   self.actualCur = 0;
   self.admin = param.admin;
   self.selection = 16;
-  self.ableToBet = false;
+  self.tiempoClickApostar = 0;
+  self.tiempoClickCancelar = 0;
+  self.Bet = -1;
+  self.sectorBet = 16;
 
   self.update = function() {
+
     if (self.selection != 16 && self.press === true && self.ableToBet === true) {
-      //bet
+      if(millis() - self.tiempoClickApostar >= 200){
+        if(self.selection === self.sectorBet || self.selection === 16 ||self.sectorBet === 16){
+          if(self.Bet <= self.pasta - 10 && self.Bet <= 90-10){
+            self.Bet += 10;//self.betType;
+            self.sectorBet = self.selection;
+            console.log("player bet 10 in " + self.selection + " , total: " + self.Bet);
+          }else{
+            console.log("player CANT BET 10 MORE in " + self.selection + " , total: " + self.Bet);
+          }
+        }else{
+          console.log("Player moved its decision from "+ self.sectorBet + " to " + self.selection + " apostando 10");
+          self.Bet = 10;
+          self.sectorBet = self.selection;
+        }
+        self.tiempoClickApostar = millis();
+      }
+
+    }else if(self.selection === 16 && self.press === true && self.ableToBet === true){
+
+      if(millis() - self.tiempoClickCancelar >= 200){
+        self.Bet = 0;
+        self.sectorBet = 16;
+        console.log("Player canceled its decision");
+        self.tiempoClickCancelar = millis();
+      }
     }
   }
 
@@ -86,7 +117,9 @@ Player = function(param) {
       cur: self.cur[self.actualCur],
       x: self.x,
       y: self.y,
-      selection: self.selection
+      selection: self.selection,
+      Bet:self.Bet,
+      sectorBet:self.sectorBet
     }
   }
 
@@ -97,6 +130,12 @@ Player = function(param) {
 }
 
 Player.list = {};
+
+var millis = function() {
+  var d = new Date();
+  var n = d.getTime();
+  return n;
+}
 
 dist = function(Px, Py, Ox, Oy) {
   return (Math.sqrt(Math.pow((Px - Ox), 2) + Math.pow((Py - Oy), 2)));
@@ -110,6 +149,7 @@ var Modulo = function(array) {
 var ProducteEscalar = function(vec1, vec2) {
   return (vec1[0] * vec2[0] + vec1[1] * vec2[1]);
 }
+
 Player.onConnect = function(socket, data) {
 
   var player = Player({
@@ -128,19 +168,18 @@ Player.onConnect = function(socket, data) {
     Player.list[socket.id].x = data.x;
     Player.list[socket.id].y = data.y;
 
-    console.log(data.x + " " + data.y+" <"+data.r[0] + " >"+data.r[1]);
+
 
     var SelectionAngle = Angle([data.x - data.cx, data.y - data.cy], [0, -100]);
 
     if (data.x < data.cx) {
       SelectionAngle = 360 - SelectionAngle;
     }
-    SelectionAngle = Math.floor(SelectionAngle / 22.5) * 22.5;
+    SelectionAngle = Math.floor(SelectionAngle / 22.5);
     var distan = dist(data.cx, data.cy, data.x, data.y);
-    console.log("distan"+distan);
-    if (distan < data.r[0] && distan > data.r[1]) {
-      Player.list[socket.id].selection = SelectionAngle;
 
+    if (distan > data.r[1] && distan < data.r[0]) {
+      Player.list[socket.id].selection = SelectionAngle;
     } else {
       Player.list[socket.id].selection = 16;
     }
@@ -149,6 +188,7 @@ Player.onConnect = function(socket, data) {
   socket.on('press', function(data) {
     Player.list[socket.id].press = true;
   });
+
   socket.on('release', function(data) {
     Player.list[socket.id].press = false;
   });
@@ -225,4 +265,35 @@ Player.update = function() {
     pack.push(player.getUpdatePack());
   }
   return pack;
+}
+
+Player.checkCanBet = function(s){
+  for (var i in Player.list) {
+    var player = Player.list[i];
+    player.ableToBet = s;
+  }
+}
+
+
+Player.givePresents = function(ws){
+  console.log("giving presents");
+  for (var i in Player.list) {
+    var player = Player.list[i];
+
+    if(player.sectorBet === ws){
+      //ganador
+      player.pasta += player.Bet*1.5;
+      guardarServidor(player.name,player.pasta);
+    }else{
+      //perdedor
+      player.pasta -= player.Bet;
+      if(player.Bet > 0){
+        guardarServidor(player.name,player.pasta);
+      }
+
+    }
+    player.Bet = 0;
+    player.sectorBet = 16;
+  }
+
 }

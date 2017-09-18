@@ -78,7 +78,7 @@ var addUser = function(data, cb) {
     color: data.color,
     age: data.age,
     xp: 0,
-    pasta: 0,
+    pasta: 10,
     cur: ["cursorBasic"],
     lvl: 0,
     admin: false
@@ -88,17 +88,36 @@ var addUser = function(data, cb) {
 }
 var consultaInfo = function(socket, data) {
   console.log("Checking username & password");
-  db.account.find({
-    username: data.username,
-    password: data.password
-  }, function(err, res) {
-    ActualPlayerNumber++;
-    Player.onConnect(socket, res);
-    console.log("User registered, going in!");
-    socket.emit('signInResponse', {
-      success: true
+
+  if(data.username.indexOf("@") === -1){
+    db.account.find({
+      username: data.username,
+      password: data.password
+    }, function(err, res) {
+      ActualPlayerNumber++;
+
+      Player.onConnect(socket, res);
+      console.log("User registered, going in!");
+      socket.emit('signInResponse', {
+        success: true
+      });
     });
-  });
+  }else{
+    db.account.find({
+      email: data.username,
+      password: data.password
+    }, function(err, res) {
+      ActualPlayerNumber++;
+
+      Player.onConnect(socket, res);
+      console.log("User registered, going in!");
+      socket.emit('signInResponse', {
+        success: true
+      });
+    });
+  }
+
+
 }
 
 
@@ -169,6 +188,19 @@ io.sockets.on('connection', function(socket) {
     Player.onDisconnect(socket);
   });
 });
+
+var guardarServidor = function(username,moneyToUpdate){
+  db.account.find({
+    email: data.username,
+    password: data.password
+  }, function(err, res) {
+
+  });
+  db.account.insert({username:username}, {pasta: moneyToUpdate}, function(err, records){
+    console.log(records);
+    //console.log("Record added as "+records[0]._id);
+  });
+}
 
 var Degree = 0;
 var velocidad = 180;
@@ -299,8 +331,9 @@ var DecideWinner = function() {
 
 var justOneTime = true;
 var justOne = true;
+
 setInterval(function() {
-  var packs = Entity.getFrameUpdateDate();
+
 
   Stop = updateRouletteMovement();
 
@@ -317,22 +350,28 @@ setInterval(function() {
         roll();
         justOneTime = true;
         justOne = true;
+      Player.checkCanBet(false);
       }, 7500);
       justOneTime = false;
     }
 
   }
-
+  var packs = Entity.getFrameUpdateDate();
   for (var i in SOCKET_LIST) {
     var socket = SOCKET_LIST[i];
     socket.emit('init', packs.initPack);
     socket.emit('update', packs.updatePack);
     socket.emit('remove', packs.removePack);
     socket.emit('roulette', Degree);
-
-    if (finishedRound == true && justOne == true) {
+  }
+  if (finishedRound == true && justOne == true) {
+    for (var i in SOCKET_LIST) {
+      var socket = SOCKET_LIST[i];
       socket.emit('SectorWinner', winnerSector);
-      justOne = false;
+      Player.givePresents(winnerSector);
+      Player.checkCanBet(true);
+
     }
+    justOne = false;
   }
 }, 1000 / 25);

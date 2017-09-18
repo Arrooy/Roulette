@@ -29,6 +29,8 @@ var Player = function(initPack) {
   self.y = initPack.y;
   self.admin = initPack.admin;
   self.selection = 16;
+  self.Bet = -1;
+  self.sectorBet = 16;
 
   self.ImageCursor = new Image();
   self.ImageCursor.src = "./client/img/" + self.cur + ".png";
@@ -43,9 +45,23 @@ var Player = function(initPack) {
       }
 
     } else { // 100 % private data
-      if (self.selection !== 16) {
-        indicador(D[WindowSize + imagesPackNumber * 2], window.innerWidth / 2, window.innerHeight / 2, self.selection);
+      if(self.sectorBet !== 16){
+        RoundText(self.Bet,self.sectorBet * 22.5);
+
       }
+      if (self.selection !== 16) {
+        indicador(D[WindowSize + imagesPackNumber * 2], window.innerWidth / 2, window.innerHeight / 2, self.selection*22.5);
+      }
+
+      ctx.font = "25px Segoe UI";
+      ctx.fillStyle = "#2F1B41";
+      ctx.fillText(self.name.toUpperCase(),0,25);
+      ctx.fillText("Pasta: "+self.pasta,0,25*2);
+      ctx.fillText("X "+self.x,0,25*3);
+      ctx.fillText("Y "+self.y,0,25*4);
+      ctx.fillText("WSize "+WindowSize,0,25*5);
+      ctx.fillText("ROLLING "+rolling,0,25*6);
+      ctx.fillText("Winner sector "+winSec,0,25*7);
 
     }
   }
@@ -88,6 +104,10 @@ socket.on('update', function(data) {
         p.y = pack.y;
       if (pack.selection !== undefined)
         p.selection = pack.selection;
+      if (pack.Bet !== undefined)
+        p.Bet = pack.Bet;
+      if (pack.sectorBet !== undefined)
+        p.sectorBet = pack.sectorBet;
     }
   }
 });
@@ -105,12 +125,14 @@ var rolling = true;
 
 var lastMillis = 0;
 var timeLeft = 0;
+var winSec = 16;
 socket.on('roulette', function(data) {
   Degree = data;
 });
 
 socket.on('SectorWinner', function(data) {
   console.log("Ganador = " + data);
+  winSec = data;
   rolling = false;
   lastMillis = millis();
   //7500
@@ -269,12 +291,12 @@ document.addEventListener('mousemove', function(e) {
         radi[1] = D[WindowSize].width / 2 - 70;
         break;
       case 1:
-        radi[0] = D[WindowSize].width / 2 - 35;
-        radi[1] = D[WindowSize].width / 2;
+        radi[1] = D[WindowSize].width / 2 - 35;
+        radi[0] = D[WindowSize].width / 2;
         break;
       case 2:
-        radi[0] = D[WindowSize].width / 2 - 26;
-        radi[1] = D[WindowSize].width / 2;
+        radi[1] = D[WindowSize].width / 2 - 26;
+        radi[0] = D[WindowSize].width / 2;
         break;
     }
     socket.emit("mouseMoved", {
@@ -331,6 +353,16 @@ var rotateImageCenter = function(image, Px, Py, degrees) {
   ctx.translate(-Px / 2, -Py / 2);
 }
 
+var rotateTextCenter = function(text, Px, Py, degrees) {
+  ctx.save();
+  ctx.translate(Px, Py);
+  ctx.rotate(degrees * Math.PI / 180);
+  ctx.fillText(text, -Px / 2, -Py / 2);
+  //return to initial state
+  ctx.restore();
+  ctx.translate(-Px / 2, -Py / 2);
+}
+
 window.addEventListener('load', function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
@@ -361,4 +393,45 @@ function loadImages(names, callback) {
       result[n].src = "./client/img/" + name + ".png";
   }
 
+}
+
+
+var RoundText = function(texto,angle){
+  ctx.save();
+
+  ctx.translate(window.innerWidth/2, window.innerHeight/2); //origen = centre pantalla
+
+
+  var desplasamiento ;
+  var despasito = 0;
+  switch (WindowSize) {
+    case 0:
+      desplasamiento = D[WindowSize].width / 2 -60;
+      ctx.font = "70px Segoe UI";
+      angle+=5.25;
+      despasito = 5;
+      break;
+    case 1:
+      desplasamiento = D[WindowSize].width / 2 - 28;
+      ctx.font = "35px Segoe UI";
+      angle+=5.25;
+      despasito = 8;
+      break;
+    case 2:
+      desplasamiento = D[WindowSize].width / 2 - 20;
+      ctx.font = "20px Segoe UI";
+      angle+=7;
+      despasito = 6;
+      break;
+  }
+
+  ctx.rotate(angle * Math.PI / 180); //Rotem tot el canvas uns degrees
+  ctx.translate(0, -desplasamiento + 1);
+
+
+  ctx.fillStyle = "#ffffff";
+  rotateTextCenter(texto,0,0,despasito);
+  //ctx.fillText(texto,0,0);
+
+  ctx.restore();
 }
