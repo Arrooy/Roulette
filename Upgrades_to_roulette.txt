@@ -6,4 +6,5 @@ UPGRADE LIST:
 
 - COUNTER back WORKS FOR A PLAYER, Better to make it inside draw function and via server side!
 
-- Center the countDown Number
+-Mouse al telefon esta en diferents coordenades que en el pc.
+-No funciona selector en las roulettes petites i mitjanes.

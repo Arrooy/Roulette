@@ -128,6 +128,8 @@ Player.onConnect = function(socket, data) {
     Player.list[socket.id].x = data.x;
     Player.list[socket.id].y = data.y;
 
+    console.log(data.x + " " + data.y+" <"+data.r[0] + " >"+data.r[1]);
+
     var SelectionAngle = Angle([data.x - data.cx, data.y - data.cy], [0, -100]);
 
     if (data.x < data.cx) {
@@ -135,7 +137,7 @@ Player.onConnect = function(socket, data) {
     }
     SelectionAngle = Math.floor(SelectionAngle / 22.5) * 22.5;
     var distan = dist(data.cx, data.cy, data.x, data.y);
-
+    console.log("distan"+distan);
     if (distan < data.r[0] && distan > data.r[1]) {
       Player.list[socket.id].selection = SelectionAngle;
 

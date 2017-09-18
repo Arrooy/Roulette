@@ -34,7 +34,7 @@ var Player = function(initPack) {
   self.ImageCursor.src = "./client/img/" + self.cur + ".png";
 
   self.draw = function() {
-ctx.drawImage(self.ImageCursor, self.x, self.y);
+
     if (selfId != self.id) { // Si eres tu, no pintes nada en tu display. Si otra persona pasa por el bucle draw, si que vera el tema.
       if (self.cur != undefined) {
 
@@ -126,7 +126,6 @@ $(window).resize(function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
   loadImages(imageArray, start);
-
 });
 
 var checkSize = function(images) {
@@ -271,11 +270,11 @@ document.addEventListener('mousemove', function(e) {
         break;
       case 1:
         radi[0] = D[WindowSize].width / 2 - 35;
-        radi[0] = D[WindowSize].width / 2;
+        radi[1] = D[WindowSize].width / 2;
         break;
       case 2:
         radi[0] = D[WindowSize].width / 2 - 26;
-        radi[0] = D[WindowSize].width / 2;
+        radi[1] = D[WindowSize].width / 2;
         break;
     }
     socket.emit("mouseMoved", {
@@ -283,7 +282,8 @@ document.addEventListener('mousemove', function(e) {
       y: e.pageY,
       cx: window.innerWidth / 2,
       cy: window.innerHeight / 2,
-      r: radi
+      r: radi,
+      ws:WindowSize
     });
   }
 });
@@ -292,7 +292,8 @@ document.addEventListener('mousedown', function(e) {
   if (ready1 && ready2 && ready3) {
     socket.emit("press", {
       x: e.pageX,
-      y: e.pageY
+      y: e.pageY,
+      ws:WindowSize
     });
   }
 });
@@ -300,7 +301,8 @@ document.addEventListener('mouseup', function(e) {
   if (ready1 && ready2 && ready3) {
     socket.emit("release", {
       x: e.pageX,
-      y: e.pageY
+      y: e.pageY,
+      ws:WindowSize
     });
   }
 });
