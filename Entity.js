@@ -1,6 +1,8 @@
 adminId = 0;
+var mongoClient = require("mongojs");
+var url = 'mongodb://arroyoarroyo:adriaarroyo@ds127864.mlab.com:27864/accounts_ruleta?authMechanism=SCRAM-SHA-1';
+var db = mongoClient(url, []);
 
-require('./app');
 var initPack = {
   player: []
 };
@@ -290,10 +292,19 @@ Player.givePresents = function(ws){
       if(player.Bet > 0){
         guardarServidor(player.name,player.pasta);
       }
-
     }
     player.Bet = 0;
     player.sectorBet = 16;
   }
+}
 
+var guardarServidor = function(username,moneyToUpdate){
+  db.account.update({username:username},
+    { $set:
+      {
+        pasta: moneyToUpdate
+      }
+    } , function(err, records){
+      //handle error?
+  });
 }
