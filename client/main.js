@@ -184,15 +184,15 @@ var indicarTiempo = function(x, y) {
     switch (WindowSize) {
       case 0:
         ctx.font = "180px Segoe UI";
-        y += 90;
+        y += 80;
         break;
       case 1:
         ctx.font = "90px Segoe UI";
-        y += 45;
+        y += 35;
         break;
       case 2:
         ctx.font = "65px Segoe UI";
-        y += 32.5;
+        y += 22.5;
         break;
     }
     if (timeLeft == 0) {
@@ -202,7 +202,7 @@ var indicarTiempo = function(x, y) {
     }
 
     var tempSize = ctx.measureText(timeLeft).width;
-    //x -= tempSize;
+    x -= tempSize/2.3;
 
     ctx.fillText(timeLeft, x, y);
     switch (WindowSize) {
@@ -227,20 +227,20 @@ var indicarTiempo = function(x, y) {
     switch (WindowSize) {
       case 0:
         ctx.font = "180px Segoe UI";
-        y += 90;
+        y += 80;
         break;
       case 1:
         ctx.font = "90px Segoe UI";
-        y += 45;
+        y += 35;
         break;
       case 2:
         ctx.font = "65px Segoe UI";
-        y += 32.5;
+        y += 22.5;
         break;
     }
     ctx.fillStyle = "#F05941";
     var tempSize = ctx.measureText(0).width;
-    //  x -= tempSize;
+      x -= tempSize/2.3;
 
     ctx.fillText(0, x, y);
     switch (WindowSize) {
@@ -291,6 +291,14 @@ document.addEventListener('mousemove', function(e) {
 document.addEventListener('mousedown', function(e) {
   if (ready1 && ready2 && ready3) {
     socket.emit("press", {
+      x: e.pageX,
+      y: e.pageY
+    });
+  }
+});
+document.addEventListener('mouseup', function(e) {
+  if (ready1 && ready2 && ready3) {
+    socket.emit("release", {
       x: e.pageX,
       y: e.pageY
     });
