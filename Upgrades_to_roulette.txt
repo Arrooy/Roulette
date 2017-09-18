@@ -1,7 +1,7 @@
 UPGRADE LIST:
 
 - Chat box (input) -> RESPONSIVE
-- Make all decisions off-Client  -> ADD SERVERSIDE RANDOMNESS
+
 - Upgrade MovilePhone Usage -> Principal menu interface / looking.
 
 - COUNTER back WORKS FOR A PLAYER, Better to make it inside draw function and via server side!
@@ -9,4 +9,3 @@ UPGRADE LIST:
 -Mouse al telefon esta en diferents coordenades que en el pc.
 -No funciona selector en las roulettes petites i mitjanes.
 -añadir apuestas de 3 digitos = round numbers length
--save all money and stats on server.

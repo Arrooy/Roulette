@@ -345,12 +345,15 @@ setInterval(function() {
     if (justOneTime == true) {
 
       setTimeout(function() {
-        //  socket.emit('SectorWinner', winnerSector);
+        Player.checkCanBet(false);
+      }, 6900);
+      setTimeout(function() {
+
         RestartVarsNewGame();
         roll();
         justOneTime = true;
         justOne = true;
-      Player.checkCanBet(false);
+
       }, 7500);
       justOneTime = false;
     }
