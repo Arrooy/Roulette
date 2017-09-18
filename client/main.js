@@ -34,7 +34,7 @@ var Player = function(initPack) {
   self.ImageCursor.src = "./client/img/" + self.cur + ".png";
 
   self.draw = function() {
-
+ctx.drawImage(self.ImageCursor, self.x, self.y);
     if (selfId != self.id) { // Si eres tu, no pintes nada en tu display. Si otra persona pasa por el bucle draw, si que vera el tema.
       if (self.cur != undefined) {
 
