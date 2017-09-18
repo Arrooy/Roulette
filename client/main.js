@@ -1,4 +1,4 @@
-var OrignialSizeX = 1842;
+  var OrignialSizeX = 1842;
 var OrignialSizeY = 1014;
 var setupDone = 0;
 var web = 0;
@@ -37,7 +37,7 @@ var Player = function(initPack) {
   self.ImageCursor.src = "./client/img/" + self.cur + ".png";
 
   self.draw = function() {
-    
+
     if(self.dntSTut === false){
       modalPage = 4;
       $('#alerta').modal('show');
