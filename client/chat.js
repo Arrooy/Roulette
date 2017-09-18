@@ -27,11 +27,22 @@ socket.on('addToChat', function(data) {
   chatText.scrollTop = chatText.scrollHeight;
 });
 
+$("#SendPrivateMessage").click(function(){
+  sendingPm = true;
+  modalPage = 3;
+  $('#alerta').modal('toggle')
+  $('#chat-input').addClass('animated bounce');
+  chatInput.value = "@RECIVER_USERNAME,MESSAGE_TO_SEND"
+});
+
+
+
 chatForm.onsubmit = function(e) {
+  $(".animated").removeClass('animated infinite shake');
 
   e.preventDefault();
 
-  /*if (chatInput.value[0] === '@') {
+  if (chatInput.value[0] === '@') {
 
     if (chatInput.value.indexOf(",") !== -1) {
       if (chatInput.value.slice(1, chatInput.value.indexOf(',')) !== Player.list[selfId].name) {
@@ -42,16 +53,17 @@ chatForm.onsubmit = function(e) {
         });
 
       } else {
-        chatText.innerHTML += '<div style ="color:#000000">Que solo estas...</div>';
+        chatText.innerHTML += '<div style ="color:#ffffff" class="animated shake">Go omegle pls</div>';
+        $("#chat-text").scrollTop($('#chat-text').prop('scrollHeight'));
       }
 
     } else {
-      chatText.innerHTML += '<div style ="color:#000000">Error, La sintaxis requiere @USERNAME,MESSAGE</div>';
+      chatText.innerHTML += '<div style ="color:#ffffff" class="animated shake">Error, use @USERNAME,MESSAGE to send a private message</div>';
+      $("#chat-text").scrollTop($('#chat-text').prop('scrollHeight'));
     }
 
- } else {*/
-
+ } else {
   socket.emit('sendMsgToServer', chatInput.value);
-  //}
+  }
   chatInput.value = '';
 }

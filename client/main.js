@@ -31,11 +31,18 @@ var Player = function(initPack) {
   self.selection = 16;
   self.Bet = -1;
   self.sectorBet = 16;
+  self.dntSTut = initPack.dntSTut;
 
   self.ImageCursor = new Image();
   self.ImageCursor.src = "./client/img/" + self.cur + ".png";
 
   self.draw = function() {
+    
+    if(self.dntSTut === false){
+      modalPage = 4;
+      $('#alerta').modal('show');
+      self.dntSTut  = true;
+    }
 
     if (selfId != self.id) { // Si eres tu, no pintes nada en tu display. Si otra persona pasa por el bucle draw, si que vera el tema.
       if (self.cur != undefined) {
@@ -150,9 +157,16 @@ $(window).resize(function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
   loadImages(imageArray, start);
+  $('#alerta').modal('handleUpdate')
+});
 
+$('#alerta').on('hide.bs.modal', function () {
 
-
+    if(modalPage = 4){
+      if ($('#checkBox').is(":checked") == true){
+        socket.emit("noMoreTuto",true);
+      }
+    }
 });
 
 var checkSize = function(images) {
@@ -196,11 +210,14 @@ var checkSize = function(images) {
 }
 
 $("#comment-container").mouseover(function() {
+  $(".animated").removeClass('animated infinite shake');
+
   //chatText.style.display = "inline-block";
   if(WindowSize === 2){
     //$("#chat-text").css("display","inline-block");
     $("#chat-text").css('max-height', window.innerHeight/2 + "px");
   }else{
+
     $("#chat-text").css('max-height', window.innerHeight + "px");
   }
 
@@ -217,6 +234,7 @@ $("#comment-container").mouseleave(function() {
 var start = function(images) {
   D = images;
   checkSize(D);
+
   setInterval(function() {
 
     if (ready1 && ready2 & ready3) {
@@ -236,6 +254,7 @@ var start = function(images) {
       ctx.drawImage(D[WindowSize], window.innerWidth / 2 - D[WindowSize].width / 2 + 1, window.innerHeight / 2 - D[WindowSize].height / 2);
     }
   }, 40);
+
 }
 //JO = Player.list[selfId]
 

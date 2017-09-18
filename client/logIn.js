@@ -5,7 +5,7 @@ var ready2 = 0;
 var ready3 = 0;
 ctx = $("#GameCanvas")[0].getContext('2d'); //HEROORR
 //Error detection
-var ErrorType = 0;
+var modalPage = 0;
 var tryedandFailedEmail = 0;
 var tryedandFailedAge = 0;
 var tryedandFailedPass1 = 0;
@@ -179,10 +179,18 @@ $("#CUsername").hover(function() {
     $("#ContainerUsername").removeClass('animated infinite  ' + ErrorAnimation).addClass('animated  ' + ErrorAnimation);
   }
 });
+$("#signDiv-password").hover(function() {
+
+    $("#signDiv-password").removeClass('animated infinite  ' + ErrorAnimation)
+    $("#signDiv-password-label").css('color', '#2F1B41');
+});
+
 $('#alerta').on('show.bs.modal', function(event) {
   var modal = $(this)
-  switch (ErrorType) {
+  switch (modalPage) {
     case 1: //Error signUp
+      modal.find('#tutorial').hide();
+      modal.find('#tutorial_chat').hide();
       modal.find('#tituloModal').text('This is weird...');
       modal.find('#textoModal').text('Your account Username is taken! Try with another one please');
       $("#CrearCuenta1").css("display", "");
@@ -190,14 +198,31 @@ $('#alerta').on('show.bs.modal', function(event) {
       $("#signDiv").css("display", "none");
       break;
     case 2: //Error signUp
-      modal.find('#tituloModal').text('Well...');
-      modal.find('#textoModal').text('Combination wrong. Feel free to try again!');
+
       break;
+    case 3:
+        modal.find('#tutorial').hide();
+        modal.find('#tutorial_chat').show();
+
+        modal.find('#tituloModal').text('Private message')
+        modal.find('#textoModal').text('');
+
+        break;
+        case 4:
+        modal.find('#tutorial_chat').hide();
+        modal.find('#tituloModal').text('How to bet')
+        modal.find('#textoModal').text("")
+        modal.find('#tutorial').show();
+        break;
     default:
+      modal.find('#tutorial').text("");
+      modal.find('#tutorial_chat').hide();
       modal.find('#tituloModal').text('OH')
       modal.find('#textoModal').text('Our tech group failed, report us')
 
   }
+
+
 });
 
 document.addEventListener('keypress', function(e) {
@@ -211,6 +236,7 @@ document.addEventListener('keypress', function(e) {
   }
   if ($("#signDiv").css("display") !== "none" && e.keyCode === 13) {
     $('#signDiv-signIn').click();
+
   }
 });
 
@@ -219,8 +245,8 @@ socket.on('signInResponse', function(data) {
   if (data.success) {
     setUp();
   } else {
-    ErrorType = 2;
-    $('#alerta').modal('toggle')
+    $("#signDiv-password-label").css('color', '#F05941');
+    $("#signDiv-password").addClass('animated infinite ' + ErrorAnimation);
   }
 
   //
@@ -232,7 +258,7 @@ socket.on('signUpResponse', function(data) {
     $("#signDiv").css("display", "");
     $("#CUsernameLabel").css('color', '#2F1B41');
   } else {
-    ErrorType = 1;
+    modalPage = 1;
     $("#CUsernameLabel").css('color', '#F05941');
     $('#alerta').modal('toggle');
     tryedandFailedUsername = 1;
@@ -242,6 +268,8 @@ socket.on('signUpResponse', function(data) {
 });
 
 var setUp = function() {
+
+
   $("#gameDiv").css("display", "inline-block");
   $("#signDiv").css("display", "none");
   ready1 = 1;

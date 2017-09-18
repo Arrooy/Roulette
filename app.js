@@ -81,7 +81,8 @@ var addUser = function(data, cb) {
     pasta: 100,
     cur: ["cursorBasic"],
     lvl: 0,
-    admin: false
+    admin: false,
+    dntSTut:false
   }, function(err, doc) {
     return cb();
   });

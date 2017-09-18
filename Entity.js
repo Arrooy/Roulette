@@ -65,6 +65,7 @@ Player = function(param) {
   self.tiempoClickCancelar = 0;
   self.Bet = -1;
   self.sectorBet = 16;
+  self.dntSTut = param.dntSTut;
 
   self.update = function() {
 
@@ -107,7 +108,8 @@ Player = function(param) {
       cur: self.cur[self.actualCur],
       x: self.x,
       y: self.y,
-      admin: self.admin
+      admin: self.admin,
+      dntSTut:self.dntSTut
     };
   }
   self.getUpdatePack = function() {
@@ -163,7 +165,8 @@ Player.onConnect = function(socket, data) {
     cur: data[0].cur,
     xp: data[0].xp,
     pasta: data[0].pasta,
-    admin: data[0].admin
+    admin: data[0].admin,
+    dntSTut:data[0].dntSTut
   });
 
   socket.on('mouseMoved', function(data) {
@@ -194,6 +197,18 @@ Player.onConnect = function(socket, data) {
   socket.on('release', function(data) {
     Player.list[socket.id].press = false;
   });
+
+  socket.on('noMoreTuto', function(data) {
+    db.account.update({username:Player.list[socket.id].name},
+      { $set:
+        {
+          dntSTut: true
+        }
+      } , function(err, records){
+        //handle error?
+    });
+  });
+
 
   socket.on('sendMsgToServer', function(data) {
 
