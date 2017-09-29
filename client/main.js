@@ -347,7 +347,7 @@ var indicarTiempo = function(x, y) {
 document.addEventListener('mousemove', function(e) {
   if (ready1 && ready2 && ready3) {
     var radi  = [];
-
+ 
     switch (WindowSize) {
       case 0:
         radi[0] = D[WindowSize].width / 2;
