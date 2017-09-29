@@ -67,6 +67,10 @@ Player = function(param) {
   self.sectorBet = 16;
   self.dntSTut = param.dntSTut;
 
+
+  self.screenWidth = -1;
+  self.screenHeight = -1;
+
   self.update = function() {
 
     if (self.selection != 16 && self.press === true && self.ableToBet === true) {
@@ -123,7 +127,9 @@ Player = function(param) {
       y: self.y,
       selection: self.selection,
       Bet:self.Bet,
-      sectorBet:self.sectorBet
+      sectorBet:self.sectorBet,
+      screenWidth:self.screenWidth,
+      screenHeight:self.screenHeight
     }
   }
 
@@ -196,6 +202,12 @@ Player.onConnect = function(socket, data) {
 
   socket.on('release', function(data) {
     Player.list[socket.id].press = false;
+  });
+
+  socket.on('screenSizeInit', function(data) {
+    
+    Player.list[socket.id].screenWidth = data.width;
+    Player.list[socket.id].screenHeight = data.height;
   });
 
   socket.on('noMoreTuto', function(data) {

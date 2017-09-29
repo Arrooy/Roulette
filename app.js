@@ -1,4 +1,4 @@
-var OFFLINE = false;
+var OFFLINE = true;
 
 
 
@@ -249,7 +249,7 @@ var decideSide = function(alfa) {
   var resultado = 0;
   //Se puede reducir a añadir el i+1 como al posterior. pero el tamaño de GOLD puede variar.
   for (var i = 0; i < 16; i++) {
-    if (i * 22.5 < alfa) {
+    if (i * 22.5 <= alfa) {
       SectorAnterior = i;
     } else {
       SectorPosterior = i;
@@ -274,13 +274,15 @@ var decideSide = function(alfa) {
 }
 var moveToSector = function(Sector, alfa) {
   var beta = Sector * 22.5;
-
   var returner = 0;
   var speed = 0.1;
 
+
   alfa = Math.round(alfa * 10) / 10;
   beta = Math.round(beta * 10) / 10;
+
   if (alfa > beta) {
+
     if (Sector == 0) {
       returner = +speed;
       if (alfa + speed > 360)
@@ -290,7 +292,8 @@ var moveToSector = function(Sector, alfa) {
     }
 
 
-  } else if (alfa < beta) {
+  }
+  if (alfa < beta) {
 
     if (Sector == 0) {
       returner = -speed;
@@ -300,10 +303,11 @@ var moveToSector = function(Sector, alfa) {
       returner = +speed;
     }
 
-  } else {
+  }
+  if(alfa == beta) {
     finishedRound = true;
   }
-console.log(alfa + " "+ beta);
+
 
   return returner;
 }

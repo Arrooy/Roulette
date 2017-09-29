@@ -33,11 +33,14 @@ var Player = function(initPack) {
   self.sectorBet = 16;
   self.dntSTut = initPack.dntSTut;
 
+  self.screenWidth = 0;
+  self.screenHeight = 0;
+
   self.ImageCursor = new Image();
   self.ImageCursor.src = "./client/img/" + self.cur + ".png";
 
   self.draw = function() {
-
+console.log(self.screenHeight + " " + self.screenWidth);
     if(self.dntSTut === false){
       modalPage = 4;
       $('#alerta').modal('show');
@@ -47,11 +50,13 @@ var Player = function(initPack) {
     if (selfId != self.id) { // Si eres tu, no pintes nada en tu display. Si otra persona pasa por el bucle draw, si que vera el tema.
       if (self.cur != undefined) {
 
-        ctx.drawImage(self.ImageCursor, self.x, self.y);
+
+
+        ctx.drawImage(self.ImageCursor, Map(self.x,0,self.screenWidth,0,window.innerWidth),Map(self.y,0,self.screenHeight,0,window.innerHeight));
 
       }
 
-    } else { // 100 % private data
+    }else { // 100 % private data
       if(self.sectorBet !== 16){
         RoundText(self.Bet,self.sectorBet * 22.5);
 
@@ -62,7 +67,7 @@ var Player = function(initPack) {
 
       ctx.font = "25px Segoe UI";
       ctx.fillStyle = "#2F1B41";
-      ctx.fillText(self.name.toUpperCase(),0,25);
+      ctx.fillText(self.name,0,25);
       ctx.fillText("Pasta: "+self.pasta,0,25*2);
       ctx.fillText("X "+self.x,0,25*3);
       ctx.fillText("Y "+self.y,0,25*4);
@@ -80,6 +85,8 @@ var Player = function(initPack) {
 
 var selfId = null;
 Player.list = {};
+
+
 
 socket.on('init', function(data) {
   if (data.selfId)
@@ -115,6 +122,10 @@ socket.on('update', function(data) {
         p.Bet = pack.Bet;
       if (pack.sectorBet !== undefined)
         p.sectorBet = pack.sectorBet;
+      if (pack.screenWidth !== undefined)
+        p.screenWidth = pack.screenWidth;
+      if (pack.screenHeight !== undefined)
+        p.screenHeight = pack.screenHeight;
     }
   }
 });
@@ -157,6 +168,9 @@ $(window).resize(function() {
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
   loadImages(imageArray, start);
+  oneEmit = true;
+  emitInitSize();
+
   $('#alerta').modal('handleUpdate')
 });
 
@@ -230,15 +244,27 @@ $("#comment-container").mouseleave(function() {
   $("#chat-text").scrollTop($('#chat-text').prop('scrollHeight'));
 });
 
-
+var oneEmit = true;
+var emitInitSize = function(){
+  if(oneEmit == true) {
+    console.log("EMITING " +window.innerWidth + " "+  window.innerHeight);
+    socket.emit("screenSizeInit", {
+      width:window.innerWidth,
+      height:window.innerHeight
+    });
+    oneEmit = false;
+  }
+}
 var start = function(images) {
   D = images;
   checkSize(D);
 
+
+
   setInterval(function() {
 
     if (ready1 && ready2 & ready3) {
-
+emitInitSize();
       if (!selfId)
         return;
 
@@ -372,6 +398,7 @@ document.addEventListener('mousemove', function(e) {
     });
   }
 });
+
 
 document.addEventListener('mousedown', function(e) {
   if (ready1 && ready2 && ready3) {
