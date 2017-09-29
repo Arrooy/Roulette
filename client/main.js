@@ -282,7 +282,7 @@ var indicarTiempo = function(x, y) {
     if (timeLeft == 0) {
       ctx.fillStyle = "#F05941";
     } else {
-      ctx.fillStyle = "#31BE5E";
+      ctx.fillStyle = "#2F1B41";//"#31BE5E";
     }
 
     var tempSize = ctx.measureText(timeLeft).width;
@@ -347,7 +347,7 @@ var indicarTiempo = function(x, y) {
 document.addEventListener('mousemove', function(e) {
   if (ready1 && ready2 && ready3) {
     var radi  = [];
- 
+
     switch (WindowSize) {
       case 0:
         radi[0] = D[WindowSize].width / 2;

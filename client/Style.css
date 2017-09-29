@@ -40,6 +40,7 @@ canvas {
   transform: translate(-50%, -50%);
 }
 
+
 .LogIn {
   position: relative;
   top: calc(100vh/7);

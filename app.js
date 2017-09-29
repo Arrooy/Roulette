@@ -22,6 +22,7 @@ app.use('/client', express.static(__dirname + '/client'));
 serv.listen(process.env.PORT || 2000);
 console.log("Server started.");
 
+
 SOCKET_LIST = {};
 if (OFFLINE) {
 
@@ -33,7 +34,6 @@ if (OFFLINE) {
     ping: 1
   }, function(err, res) {
     if (!err && res.ok) {
-      roll();
       console.log('Connection done')
     }
   })
@@ -88,7 +88,7 @@ var addUser = function(data, cb) {
   });
 }
 var consultaInfo = function(socket, data) {
-  console.log("Checking username & password");
+
 
   if(data.username.indexOf("@") === -1){
     db.account.find({
@@ -98,7 +98,7 @@ var consultaInfo = function(socket, data) {
       ActualPlayerNumber++;
 
       Player.onConnect(socket, res);
-      console.log("User registered, going in!");
+
       socket.emit('signInResponse', {
         success: true
       });
@@ -111,7 +111,7 @@ var consultaInfo = function(socket, data) {
       ActualPlayerNumber++;
 
       Player.onConnect(socket, res);
-      console.log("User registered, going in!");
+
       socket.emit('signInResponse', {
         success: true
       });
@@ -199,14 +199,14 @@ var guardarServidor = function(username,moneyToUpdate){
 
   });
   db.account.insert({username:username}, {pasta: moneyToUpdate}, function(err, records){
-    console.log(records);
-    //console.log("Record added as "+records[0]._id);
+
+
   });
 }
 
 var Degree = 0;
-var velocidad = 180;
-var freno = 3;
+var velocidad = 0;
+var freno = 0;
 
 var Stop = false;
 var finishedRound = false;
@@ -220,9 +220,9 @@ var timeLeft = 0;
 var lastMillis = 0;
 
 var roll = function() {
-  Degree = Math.round(rand(0, 360));
-  velocidad = Math.round(rand(90, 360));
-  freno = Math.round(rand(1, 5));
+  //Degree = Math.round(rand(0, 360));
+  velocidad = Math.round(rand(40, 50));
+  freno = rand(0.2, 2);
 }
 var rand = function(min, max) {
   return (Math.random() * (min - max) + max)
@@ -231,7 +231,9 @@ var updateRouletteMovement = function() {
   var returner = false;
   Degree = Degree + velocidad;
   velocidad = velocidad - freno;
+
   if (Degree >= 360) Degree = 0;
+
   if (velocidad <= 0) {
     freno = 0;
     velocidad = 0;
@@ -272,34 +274,36 @@ var decideSide = function(alfa) {
 }
 var moveToSector = function(Sector, alfa) {
   var beta = Sector * 22.5;
+
   var returner = 0;
+  var speed = 0.1;
 
-
-
+  alfa = Math.round(alfa * 10) / 10;
+  beta = Math.round(beta * 10) / 10;
   if (alfa > beta) {
     if (Sector == 0) {
-      returner = +0.5;
-      if (alfa + 0.5 > 360)
+      returner = +speed;
+      if (alfa + speed > 360)
         alfa = 0;
     } else {
-      returner = -0.5;
+      returner = -speed;
     }
 
 
   } else if (alfa < beta) {
 
     if (Sector == 0) {
-      returner = -0.5;
-      if (alfa - 0.5 < 0)
+      returner = -speed;
+      if (alfa - speed < 0)
         alfa = 360;
     } else {
-      returner = +0.5;
+      returner = +speed;
     }
 
   } else {
     finishedRound = true;
   }
-
+console.log(alfa + " "+ beta);
 
   return returner;
 }
@@ -315,10 +319,9 @@ var millis = function() {
   return n;
 }
 var DecideWinner = function() {
-
   if (justElectOneTime === true) {
-
     setTimeout(function() {
+
       winnerSector = decideSide(Degree);
       startMovingCorrection = true;
     }, 500);
@@ -333,7 +336,8 @@ var DecideWinner = function() {
 
 var justOneTime = true;
 var justOne = true;
-
+RestartVarsNewGame();
+roll();
 setInterval(function() {
 
 
