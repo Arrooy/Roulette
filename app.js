@@ -135,6 +135,7 @@ io.sockets.on('connection', function(socket) {
         username: "OflineModeON",
         cur: ["cursorBasic"],
         admin: true,
+        pasta:500
       }]);
       socket.emit('signInResponse', {
         success: true

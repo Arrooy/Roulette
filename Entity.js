@@ -87,7 +87,7 @@ Player = function(param) {
         self.tiempoClickApostar = millis();
       }
 
-    }else if(self.selection === 16 && self.press === true && self.ableToBet === true){
+    }else if(self.selection === 16 && self.press === true && self.ableToBet === true && self.Bet > 0){
 
       if(millis() - self.tiempoClickCancelar >= 200){
         self.Bet = 0;
