@@ -230,35 +230,6 @@ $("#comment-container").mouseleave(function() {
   $("#chat-text").scrollTop($('#chat-text').prop('scrollHeight'));
 });
 
-var mouseX,mouseY,pressed;
-var points = [];
-var lastClick = 0;
-
-
-
-var calculateArea = function(LListaPunts){
-    var origen = LListaPunts[0];
-    var vPrimer ;
-    var vConservat;
-    var area = 0;
-var newArea = 0;
-
-    for(var i = 1 ; i<LListaPunts.length - 1;i++){
-
-
-
-
-
-        vPrimer = [origen[0] - LListaPunts[i][0],origen[1] - LListaPunts[i][1]];
-        vConservat = [origen[0] - LListaPunts[i+1][0],origen[1] - LListaPunts[i+1][1]];
-        console.log("vector1 "+vPrimer);
-        console.log("vector2 "+vConservat);
-        newArea = Math.abs(vPrimer[0]*vConservat[1]-vPrimer[1]*vConservat[0])/2;
-        console.log("AREA = "  + newArea);
-        area += newArea;
-    }
-    return area;
-}
 
 var start = function(images) {
   D = images;
@@ -267,19 +238,6 @@ var start = function(images) {
   setInterval(function() {
 
     if (ready1 && ready2 & ready3) {
-      if(mouseX && mouseY && pressed && millis() - lastClick > 500){
-        var area = 0;
-        points.push([mouseX,mouseY]);
-
-        if(points.length > 2){
-          area = calculateArea(points);
-          console.log(points);
-          console.log("area is : " + area);
-        }
-
-        lastClick = millis();
-      }
-
 
       if (!selfId)
         return;
@@ -288,9 +246,6 @@ var start = function(images) {
 
       indicarTiempo(window.innerWidth / 2, window.innerHeight / 2);
 
-      /*for(var sap = 0 ; sap<points.length;sap++)
-        ctx.fillRect(points[sap][0],points[sap][1],3,3);
-        */
       for (var i in Player.list)
         Player.list[i].draw();
 
@@ -393,11 +348,6 @@ document.addEventListener('mousemove', function(e) {
   if (ready1 && ready2 && ready3) {
     var radi = [];
 
-    //DELETE
-    mouseX = e.pageX;
-    mouseY = e.pageY;
-
-
     switch (WindowSize) {
       case 0:
         radi[0] = D[WindowSize].width / 2;
@@ -425,7 +375,7 @@ document.addEventListener('mousemove', function(e) {
 
 document.addEventListener('mousedown', function(e) {
   if (ready1 && ready2 && ready3) {
-    pressed = true;
+
     socket.emit("press", {
       x: e.pageX,
       y: e.pageY,
@@ -435,7 +385,7 @@ document.addEventListener('mousedown', function(e) {
 });
 document.addEventListener('mouseup', function(e) {
   if (ready1 && ready2 && ready3) {
-    pressed = false;
+
     socket.emit("release", {
       x: e.pageX,
       y: e.pageY,
